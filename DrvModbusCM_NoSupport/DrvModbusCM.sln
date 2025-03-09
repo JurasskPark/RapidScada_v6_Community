@@ -1,0 +1,44 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32922.545
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrvModbusCM.Logic", "DrvModbusCM.Logic\DrvModbusCM.Logic.csproj", "{AD42D8EF-3836-4085-A3D2-EA262F249673}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrvModbusCM.View", "DrvModbusCM.View\DrvModbusCM.View.csproj", "{42DF18B6-4E43-41B9-926A-91CBFB5F5E71}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrvModbusCM.WinForm", "DrvModbusCM.WinForm\DrvModbusCM.WinForm.csproj", "{87BC2BBD-8081-4FFA-8C1C-BF8A0544C12E}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "DrvModbusCM.Shared", "DrvModbusCM.Shared\DrvModbusCM.Shared.shproj", "{3C2772B4-0CE4-4735-ADF7-11DA1CC090BF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AD42D8EF-3836-4085-A3D2-EA262F249673}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD42D8EF-3836-4085-A3D2-EA262F249673}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD42D8EF-3836-4085-A3D2-EA262F249673}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD42D8EF-3836-4085-A3D2-EA262F249673}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42DF18B6-4E43-41B9-926A-91CBFB5F5E71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42DF18B6-4E43-41B9-926A-91CBFB5F5E71}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42DF18B6-4E43-41B9-926A-91CBFB5F5E71}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42DF18B6-4E43-41B9-926A-91CBFB5F5E71}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87BC2BBD-8081-4FFA-8C1C-BF8A0544C12E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87BC2BBD-8081-4FFA-8C1C-BF8A0544C12E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87BC2BBD-8081-4FFA-8C1C-BF8A0544C12E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87BC2BBD-8081-4FFA-8C1C-BF8A0544C12E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D773A634-3F4B-4EF7-8B46-6F462E852311}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		DrvModbusCM.Shared\DrvModbusCM.Shared.projitems*{3c2772b4-0ce4-4735-adf7-11da1cc090bf}*SharedItemsImports = 13
+		DrvModbusCM.Shared\DrvModbusCM.Shared.projitems*{42df18b6-4e43-41b9-926a-91cbfb5f5e71}*SharedItemsImports = 5
+		DrvModbusCM.Shared\DrvModbusCM.Shared.projitems*{ad42d8ef-3836-4085-a3d2-ea262f249673}*SharedItemsImports = 5
+	EndGlobalSection
+EndGlobal

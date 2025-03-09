@@ -1,0 +1,60 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35728.132
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrvModbusCM.ViewData", "DrvModbusCM.Log\DrvModbusCM.ViewData.csproj", "{FF8D1B78-902D-4C13-9F7C-6E743F31709B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrvModbusCM.Logic", "DrvModbusCM.Logic\DrvModbusCM.Logic.csproj", "{8BB4313B-5FA6-4389-B917-55355D6BB550}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrvModbusCM.View", "DrvModbusCM.View\DrvModbusCM.View.csproj", "{1E572FBF-A31F-47A6-872E-1D6974F00392}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrvModbusCM.View_OLD", "DrvModbusCM.View_OLD\DrvModbusCM.View_OLD.csproj", "{98115B89-02CD-4290-85CB-98EE59C30B72}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrvModbusCM.WinForm", "DrvModbusCM.WinForm\DrvModbusCM.WinForm.csproj", "{DFFE940E-9B13-4E12-B664-D00AAEBAA456}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "DrvModbusCM.Shared", "DrvModbusCM.Shared\DrvModbusCM.Shared.shproj", "{24B3DC72-1DBC-4459-AA78-73606A2E58AD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrvModbusCM.Utils", "DrvModbusCM.Utils\DrvModbusCM.Utils.csproj", "{B5F8490B-711B-499E-996F-CF13D9DAD64F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FF8D1B78-902D-4C13-9F7C-6E743F31709B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF8D1B78-902D-4C13-9F7C-6E743F31709B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF8D1B78-902D-4C13-9F7C-6E743F31709B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF8D1B78-902D-4C13-9F7C-6E743F31709B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8BB4313B-5FA6-4389-B917-55355D6BB550}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8BB4313B-5FA6-4389-B917-55355D6BB550}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8BB4313B-5FA6-4389-B917-55355D6BB550}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8BB4313B-5FA6-4389-B917-55355D6BB550}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E572FBF-A31F-47A6-872E-1D6974F00392}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E572FBF-A31F-47A6-872E-1D6974F00392}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E572FBF-A31F-47A6-872E-1D6974F00392}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E572FBF-A31F-47A6-872E-1D6974F00392}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98115B89-02CD-4290-85CB-98EE59C30B72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98115B89-02CD-4290-85CB-98EE59C30B72}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98115B89-02CD-4290-85CB-98EE59C30B72}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98115B89-02CD-4290-85CB-98EE59C30B72}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DFFE940E-9B13-4E12-B664-D00AAEBAA456}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DFFE940E-9B13-4E12-B664-D00AAEBAA456}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DFFE940E-9B13-4E12-B664-D00AAEBAA456}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DFFE940E-9B13-4E12-B664-D00AAEBAA456}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5F8490B-711B-499E-996F-CF13D9DAD64F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5F8490B-711B-499E-996F-CF13D9DAD64F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5F8490B-711B-499E-996F-CF13D9DAD64F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5F8490B-711B-499E-996F-CF13D9DAD64F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		DrvModbusCM.Shared\DrvModbusCM.Shared.projitems*{1e572fbf-a31f-47a6-872e-1d6974f00392}*SharedItemsImports = 5
+		DrvModbusCM.Shared\DrvModbusCM.Shared.projitems*{24b3dc72-1dbc-4459-aa78-73606a2e58ad}*SharedItemsImports = 13
+		DrvModbusCM.Shared\DrvModbusCM.Shared.projitems*{8bb4313b-5fa6-4389-b917-55355d6bb550}*SharedItemsImports = 5
+		DrvModbusCM.Shared\DrvModbusCM.Shared.projitems*{98115b89-02cd-4290-85cb-98ee59c30b72}*SharedItemsImports = 5
+	EndGlobalSection
+EndGlobal

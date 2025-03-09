@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "DrvModbusCM.Logic": {
+      "commandName": "Project",
+      "workingDirectory": "C:\\SCADA_6\\ScadaComm\\Drv"
+    }
+  }
+}

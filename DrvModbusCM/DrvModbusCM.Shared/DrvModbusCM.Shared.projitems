@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>24b3dc72-1dbc-4459-aa78-73606a2e58ad</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>DrvModbusCM.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)CnlPrototypeFactory\CnlPrototypeFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommunicationProtocol\MasterDeviceReceiverSender.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommunicationProtocol\ProtocolModbus\ASCII\ModbusASCII.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommunicationProtocol\ProtocolModbus\BaseMessage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommunicationProtocol\ProtocolModbus\ModbusAddresses.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommunicationProtocol\ProtocolModbus\ModbusFunctionCode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommunicationProtocol\ProtocolModbus\ModbusTableTypes.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommunicationProtocol\ProtocolModbus\RTU\ModbusRTU.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommunicationProtocol\ProtocolModbus\TCP\ModbusTCP.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommunicationProtocol\ProtocolModbus\_ModbusException\AcknowledgeException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommunicationProtocol\ProtocolModbus\_ModbusException\GatewayPathUnavailableException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommunicationProtocol\ProtocolModbus\_ModbusException\GatewayTargetDeviceFailedToRespondException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommunicationProtocol\ProtocolModbus\_ModbusException\IllegalDataAddressException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommunicationProtocol\ProtocolModbus\_ModbusException\IllegalDataValueException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommunicationProtocol\ProtocolModbus\_ModbusException\IllegalFunctionException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommunicationProtocol\ProtocolModbus\_ModbusException\IllegalIPAddressException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommunicationProtocol\ProtocolModbus\_ModbusException\IllegalModbusModeException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommunicationProtocol\ProtocolModbus\_ModbusException\IMessage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommunicationProtocol\ProtocolModbus\_ModbusException\IPAdressNotAvailableException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommunicationProtocol\ProtocolModbus\_ModbusException\MemoryParityErrorException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommunicationProtocol\ProtocolModbus\_ModbusException\NegativeKnowledgementException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommunicationProtocol\ProtocolModbus\_ModbusException\SlaveDeviceBusyException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommunicationProtocol\ProtocolModbus\_ModbusException\SlaveDeviceFailureException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommunicationProtocol\ProtocolVTD\VTD.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Communication\SerialPort\SerialPortClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Communication\TcpClient\TCPClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Communication\TcpServer\AsyncTCPServer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Communication\TcpServer\Extensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Communication\TcpServer\InfoClientTCP.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Communication\TcpServer\ListAsyncTCPServer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Communication\TcpServer\Message.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Communication\TcpServer\MessageDictionary.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Communication\TcpServer\MessageQueue.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Communication\TcpServer\TaskQueue.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Communication\TcpServer\TcpServerPortGenerator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Communication\UdpClient\UDPClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Communication\UdpServer\AsyncUDPServer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Communication\UdpServer\ClientUDPData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Communication\UdpServer\GenerateUDPServerPortCS.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Communication\UdpServer\InfoClientUDP.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Communication\UdpServer\ListAsyncUDPServer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CSV\CSV.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Debuger.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DriverClient\DriverClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DriverUtils.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Hex\HEX.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Hex\HEX_ARRAY.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Hex\HEX_ASCII.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Hex\HEX_BIT.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Hex\HEX_BOOLEAN.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Hex\HEX_BYTE.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Hex\HEX_DATETIME.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Hex\HEX_DINT.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Hex\HEX_DWORD.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Hex\HEX_ENDIAN.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Hex\HEX_FLOAT.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Hex\HEX_INT.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Hex\HEX_IPADDRESS.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Hex\HEX_OPERATION.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Hex\HEX_STRING.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Hex\HEX_ULONG.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Hex\HEX_WORD.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Lang\DriverDictonary.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Lang\DriverPhrases.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Project\Project.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Project\ProjectFile.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)Dll\ScadaCommCommon.dll" />
+    <None Include="$(MSBuildThisFileDirectory)Dll\ScadaCommFunc.dll" />
+    <None Include="$(MSBuildThisFileDirectory)Dll\ScadaCommon.dll" />
+    <None Include="$(MSBuildThisFileDirectory)Dll\ScadaCommon.Forms.dll" />
+    <None Include="$(MSBuildThisFileDirectory)Dll\ScadaCommon.Log.dll" />
+    <None Include="$(MSBuildThisFileDirectory)Dll\System.IO.Ports.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)TcpPorts\" />
+  </ItemGroup>
+</Project>

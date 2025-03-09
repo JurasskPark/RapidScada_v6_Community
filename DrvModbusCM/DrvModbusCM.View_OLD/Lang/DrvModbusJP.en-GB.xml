@@ -1,0 +1,164 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<DrvModbusCMDictionaries>
+	<Dictionary key="Scada.Comm.Drivers.DrvModbusCM.View.FrmConfig">
+		<Phrase key="this">IEC 61107</Phrase>
+		<Phrase key="cmnuAddCmd.Text">Add Command</Phrase>
+		<Phrase key="cmnuAddCmdRequest.Text">Add Command</Phrase>
+		<Phrase key="cmnuAddSndRequest.Text">Add Command</Phrase>
+		<Phrase key="cmnuAddVariable.Text">Add Variable</Phrase>
+		<Phrase key="cmnuDeleteGroup.Text">Delete</Phrase>
+		<Phrase key="cmnuDeleteVariable.Text">Delete</Phrase>
+		<Phrase key="menuMenu.Text">Menu</Phrase>
+		<Phrase key="mnuAbout.Text">About</Phrase>
+		<Phrase key="mnuActivation.Text">Activation</Phrase>
+		<Phrase key="mnuNewProject.Text">New</Phrase>
+		<Phrase key="mnuOpenProject.Text">Open</Phrase>
+		<Phrase key="mnuProject.Text">Project</Phrase>
+		<Phrase key="mnuSaveAsProject.Text">Save as...</Phrase>
+		<Phrase key="mnuSaveProject.Text">Save</Phrase>
+		<Phrase key="mnuSettings.Text">Settings</Phrase>
+		<Phrase key="tlsMenu.Text">Menu</Phrase>
+		<Phrase key="tlsProjectNew.Text">New</Phrase>
+		<Phrase key="tlsProjectOpen.Text">Open</Phrase>
+		<Phrase key="tlsProjectSave.Text">Save</Phrase>
+		<Phrase key="tlsProjectSaveAs.Text">Save As...</Phrase>
+		<Phrase key="сmnuSelectVariableActionDown.Text">Down</Phrase>
+		<Phrase key="сmnuSelectVariableActionUp.Text">Up</Phrase>
+		<Phrase key="сmnuSelectVariableDown.Text">Down</Phrase>
+		<Phrase key="сmnuSelectVariableUp.Text">Up</Phrase>
+	</Dictionary>
+	<Dictionary key="Scada.Comm.Drivers.DrvModbusCM.View.FrmDevice">
+		<Phrase key="this">Device</Phrase>
+		<Phrase key="btnSave.Text">Save</Phrase>
+		<Phrase key="clmCode.Text">Number</Phrase>
+		<Phrase key="clmMessage.Text">Message</Phrase>
+		<Phrase key="cmnuDown.Text">Down</Phrase>
+		<Phrase key="cmnuErrorAdd.Text">Add Error</Phrase>
+		<Phrase key="cmnuErrorAllDelete.Text">Delete all Error</Phrase>
+		<Phrase key="cmnuErrorChange.Text">Change Error</Phrase>
+		<Phrase key="cmnuErrorDelete.Text">Delete Error</Phrase>
+		<Phrase key="cmnuListErrorAdd.Text">Add list of Errors</Phrase>
+		<Phrase key="cmnuUp.Text">Up</Phrase>
+		<Phrase key="gbCategory.Text">Main Parameters</Phrase>
+		<Phrase key="lblCheckCS.Text">Type checksum</Phrase>
+		<Phrase key="lblError.Text">Error</Phrase>
+		<Phrase key="lblInit.Text">Initialization</Phrase>
+		<Phrase key="lblLockA.Text">Lock A</Phrase>
+		<Phrase key="lblLockB.Text">Lock B</Phrase>
+		<Phrase key="lblMode.Text">Mode</Phrase>
+		<Phrase key="lblModem.Text">Modem</Phrase>
+		<Phrase key="lblName.Text">Name</Phrase>
+		<Phrase key="lblProg7e1.Text">Mode 7-E-1</Phrase>
+		<Phrase key="lblSpeed.Text">Speed</Phrase>
+		<Phrase key="lblTimeout.Text">Timeout</Phrase>
+		<Phrase key="lblViewDescr.Text">Show request descriptors</Phrase>
+	</Dictionary>
+	<Dictionary key="Scada.Comm.Drivers.DrvModbusCM.View.FrmError">
+		<Phrase key="btnClose.Text">Close</Phrase>
+		<Phrase key="btnSave.Text">Save</Phrase>
+		<Phrase key="btnAdd.Text">Add</Phrase>
+		<Phrase key="lblCode.Text">Code</Phrase>
+		<Phrase key="lblMessage.Text">Message</Phrase>
+	</Dictionary>
+	<Dictionary key="Scada.Comm.Drivers.DrvModbusCM.View.FrmInputBox">
+		<Phrase key="btnOk.Text">Ok</Phrase>
+		<Phrase key="btnCancel.Text">Cancel</Phrase>
+	</Dictionary>
+	<Dictionary key="Scada.Comm.Drivers.DrvModbusCM.View.FrmCmdRequest">
+		<Phrase key="this">Command request</Phrase>
+		<Phrase key="btnSave.Text">Save</Phrase>
+		<Phrase key="gbCategory.Text">Main Parameters</Phrase>
+		<Phrase key="lblAddr.Text">Address</Phrase>
+		<Phrase key="lblCmdCnt.Text">Count</Phrase>
+		<Phrase key="lblMode.Text">Name</Phrase>
+		<Phrase key="lblSubAddr.Text">Sub Address</Phrase>
+		<Phrase key="lblwMode.Text">Mode</Phrase>
+	</Dictionary>
+	<Dictionary key="Scada.Comm.Drivers.DrvModbusCM.View.FrmSndRequest">
+		<Phrase key="this">Parameter request</Phrase>
+		<Phrase key="btnSave.Text">Save</Phrase>
+		<Phrase key="clmName.Text">Name</Phrase>
+		<Phrase key="clmSignal.Text">Signal</Phrase>
+		<Phrase key="clmType.Text">Type</Phrase>
+		<Phrase key="cmbActive.Items[0]">No</Phrase>
+		<Phrase key="cmbActive.Items[1]">Yes</Phrase>
+		<Phrase key="cmnuDown.Text">Down</Phrase>
+		<Phrase key="cmnuUp.Text">Up</Phrase>
+		<Phrase key="cmnuVariableAdd.Text">Add Variable</Phrase>
+		<Phrase key="cmnuVariableAllDelete.Text">Delete all Variable</Phrase>
+		<Phrase key="cmnuVariableChange.Text">Change Variable</Phrase>
+		<Phrase key="cmnuVariableDelete.Text">Delete Variable</Phrase>
+		<Phrase key="gbCategory.Text">Main Parameters</Phrase>
+		<Phrase key="lblActive.Text">Active</Phrase>
+		<Phrase key="lblAddr.Text">Address</Phrase>
+		<Phrase key="lblDescr.Text">Description</Phrase>
+		<Phrase key="lblFormat.Text">Type</Phrase>
+		<Phrase key="lblrMode.Text">Read Mode</Phrase>
+		<Phrase key="lblSeparator.Text">Separator</Phrase>
+		<Phrase key="lblSignal.Text">Signal</Phrase>
+		<Phrase key="lblSndName.Text">Name</Phrase>
+		<Phrase key="lblUnits.Text">Units</Phrase>
+		<Phrase key="lblVariables.Text">Variables</Phrase>
+		<Phrase key="lblwMode.Text">Write Mode</Phrase>
+	</Dictionary>
+	<Dictionary key="Scada.Comm.Drivers.DrvModbusCM.View.FrmVariable">
+		<Phrase key="this">Variable</Phrase>
+		<Phrase key="btnSave.Text">Save</Phrase>
+		<Phrase key="gbCategory.Text">Main Parameters</Phrase>
+		<Phrase key="lblFormat.Text">Type</Phrase>
+		<Phrase key="lblName.Text">Name</Phrase>
+		<Phrase key="lblSignal.Text">Signal</Phrase>
+	</Dictionary>
+	<Dictionary key="Scada.Comm.Drivers.DrvModbusCM.View.FrmCommand">
+		<Phrase key="this">Command</Phrase>
+		<Phrase key="btnSave.Text">Save</Phrase>
+		<Phrase key="gbCategory.Text">Main Parameters</Phrase>
+		<Phrase key="cmbActive.Items[0]">No</Phrase>
+		<Phrase key="cmbActive.Items[1]">Yes</Phrase>
+		<Phrase key="lblActive.Text">Active</Phrase>
+		<Phrase key="lblAddr.Text">Address</Phrase>
+		<Phrase key="lblDescr.Text">Description</Phrase>
+		<Phrase key="lblSignal.Text">Signal</Phrase>
+		<Phrase key="lblSndName.Text">Name</Phrase>
+		<Phrase key="lblUnits.Text">Units</Phrase>
+		<Phrase key="lblwMode.Text">Write Mode</Phrase>
+	</Dictionary>	
+	<Dictionary key="Scada.Comm.Drivers.DrvModbusCM.View.Config">
+		
+		<Phrase key="NoType">[No channel type selected!]</Phrase>
+		<Phrase key="NoProtocol">[No protocol selected!]</Phrase>
+
+		<Phrase key="Request">[Request ]</Phrase>
+		<Phrase key="Response">[Response]</Phrase>
+		<Phrase key="CommandExecutedError">[Error][The command was executed with an error!]</Phrase>
+		
+		
+		<Phrase key="ChannelName">Communication channel</Phrase>
+		<Phrase key="DeviceName">Device</Phrase>
+		<Phrase key="GroupCommandName">Commands</Phrase>
+		<Phrase key="CommandName">Command</Phrase>
+		<Phrase key="GroupTagName">Tag group</Phrase>
+		<Phrase key="TagName">Tag</Phrase>
+
+		<Phrase key="QuestionNewProjectTitle">Creating Project</Phrase>
+		<Phrase key="QuestionNewProjectMsg">Create a new project?</Phrase>
+		<Phrase key="Delete">Delete</Phrase>
+		<Phrase key="DeleteQuestion">Are you sure you want to delete </Phrase>
+
+		<Phrase key="ChannelGatewayPortChecked">Checking if the selected port is free.</Phrase>
+		<Phrase key="NoComPort">No COM ports were found on this computer.\nPlease install a COM port and restart this application.</Phrase>
+		<Phrase key="PortFree">The specified port is free and available for use!</Phrase>
+		<Phrase key="PortBusy">The specified port is busy! Try another one!</Phrase>
+		
+		<Phrase key="GroupCmd">Commands</Phrase>
+		<Phrase key="Cmd">Command</Phrase>
+		<Phrase key="VarGroupsNode">Variable Groups</Phrase>
+		<Phrase key="UnnamedGroup">&lt;Unnamed Group&gt;</Phrase>
+		<Phrase key="UnnamedVariable">&lt;Unnamed Variable&gt;</Phrase>
+
+		<Phrase key="QuestionAboutChanges">The changes are not saved. Save changes?</Phrase>
+		<Phrase key="QuestionDeleteNode">Are you sure you want to delete </Phrase>
+		<Phrase key="TitleLoadProject">Load  project...</Phrase>
+		<Phrase key="FilterProject">XML (*.xml)|*.xml|All files (*.*)|*.*</Phrase>
+	</Dictionary>
+</DrvModbusCMDictionaries>

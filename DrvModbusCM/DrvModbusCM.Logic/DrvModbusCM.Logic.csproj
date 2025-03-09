@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<Nullable>disable</Nullable>
+		<UseWindowsForms>false</UseWindowsForms>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<RootNamespace>Scada.Comm.Drivers.DrvModbusCM.Logic</RootNamespace>
+		<Version>6.0.0.0</Version>
+		<AssemblyVersion>6.0.0.0</AssemblyVersion>
+		<Authors>Rapid Community</Authors>
+		<Company>Rapid Community</Company>
+		<Product>DrvModbusCM</Product>
+		<Copyright>Copyright © Rapid Community (2025)</Copyright>
+	</PropertyGroup>
+
+
+  <ItemGroup>
+    <PackageReference Include="System.IO.Ports" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="ScadaCommCommon">
+      <HintPath>..\Libraries\ScadaCommCommon.dll</HintPath>
+    </Reference>
+    <Reference Include="ScadaCommon">
+      <HintPath>..\Libraries\ScadaCommon.dll</HintPath>
+    </Reference>
+    <Reference Include="ScadaCommon.Log">
+      <HintPath>..\Libraries\ScadaCommon.Log.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <Import Project="..\DrvModbusCM.Shared\DrvModbusCM.Shared.projitems" Label="Shared" />
+
+</Project>

@@ -1,0 +1,76 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>disable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>Scada.Comm.Drivers.DrvModbusCM.View</RootNamespace>
+    <Version>6.0.0</Version>
+    <Authors>Yuriy Pradius</Authors>
+    <Company>Rapid Software Community</Company>
+    <Product>Rapid SCADA</Product>
+    <Copyright>Copyright © 2022</Copyright>
+    <LangVersion>preview</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="ScadaCommCommon">
+      <HintPath>..\Libraries\ScadaCommCommon.dll</HintPath>
+    </Reference>
+    <Reference Include="ScadaCommon">
+      <HintPath>..\Libraries\ScadaCommon.dll</HintPath>
+    </Reference>
+    <Reference Include="ScadaCommon.Forms">
+      <HintPath>..\Libraries\ScadaCommon.Forms.dll</HintPath>
+    </Reference>
+    <Reference Include="ScadaCommon.Log">
+      <HintPath>..\Libraries\ScadaCommon.Log.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.Ports">
+      <HintPath>..\Libraries\System.IO.Ports.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Control\FrmSplashScreen.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Control\uscChannelDevice.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Control\uscDevice.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Control\uscDeviceArbitrary.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Control\uscDeviceCommandParametr.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Control\uscDeviceCommandRead.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Control\uscDeviceCommandWrite.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Control\uscTag.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Control\uscGroupTag.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Control\uscChannelDevice.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Control\uscDevice.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <Import Project="..\DrvModbusCM.Shared\DrvModbusCM.Shared.projitems" Label="Shared" />
+
+</Project>
