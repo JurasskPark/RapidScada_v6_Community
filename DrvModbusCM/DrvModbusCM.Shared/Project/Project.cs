@@ -1,8 +1,11 @@
-﻿using Scada.Data.Entities;
+﻿using Master;
+using Scada.Data.Entities;
+using Scada.Lang;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.IO.Ports;
 using System.Linq.Expressions;
 using System.Net;
 using System.Text;
@@ -12,11 +15,477 @@ using System.Xml.Serialization;
 namespace Scada.Comm.Drivers.DrvModbusCM
 {
 
+    #region Project
+    /// <summary>
+    /// Represents the configuration of a device driver.
+    /// <para>Представляет конфигурацию драйвера устройства.</para>
+    /// </summary>
+    [Serializable]
+    public class Project
+    {
+        /// <summary>
+        /// Initializes a new instance of the class.
+        /// </summary>
+        public Project()
+        {
+            Driver = new ProjectDriver();
+        }
+
+        private void SetToDefault()
+        {
+            Driver = new ProjectDriver();
+        }
+
+        #region Variables
+        // driver
+        // драйвер
+        private ProjectDriver driver;
+        public ProjectDriver Driver
+        {
+            get { return driver; }
+            set { driver = value; }
+        }
+        #endregion Variables
+
+        #region Load
+        /// <summary>
+        /// Loads the configuration from the specified file.
+        /// <para>Загружает конфигурацию из указанного файла.</para>
+        /// </summary>
+        public bool Load(string fileName, out string errMsg)
+        {
+            SetToDefault();
+
+            try
+            {
+                if (!File.Exists(fileName))
+                {
+                    try
+                    {
+                        Save(fileName, out errMsg);
+                    }
+                    catch
+                    {
+                        throw new FileNotFoundException(string.Format(CommonPhrases.NamedFileNotFound, fileName));
+                    }
+                }
+
+                XmlDocument xmlDoc = new XmlDocument();
+                xmlDoc.Load(fileName);
+                XmlElement rootElem = xmlDoc.DocumentElement;
+
+                try { Driver.LoadFromXml(rootElem.SelectSingleNode("Driver")); } catch { Driver = new ProjectDriver(); }
+
+                errMsg = "";
+                return true;
+            }
+            catch (Exception ex)
+            {
+                errMsg = ex.Message;
+                return false;
+            }
+        }
+        #endregion Load
+
+        #region Save
+        /// <summary>
+        /// Saves the configuration to the specified file.
+        /// <para>Сохраняет конфигурацию в указанный файл.</para>
+        /// </summary>
+        public bool Save(string fileName, out string errMsg)
+        {
+            try
+            {
+                XmlDocument xmlDoc = new XmlDocument();
+                XmlDeclaration xmlDecl = xmlDoc.CreateXmlDeclaration("1.0", "utf-8", null);
+                xmlDoc.AppendChild(xmlDecl);
+
+                XmlElement rootElem = xmlDoc.CreateElement("Config");
+                xmlDoc.AppendChild(rootElem);
+
+                try { Driver.SaveToXml(rootElem.AppendElem("Driver")); } catch { }
+
+                xmlDoc.Save(fileName);
+                errMsg = "";
+                return true;
+            }
+            catch (Exception ex)
+            {
+                errMsg = ex.Message;
+                return false;
+            }
+        }
+        #endregion Save
+
+        #region Load Old Version
+        #region Project Xml
+        private const string XmlNodeTag = "NODE";
+        private const string XmlNodeTextAtt = "TEXT";
+        private const string XmlNodeTagAtt = "TAG";
+        private const string XmlNodeImageIndexAtt = "KEYIMAGE";
+        #endregion Project Xml
+
+        //public bool LoadOldVersion(string fileName, out string errMsg)
+        //{
+
+            //SetToDefault();
+            //errMsg = "";
+
+            //ProjectSettings settings = new ProjectSettings();
+            //ProjectSettings project = new ProjectSettings();
+            //ProjectChannel tmpProjectChannel = new ProjectChannel();
+            //List<ProjectDevice> tmpProjectDevice = new List<ProjectDevice>();
+            //List<ProjectGroupCommand> tmpProjectGroupCommand = new List<ProjectGroupCommand>();
+            //List<ProjectCommand> tmpProjectCommand = new List<ProjectCommand>();
+            //List<ProjectGroupTag> tmpProjectGroupTag = new List<ProjectGroupTag>();
+            //List<ProjectTag> tmpProjectTag = new List<ProjectTag>();
+
+            //XmlTextReader reader = null;
+            //try
+            //{
+            //    // disabling re-drawing of treeview till all nodes are added
+            //    reader = new XmlTextReader(fileName);
+
+            //    while (reader.Read())
+            //    {
+            //        if (reader.NodeType == XmlNodeType.Element)
+            //        {
+            //            if (reader.Name == XmlNodeTag)
+            //            {
+            //                bool isEmptyElement = reader.IsEmptyElement;
+
+            //                // loading node attributes
+            //                int attributeCount = reader.AttributeCount;
+
+            //                if (attributeCount > 0)
+            //                {
+            //                    Dictionary<string, string> attributes = new Dictionary<string, string>();
+            //                    string newNodeName = string.Empty;
+            //                    string newNodeImageKey = string.Empty;
+            //                    string newNodeType = string.Empty;
+
+            //                    for (int i = 0; i < attributeCount; i++)
+            //                    {
+            //                        reader.MoveToAttribute(i);
+            //                        attributes.Add(reader.Name, reader.Value);
+            //                    }
+
+            //                    newNodeName = attributes[XmlNodeTextAtt];
+            //                    if (attributes.TryGetValue(XmlNodeTextAtt, out string attributesValue1))
+            //                    {
+            //                        newNodeName = attributes[XmlNodeTextAtt];
+            //                    }
+
+            //                    newNodeImageKey = attributes[XmlNodeImageIndexAtt];
+            //                    if (attributes.TryGetValue(XmlNodeImageIndexAtt, out string attributesValue2))
+            //                    {
+            //                        newNodeImageKey = attributes[XmlNodeImageIndexAtt];
+            //                    }
+
+            //                    if (attributes.TryGetValue(XmlNodeTagAtt, out string attributesValue3))
+            //                    {
+            //                        newNodeType = attributes[XmlNodeTagAtt];
+            //                    }
+
+            //                    ProjectNodeData projectNodeData = new ProjectNodeData();
+
+            //                    switch (newNodeType)
+            //                    {
+            //                        case "SETTINGS":
+            //                            try { settings.AutoRun = Convert.ToBoolean(attributes["AUTORUN"]); } catch { }
+
+            //                            break;
+
+            //                        case "CHANNEL":
+            //                            #region Channel
+            //                            ProjectChannel projectChannel = new ProjectChannel();
+
+            //                            try { projectChannel.KeyImage = attributes["NAME"]; } catch { }
+            //                            try { projectChannel.ID = DriverUtils.StringToGuid(attributes["ID"]); } catch { }
+            //                            try { projectChannel.Name = attributes["NAME"]; } catch { }
+            //                            try { projectChannel.Description = attributes["DESCRIPTION"]; } catch { }
+            //                            try { projectChannel.Enabled = Convert.ToBoolean(attributes["ENABLED"]); } catch { }
+            //                            try { projectChannel.Type = Convert.ToInt32(attributes["TYPE"]); } catch { }
+            //                            try { projectChannel.GatewayTypeProtocol = Convert.ToInt32(attributes["GATEWAY"]); } catch { }
+            //                            try { projectChannel.GatewayPort = Convert.ToInt32(attributes["GATEWAYPORT"]); } catch { }
+            //                            try { projectChannel.GatewayConnectedClientsMax = Convert.ToInt32(attributes["CONNECTEDCLIENTSMAX"]); } catch { }
+
+            //                            try { projectChannel.WriteTimeout = Convert.ToInt32(attributes["WRITETIMEOUT"]); } catch { }
+            //                            try { projectChannel.ReadTimeout = Convert.ToInt32(attributes["READTIMEOUT"]); } catch { }
+            //                            try { projectChannel.Timeout = Convert.ToInt32(attributes["TIMEOUT"]); } catch { }
+
+            //                            try { projectChannel.WriteBufferSize = Convert.ToInt32(attributes["WRITEBUFFERSIZE"]); } catch { }
+            //                            try { projectChannel.ReadBufferSize = Convert.ToInt32(attributes["READBUFFERSIZE"]); } catch { }
+
+            //                            try { projectChannel.CountError = Convert.ToInt32(attributes["COUNTERROR"]); } catch { }
+
+            //                            if (Convert.ToInt32(attributes["TYPE"]) == 1) //Последовательный порт
+            //                            {
+            //                                try { projectChannel.SerialPortName = attributes["SERIALPORTNAME"]; } catch { }
+            //                                try { projectChannel.SerialPortBaudRate = attributes["SERIALPORTBAUDRATE"]; } catch { }
+            //                                try { projectChannel.SerialPortDataBits = attributes["SERIALPORTDATABITS"]; } catch { }
+            //                                try { projectChannel.SerialPortParity = attributes["SERIALPORTPARITY"]; } catch { }
+            //                                try { projectChannel.SerialPortStopBits = attributes["SERIALPORTSTOPBITS"]; } catch { }
+
+            //                                try { projectChannel.SerialPortHandshake = attributes["HANDSHAKE"]; } catch { }
+            //                                try { projectChannel.SerialPortDtrEnable = Convert.ToBoolean(attributes["DTR"]); } catch { }
+            //                                try { projectChannel.SerialPortRtsEnable = Convert.ToBoolean(attributes["RTS"]); } catch { }
+            //                                try { projectChannel.SerialPortReceivedBytesThreshold = Convert.ToInt32(attributes["RECEIVEDBYTESTHRESHOLD"]); } catch { }
+            //                            }
+
+            //                            if (Convert.ToInt32(attributes["TYPE"]) == 2 || Convert.ToInt32(attributes["TYPE"]) == 3) // TCP UDP клиент
+            //                            {
+            //                                try { projectChannel.ClientHost = attributes["CLIENTHOST"]; } catch { }
+            //                                try { projectChannel.ClientPort = Convert.ToInt32(attributes["CLIENTPORT"]); } catch { }
+            //                            }
+
+            //                            try { projectChannel.Debug = Convert.ToBoolean(attributes["DEBUG"]); } catch { }
+
+            //                            projectNodeData.channel = projectChannel;
+            //                            projectNodeData.nodeType = ProjectNodeType.Channel;
+
+            //                            tmpProjectChannel = projectChannel;
+            //                            #endregion Channel
+            //                            break;
+            //                        case "DEVICE":
+            //                            #region Device
+            //                            ProjectDevice projectDevice = new ProjectDevice();
+
+            //                            try { projectDevice.ID = DriverUtils.StringToGuid(attributes["IDPARENT"]); } catch { }
+            //                            try { projectDevice.ID = DriverUtils.StringToGuid(attributes["ID"]); } catch { }
+            //                            try { projectDevice.Address = Convert.ToUInt16(attributes["ADDRESS"]); } catch { }
+            //                            try { projectDevice.Name = attributes["NAME"]; } catch { }
+            //                            try { projectDevice.Description = attributes["DESCRIPTION"]; } catch { }
+            //                            try { projectDevice.Enabled = Convert.ToBoolean(attributes["ENABLED"]); } catch { }
+
+            //                            try { projectDevice.DeviceRegistersBytes = Convert.ToInt32(attributes["REGISTERSBYTES"]); } catch { }
+            //                            try { projectDevice.DeviceGatewayRegistersBytes = Convert.ToInt32(attributes["GATEWAYREGISTERSBYTES"]); } catch { }
+
+            //                            try { projectDevice.Status = Convert.ToInt32(attributes["STATUS"]); } catch { }
+            //                            try { projectDevice.PollingOnScheduleStatus = Convert.ToBoolean(attributes["POLLINGONSCHEDULESTATUS"]); } catch { }
+            //                            try { projectDevice.IntervalPool = Convert.ToInt32(attributes["INTERVALPOOL"]); } catch { }
+            //                            try { projectDevice.TypeProtocol = Convert.ToInt32(attributes["TYPEPROTOCOL"]); } catch { }
+
+            //                            try { projectDevice.DateTimeLastSuccessfully = DateTime.Parse(attributes["DATETIMELASTSUCCESSFULLY"]); } catch { }
+            //                            try
+            //                            {
+            //                                // creating a buffer
+            //                                // adding Registers 65535
+            //                                for (ulong index = 0; index < (ulong)65535; ++index)
+            //                                {
+            //                                    bool status = false;
+            //                                    ulong value = 0;
+
+            //                                    projectDevice.SetCoil(Convert.ToUInt64(index), status);
+            //                                    projectDevice.SetDiscreteInput(Convert.ToUInt64(index), status);
+            //                                    projectDevice.SetHoldingRegister(Convert.ToUInt64(index), value);
+            //                                    projectDevice.SetInputRegister(Convert.ToUInt64(index), value);
+            //                                }
+
+            //                                for (ulong index = 0; index < (ulong)9999999; ++index)
+            //                                {
+            //                                    string value = string.Empty;
+            //                                    projectDevice.SetDataBuffer(Convert.ToUInt64(index), value);
+            //                                }
+            //                            }
+            //                            catch { }
+
+            //                            // fill in the registers by the name of the attribute and its value from the dictionary of Attribute registers 65535
+            //                            foreach (string key in attributes.Keys)
+            //                            {
+            //                                if (key.Contains("COILREGISTER"))
+            //                                {
+            //                                    try
+            //                                    {
+            //                                        bool Coil = Convert.ToBoolean(attributes[key]);
+            //                                        ulong RegAddr = Convert.ToUInt64(key.Replace("COILREGISTER", ""));
+            //                                        projectDevice.SetCoil(RegAddr, Coil);
+            //                                    }
+            //                                    catch { }
+            //                                }
+            //                                else if (key.Contains("DISCRETEINPUT"))
+            //                                {
+            //                                    try
+            //                                    {
+            //                                        bool DiscreteInput = Convert.ToBoolean(attributes[key]);
+            //                                        ulong RegAddr = Convert.ToUInt64(key.Replace("DISCRETEINPUT", ""));
+            //                                        projectDevice.SetDiscreteInput(RegAddr, DiscreteInput);
+            //                                    }
+            //                                    catch { }
+            //                                }
+            //                                else if (key.Contains("HOLDINGREGISTER"))
+            //                                {
+            //                                    try
+            //                                    {
+            //                                        ulong HoldingRegister = Convert.ToUInt64(attributes[key]);
+            //                                        ulong RegAddr = Convert.ToUInt64(key.Replace("HOLDINGREGISTER", ""));
+            //                                        projectDevice.SetHoldingRegister(RegAddr, HoldingRegister);
+            //                                    }
+            //                                    catch { }
+            //                                }
+            //                                else if (key.Contains("INPUTREGISTER"))
+            //                                {
+            //                                    try
+            //                                    {
+            //                                        ulong InputRegister = Convert.ToUInt16(Convert.ToInt64(attributes[key]));
+            //                                        ulong RegAddr = Convert.ToUInt64(key.Replace("INPUTREGISTER", ""));
+            //                                        projectDevice.SetInputRegister(RegAddr, InputRegister);
+            //                                    }
+            //                                    catch { }
+            //                                }
+            //                            }
+
+            //                            projectNodeData.device = projectDevice;
+            //                            projectNodeData.nodeType = ProjectNodeType.Device;
+
+            //                            tmpProjectDevice.Add(projectDevice);
+            //                            #endregion Device
+            //                            break;
+            //                        case "GROUPCOMMAND":
+            //                            #region Device Group Command
+            //                            ProjectGroupCommand projectGroupCommand = new ProjectGroupCommand();
+
+            //                            try { projectGroupCommand.ParentID = DriverUtils.StringToGuid(attributes["IDPARENT"]); } catch { }
+            //                            try { projectGroupCommand.ID = DriverUtils.StringToGuid(attributes["ID"]); } catch { }
+            //                            try { projectGroupCommand.Name = attributes["NAME"]; } catch { }
+            //                            try { projectGroupCommand.Description = attributes["DESCRIPTION"]; } catch { }
+            //                            try { projectGroupCommand.Enabled = Convert.ToBoolean(attributes["ENABLED"]); } catch { }
+
+            //                            projectNodeData.groupCommand = projectGroupCommand;
+            //                            projectNodeData.nodeType = ProjectNodeType.GroupCommand;
+
+            //                            tmpProjectGroupCommand.Add(projectGroupCommand);
+            //                            #endregion Device Group Command
+            //                            break;
+            //                        case "COMMAND":
+            //                            #region Device
+            //                            ProjectCommand projectCommand = new ProjectCommand();
+
+            //                            try { projectCommand.ParentID = DriverUtils.StringToGuid(attributes["IDPARENT"]); } catch { }
+            //                            try { projectCommand.ID = DriverUtils.StringToGuid(attributes["ID"]); } catch { }
+            //                            try { projectCommand.Name = attributes["NAME"]; } catch { }
+            //                            try { projectCommand.Description = attributes["DESCRIPTION"]; } catch { }
+            //                            try { projectCommand.Enabled = Convert.ToBoolean(attributes["ENABLED"]); } catch { }
+            //                            try { projectCommand.FunctionCode = Convert.ToUInt16(attributes["FUNCTION"]); } catch { }
+            //                            try { projectCommand.RegisterStartAddress = Convert.ToUInt16(attributes["REGISTERSTARTADDRESS"]); } catch { }
+            //                            try { projectCommand.RegisterCount = Convert.ToUInt16(attributes["REGISTERCOUNT"]); } catch { }
+            //                            try { projectCommand.Parametr = Convert.ToUInt16(attributes["REGISTERPARAMETR"]); } catch { }
+            //                            try { projectCommand.CurrentValue = Convert.ToBoolean(attributes["CURRENTVALUE"]); } catch { }
+
+            //                            try { projectCommand.RegisterNameReadData = attributes["REGISTERNAMEREADDATA"].Split(' '); } catch { }
+            //                            try { projectCommand.RegisterReadData = Array.ConvertAll(attributes["REGISTERREADDATA"].Split(' '), x => { ulong res = Convert.ToUInt64(x); return res; }); } catch { }
+
+            //                            try { projectCommand.RegisterNameWriteData = attributes["REGISTERNAMEWRITEDATA"].Split(' '); } catch { }
+            //                            try { projectCommand.RegisterWriteData = Array.ConvertAll(attributes["REGISTERWRITEDATA"].Split(' '), x => { ulong res = Convert.ToUInt64(x); return res; }); } catch { }
+
+            //                            projectNodeData.command = projectCommand;
+            //                            projectNodeData.nodeType = ProjectNodeType.Command;
+
+            //                            tmpProjectCommand.Add(projectCommand);
+
+            //                            #endregion Device
+            //                            break;
+            //                        case "GROUPTAG":
+            //                            #region Device Group Tag
+            //                            ProjectGroupTag projectGroupTag = new ProjectGroupTag();
+
+            //                            try { projectGroupTag.ParentID = DriverUtils.StringToGuid(attributes["IDPARENT"]); } catch { }
+            //                            try { projectGroupTag.ID = DriverUtils.StringToGuid(attributes["ID"]); } catch { }
+            //                            try { projectGroupTag.Name = attributes["NAME"]; } catch { }
+            //                            try { projectGroupTag.Description = attributes["DESCRIPTION"]; } catch { }
+            //                            try { projectGroupTag.Enabled = Convert.ToBoolean(attributes["ENABLED"]); } catch { }
+
+            //                            projectNodeData.groupTag = projectGroupTag;
+            //                            projectNodeData.nodeType = ProjectNodeType.GroupTag;
+
+            //                            tmpProjectGroupTag.Add(projectGroupTag);
+
+            //                            #endregion Device Group Tag
+            //                            break;
+            //                        case "TAG":
+            //                            #region Device Tag
+            //                            ProjectTag projectTag = new ProjectTag();
+
+            //                            try { projectTag.ParentID = DriverUtils.StringToGuid(attributes["IDPARENT"]); } catch { }
+            //                            try { projectTag.ID = DriverUtils.StringToGuid(attributes["ID"]); } catch { }
+            //                            try { projectTag.CommandID = DriverUtils.StringToGuid(attributes["COMMANDID"]); } catch { }
+            //                            try { projectTag.Enabled = Convert.ToBoolean(attributes["ENABLED"]); } catch { }
+            //                            try { projectTag.Address = attributes["ADDRESS"]; } catch { }
+            //                            try { projectTag.Name = attributes["NAME"]; } catch { }
+            //                            try { projectTag.Code = attributes["CODE"]; } catch { }
+            //                            try { projectTag.Description = attributes["DESCRIPTION"]; } catch { }
+            //                            try { projectTag.Coefficient = Convert.ToSingle(attributes["COEFFICIENT"]); } catch { }
+            //                            try { projectTag.Sorting = attributes["SORTING"]; } catch { }
+
+            //                            try { projectTag.Scaled = Convert.ToInt32(attributes["SCALED"]); } catch { }
+            //                            try { projectTag.ScaledHigh = Convert.ToSingle(attributes["SCALEDHIGH"]); } catch { }
+            //                            try { projectTag.ScaledLow = Convert.ToSingle(attributes["SCALEDLOW"]); } catch { }
+            //                            try { projectTag.RowHigh = Convert.ToSingle(attributes["ROWHIGH"]); } catch { }
+            //                            try { projectTag.RowLow = Convert.ToSingle(attributes["ROWLOW"]); } catch { }
+
+            //                            try
+            //                            {
+            //                                ProjectTag.FormatData Type = (ProjectTag.FormatData)Enum.Parse(typeof(ProjectTag.FormatData), attributes["TYPE"]);
+            //                                projectTag.TagType = Type;
+            //                            }
+            //                            catch { }
+
+            //                            projectNodeData.tag = projectTag;
+            //                            projectNodeData.nodeType = ProjectNodeType.Tag;
+
+            //                            tmpProjectTag.Add(projectTag);
+            //                            #endregion Device Tag
+            //                            break;
+            //                        default:
+
+            //                            break;
+            //                    }
+            //                }
+
+            //            }
+            //        }
+            //        else if (reader.NodeType == XmlNodeType.XmlDeclaration)
+            //        {
+            //            //Ignore Xml Declaration                    
+            //        }
+            //        else if (reader.NodeType == XmlNodeType.None)
+            //        {
+            //            //Ignore Xml Declaration  
+            //        }
+            //        else if (reader.NodeType == XmlNodeType.Text)
+            //        {
+            //            //Ignore Xml Declaration  
+            //        }
+
+            //    }
+            //}
+            //finally
+            //{
+            //    // enabling redrawing of treeview after all nodes are added
+            //    reader.Close();
+            //}
+
+            //Settings.ProjectChannel = tmpProjectChannel;
+            ////Settings.ProjectDevice = tmpProjectDevice;
+            ////Settings.ProjectGroupCommand = tmpProjectGroupCommand;
+            ////Settings.ProjectCommand = tmpProjectCommand;
+            ////Settings.ProjectGroupTag = tmpProjectGroupTag;
+            ////Settings.ProjectTag = tmpProjectTag;
+
+            //errMsg = "";
+            //return true;
+        //}
+        #endregion Load Old Version
+
+    }
+    #endregion Project
+
     #region ProjectNodeData
     public struct ProjectNodeData
     {
         public ProjectNodeType nodeType;
-        public Settings settings;
+        public ProjectDriver driver;
+        public ProjectSettings settings;
         public ProjectChannel channel;
         public ProjectDevice device;
         public ProjectGroupCommand groupCommand;
@@ -41,17 +510,108 @@ namespace Scada.Comm.Drivers.DrvModbusCM
 
     #endregion ProjectNodeType
 
+    #region ProjectDriver
+
+    public class ProjectDriver
+    {
+        public ProjectDriver()
+        {
+            Settings = new ProjectSettings();
+            Channels = new List<ProjectChannel>();
+        }
+
+        #region Variables
+        // driver settings
+        // настройки драйвера
+        private ProjectSettings settings;
+        public ProjectSettings Settings
+        {
+            get { return settings; }
+            set { settings = value; }
+        }
+
+        // driver channels
+        // каналы драйвера
+        private List<ProjectChannel> channels;
+        public List<ProjectChannel> Channels
+        {
+            get { return channels; }
+            set { channels = value; }
+        }
+        #endregion Variables
+
+        #region Load
+        /// <summary>
+        /// Loads the settings from the XML node.
+        /// <para>Загружает настройки из узла XML.</para>
+        /// </summary>
+        public void LoadFromXml(XmlNode xmlNode)
+        {
+            if (xmlNode == null)
+            {
+                throw new ArgumentNullException("xmlNode");
+            }
+
+            Settings.LoadFromXml(xmlNode.SelectSingleNode("Settings"));
+
+            try
+            {
+                if (xmlNode.SelectSingleNode("ListChannels") is XmlNode listChannelsNode)
+                {
+                    Channels = new List<ProjectChannel>();
+                    foreach (XmlNode channelNode in listChannelsNode.SelectNodes("Channel"))
+                    {
+                        ProjectChannel channel = new ProjectChannel();
+                        channel.LoadFromXml(channelNode);
+                        Channels.Add(channel);
+                    }
+                }
+            }
+            catch { Channels = new List<ProjectChannel>(); }
+        }
+        #endregion Load
+
+        #region Save
+        /// <summary>
+        /// Saves the settings into the XML node.
+        /// <para>Сохраняет настройки в узле XML.</para>
+        /// </summary>
+        public void SaveToXml(XmlElement xmlElem)
+        {
+            if (xmlElem == null)
+            {
+                throw new ArgumentNullException("xmlElem");
+            }
+
+            Settings.SaveToXml(xmlElem.AppendElem("Settings"));
+
+            try
+            {
+                XmlElement listChannelesElem = xmlElem.AppendElem("ListChannels");
+                foreach (ProjectChannel channel in Channels)
+                {
+                    listChannelesElem.AppendElem("Channel", channel);
+                }
+            }
+            catch { }
+        }
+        #endregion Save
+    }
+
+    #endregion ProjectDriver
+
     #region ProjectSettings
     [Serializable]
-    public class Settings
+    public class ProjectSettings
     {
-        public Settings()
+        public ProjectSettings()
         {
             Name = "";
             AutoRun = false;
             Debug = false;
         }
 
+        #region Variables
         private string name;
         public string Name
         {
@@ -72,8 +632,45 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             get { return debug; }
             set { debug = value; }
         }
-    }
+        #endregion Variables
 
+        #region Load
+        /// <summary>
+        /// Loads the settings from the XML node.
+        /// <para>Сохраняет настройки в узле XML.</para>
+        /// </summary>
+        public void LoadFromXml(XmlNode xmlNode)
+        {
+            if (xmlNode == null)
+            {
+                throw new ArgumentNullException("xmlNode");
+            }
+
+            Name = xmlNode.GetChildAsString("Name");
+            AutoRun = xmlNode.GetChildAsBool("AutoRun");
+            Debug = xmlNode.GetChildAsBool("Debug");
+        }
+        #endregion Load
+
+        #region Save
+        /// <summary>
+        /// Saves the settings into the XML node.
+        /// <para>Сохраняет настройки в узле XML.</para>
+        /// </summary>
+        public void SaveToXml(XmlElement xmlElem)
+        {
+            if (xmlElem == null)
+            {
+                throw new ArgumentNullException("xmlElem");
+            }
+
+            xmlElem.AppendElem("Name", Name);
+            xmlElem.AppendElem("AutoRun", AutoRun);
+            xmlElem.AppendElem("Debug", Debug);
+        }
+        #endregion Save
+
+    }
 
     #endregion ProjectSettings
 
@@ -83,12 +680,31 @@ namespace Scada.Comm.Drivers.DrvModbusCM
     {
         public ProjectChannel()
         {
+            ID = new Guid();
+            Name = string.Empty;
+            Description = string.Empty;
+            KeyImage = string.Empty;
+            Enabled = false;
+            ThreadEnabled = false;
+            Type = 0;
+            WriteTimeout = 1000;
+            ReadTimeout = 1000;
+            Timeout = 100;
+            WriteBufferSize = 8192;
+            ReadBufferSize = 8192;
+            CountError = 3;
+            Debug = false;
+
+            TcpServerSettings = new ProjectTcpServer();
+            SerialPortSettings = new ProjectSerialPort();
             Devices = new List<ProjectDevice>();
         }
 
-        #region Канал
+        #region Variables
 
-        //ID канала
+        #region Channel
+
+        // id канала
         private Guid id;
         [XmlAttribute]
         public Guid ID
@@ -97,7 +713,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             set { id = value; }
         }
 
-        //Название канала
+        // название канала
         private string name;
         [XmlAttribute]
         public string Name
@@ -106,7 +722,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             set { name = value; }
         }
 
-        //Описание канала
+        // описание канала
         private string description;
         [XmlAttribute]
         public string Description
@@ -115,7 +731,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             set { description = value; }
         }
 
-        //Иконка
+        // иконка
         private string keyImage;
         [XmlAttribute]
         public string KeyImage
@@ -149,7 +765,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             return KeyImage;
         }
 
-        //Состояние канала
+        // состояние канала
         private bool enabled;
         [XmlAttribute]
         public bool Enabled
@@ -158,7 +774,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             set { enabled = value; }
         }
 
-        //Для запуска канала в потоке
+        // для запуска канала в потоке
         private bool threadEnabled;
         [XmlAttribute]
         public bool ThreadEnabled
@@ -167,7 +783,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             set { threadEnabled = value; }
         }
 
-        //Тип канала
+        // тип канала
         private int type;
         [XmlAttribute]
         public int Type
@@ -176,7 +792,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             set { type = value; }
         }
 
-        //Время записи
+        // время записи
         private int writeTimeout;
         [XmlAttribute]
         public int WriteTimeout
@@ -185,7 +801,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             set { writeTimeout = value; }
         }
 
-        //Время чтения
+        // время чтения
         private int readTimeout;
         [XmlAttribute]
         public int ReadTimeout
@@ -203,7 +819,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             set { writeBufferSize = value; }
         }
 
-        //Буфер чтения
+        // буфер чтения
         private int readBufferSize;
         [XmlAttribute]
         public int ReadBufferSize
@@ -212,7 +828,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             set { readBufferSize = value; }
         }
 
-        //Таймаут между пакетами
+        // таймаут между пакетами
         private int timeout;
         [XmlAttribute]
         public int Timeout
@@ -221,7 +837,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             set { timeout = value; }
         }
 
-        //Количество ошибок
+        // количество ошибок
         private int countError;
         [XmlAttribute]
         public int CountError
@@ -230,7 +846,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             set { countError = value; }
         }
 
-        // Отладка
+        // отладка
         private bool debug;
         [XmlAttribute]
         public bool Debug
@@ -239,90 +855,237 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             set { debug = value; }
         }
 
-        #endregion Канал
+        #endregion Channel
 
-        #region Шлюз
+        #region Gateway (TcpServer)
 
-        //Протокол
-        private int gatewayTypeProtocol;
-        [XmlAttribute]
-        public int GatewayTypeProtocol
+        private ProjectTcpServer tcpServerSettings;
+        public ProjectTcpServer TcpServerSettings
         {
-            get { return gatewayTypeProtocol; }
-            set { gatewayTypeProtocol = value; }
+            get { return tcpServerSettings; }
+            set { tcpServerSettings = value; }
         }
 
-        //Порт
-        private int gatewayPort;
-        [XmlAttribute]
-        public int GatewayPort
+        #endregion Gateway (TcpServer)
+
+        #region SerialPort
+
+        private ProjectSerialPort serialPortSettings;
+        public ProjectSerialPort SerialPortSettings
         {
-            get { return gatewayPort; }
-            set { gatewayPort = value; }
+            get { return serialPortSettings; }
+            set { serialPortSettings = value; }
         }
 
-        //Максимальное количество клиентов
-        private int gatewayConnectedClientsMax;
-        [XmlAttribute]
-        public int GatewayConnectedClientsMax
-        {
-            get { return gatewayConnectedClientsMax; }
-            set { gatewayConnectedClientsMax = value; }
-        }
-        #endregion Шлюз
+        #endregion SerialPort
 
-        #region Последовательный порт
+        #region Ethernet Client
+        private ProjectEthernetClient ethernetClientSettings;
+        public ProjectEthernetClient EthernetClientSettings
+        {
+            get { return ethernetClientSettings; }
+            set { ethernetClientSettings = value; }
+        }
+
+        #endregion Ethernet Client
+
+        #region Devices
+        private List<ProjectDevice> devices;
+        public List<ProjectDevice> Devices
+        {
+            get { return devices; }
+            set { devices = value; }
+        }
+        #endregion Devices   
+
+        #endregion Variables
+
+        #region Load
+        /// <summary>
+        /// Loads the settings from the XML node.
+        /// <para>Сохраняет настройки в узле XML.</para>
+        /// </summary>
+        public void LoadFromXml(XmlNode xmlNode)
+        {
+            if (xmlNode == null)
+            {
+                throw new ArgumentNullException("xmlNode");
+            }
+
+            //Name = xmlNode.GetChildAsString("Name");
+            //AutoRun = xmlNode.GetChildAsBool("AutoRun");
+            //Debug = xmlNode.GetChildAsBool("Debug");
+        }
+        #endregion Load
+
+        #region Save
+        /// <summary>
+        /// Saves the settings into the XML node.
+        /// <para>Сохраняет настройки в узле XML.</para>
+        /// </summary>
+        public void SaveToXml(XmlElement xmlElem)
+        {
+            if (xmlElem == null)
+            {
+                throw new ArgumentNullException("xmlElem");
+            }
+
+            //xmlElem.AppendElem("Name", Name);
+            //xmlElem.AppendElem("AutoRun", AutoRun);
+            //xmlElem.AppendElem("Debug", Debug);
+        }
+        #endregion Save
+    }
+
+    #endregion ProjectChannel
+
+    #region ProjectTcpServer
+
+    public class ProjectTcpServer
+    {
+        /// <summary>
+        /// Initializes a new instance of the class.
+        /// </summary>
+        public ProjectTcpServer()
+        {
+            ID = Guid.NewGuid();
+            Name = "";
+            IP = IPAddress.Parse("0.0.0.0");
+            Port = 0;
+            Protocol = DriverProtocol.None;
+            ConnectedClientsMax = 100;
+        }
+
+
+        /// <summary>
+        /// Gets or sets the id.
+        /// </summary>
+        public Guid ID { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name.
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the ip.
+        /// </summary>
+        public IPAddress IP { get; set; }
+
+        /// <summary>
+        /// Gets or sets the port.
+        /// </summary>
+        public int Port { get; set; }
+
+        /// <summary>
+        /// Gets or sets the protocol.
+        /// </summary>
+        public DriverProtocol Protocol { get; set; }
+
+        /// <summary>
+        /// Gets or sets the maximum number of clients.
+        /// </summary>
+        public int ConnectedClientsMax { get; set; }
+
+        /// <summary>
+        /// Loads the settings from the XML node.
+        /// </summary>
+        public void LoadFromXml(XmlNode xmlNode)
+        {
+            if (xmlNode == null)
+                throw new ArgumentNullException("xmlNode");
+
+            ID = Guid.Parse(xmlNode.GetChildAsString("ID"));
+            Name = xmlNode.GetChildAsString("Name");
+            IP = IPAddress.Parse(xmlNode.GetChildAsString("IP"));
+            Port = xmlNode.GetChildAsInt("Port");
+            Protocol = (DriverProtocol)Enum.Parse(typeof(DriverProtocol), xmlNode.GetChildAsString("Protocol"));
+            ConnectedClientsMax = xmlNode.GetChildAsInt("ConnectedClientsMax");
+        }
+
+        /// <summary>
+        /// Saves the settings into the XML node.
+        /// </summary>
+        public void SaveToXml(XmlElement xmlElem)
+        {
+            if (xmlElem == null)
+                throw new ArgumentNullException("xmlElem");
+
+            xmlElem.AppendElem("ID", ID);
+            xmlElem.AppendElem("Name", Name);
+            xmlElem.AppendElem("IP", IP);
+            xmlElem.AppendElem("Port", Port);
+            xmlElem.AppendElem("Protocol", Enum.GetName(typeof(DriverProtocol), Protocol));
+            xmlElem.AppendElem("ConnectedClientsMax", ConnectedClientsMax);
+        }
+    }
+
+    #endregion ProjectTcpServer
+
+    #region ProjectSerialPort
+
+    public class ProjectSerialPort
+    {
+        /// <summary>
+        /// Initializes a new instance of the class.
+        /// </summary>
+        public ProjectSerialPort()
+        {
+            SerialPortName = string.Empty;
+            SerialPortBaudRate = 9600;
+            SerialPortDataBits = 8;
+            SerialPortParity = Parity.None;
+            SerialPortStopBits = StopBits.One;
+            SerialPortHandshake = Handshake.None;
+            SerialPortDtrEnable = false;
+            SerialPortRtsEnable = false;
+            SerialPortReceivedBytesThreshold = 1;
+        }
+
 
         private string serialPortName;
-        [XmlAttribute]
         public string SerialPortName
         {
             get { return serialPortName; }
             set { serialPortName = value; }
         }
 
-        private string serialPortBaudRate;
-        [XmlAttribute]
-        public string SerialPortBaudRate
+        private int serialPortBaudRate;
+        public int SerialPortBaudRate
         {
             get { return serialPortBaudRate; }
             set { serialPortBaudRate = value; }
         }
 
-        private string serialPortDataBits;
-        [XmlAttribute]
-        public string SerialPortDataBits
+        private int serialPortDataBits;
+        public int SerialPortDataBits
         {
             get { return serialPortDataBits; }
             set { serialPortDataBits = value; }
         }
 
-        private string serialPortParity;
-        [XmlAttribute]
-        public string SerialPortParity
+        private Parity serialPortParity;
+        public Parity SerialPortParity
         {
             get { return serialPortParity; }
             set { serialPortParity = value; }
         }
 
-        private string serialPortStopBits;
-        [XmlAttribute]
-        public string SerialPortStopBits
+        private StopBits serialPortStopBits;
+        public StopBits SerialPortStopBits
         {
             get { return serialPortStopBits; }
             set { serialPortStopBits = value; }
         }
 
-        private string serialPortHandshake;
-        [XmlAttribute]
-        public string SerialPortHandshake
+        private Handshake serialPortHandshake;
+        public Handshake SerialPortHandshake
         {
             get { return serialPortHandshake; }
             set { serialPortHandshake = value; }
         }
 
         private bool serialPortDtrEnable;
-        [XmlAttribute]
         public bool SerialPortDtrEnable
         {
             get { return serialPortDtrEnable; }
@@ -330,7 +1093,6 @@ namespace Scada.Comm.Drivers.DrvModbusCM
         }
 
         private bool serialPortRtsEnable;
-        [XmlAttribute]
         public bool SerialPortRtsEnable
         {
             get { return serialPortRtsEnable; }
@@ -338,20 +1100,67 @@ namespace Scada.Comm.Drivers.DrvModbusCM
         }
 
         private int serialPortReceivedBytesThreshold;
-        [XmlAttribute]
         public int SerialPortReceivedBytesThreshold
         {
             get { return serialPortReceivedBytesThreshold; }
             set { serialPortReceivedBytesThreshold = value; }
         }
 
-        #endregion Последовательный порт
+        /// <summary>
+        /// Loads the settings from the XML node.
+        /// </summary>
+        public void LoadFromXml(XmlNode xmlNode)
+        {
+            if (xmlNode == null)
+                throw new ArgumentNullException("xmlNode");
 
-        #region TCP, UDP клиент
+            SerialPortName = xmlNode.GetChildAsString("Name");
+            SerialPortBaudRate = xmlNode.GetChildAsInt("BaudRate");
+            SerialPortDataBits = xmlNode.GetChildAsInt("DataBits");
+            SerialPortParity = (Parity)Enum.Parse(typeof(Parity), xmlNode.GetChildAsString("Parity"));
+            SerialPortStopBits = (StopBits)Enum.Parse(typeof(StopBits), xmlNode.GetChildAsString("StopBits"));
+            SerialPortHandshake = (Handshake)Enum.Parse(typeof(Handshake), xmlNode.GetChildAsString("Handshake"));
+            SerialPortDtrEnable = xmlNode.GetChildAsBool("DtrEnable");
+            SerialPortRtsEnable = xmlNode.GetChildAsBool("RtsEnable");
+            SerialPortReceivedBytesThreshold = xmlNode.GetChildAsInt("ReceivedBytesThreshold");
+        }
 
-        private string clientHost;
+        /// <summary>
+        /// Saves the settings into the XML node.
+        /// </summary>
+        public void SaveToXml(XmlElement xmlElem)
+        {
+            if (xmlElem == null)
+                throw new ArgumentNullException("xmlElem");
+
+            xmlElem.AppendElem("Name", SerialPortName);
+            xmlElem.AppendElem("BaudRate", SerialPortBaudRate);
+            xmlElem.AppendElem("DataBits", SerialPortDataBits);
+            xmlElem.AppendElem("Parity", Enum.GetName(typeof(Parity), SerialPortParity));
+            xmlElem.AppendElem("StopBits", Enum.GetName(typeof(StopBits), SerialPortStopBits));
+            xmlElem.AppendElem("Handshake", Enum.GetName(typeof(Handshake), SerialPortHandshake));
+            xmlElem.AppendElem("DtrEnable", SerialPortDtrEnable);
+            xmlElem.AppendElem("RtsEnable", SerialPortRtsEnable);
+            xmlElem.AppendElem("ReceivedBytesThreshold", SerialPortReceivedBytesThreshold);
+        }
+    }
+
+    #endregion ProjectSerialPort
+
+    #region ProjectEthernetClient
+
+    public class ProjectEthernetClient
+    {
+        public ProjectEthernetClient()
+        {
+            ClientHost = IPAddress.Parse("127.0.0.1");
+            ClientPort = 502;
+        }
+
+        #region Variables
+        private IPAddress clientHost;
         [XmlAttribute]
-        public string ClientHost
+        public IPAddress ClientHost
         {
             get { return clientHost; }
             set { clientHost = value; }
@@ -364,20 +1173,10 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             get { return clientPort; }
             set { clientPort = value; }
         }
-
-        #endregion TCP, UDP клиент
-
-        #region Список типов устройств
-        private List<ProjectDevice> devices;
-        public List<ProjectDevice> Devices
-        {
-            get { return devices; }
-            set { devices = value; }
-        }
-        #endregion Список типов устройств    
+        #endregion Variables
     }
 
-    #endregion ProjectChannel
+    #endregion ProjectEthernetClient
 
     #region ProjectDevice
     [Serializable]
@@ -2148,396 +2947,5 @@ namespace Scada.Comm.Drivers.DrvModbusCM
 
     #endregion ProjectTag
 
-    #region Project
-
-    /// <summary>
-    /// Represents a device configuration.
-    /// <para>Представляет конфигурацию КП.</para>
-    /// </summary>
-    [Serializable]
-    public class ProjectSettings
-    {
-        public Settings Settings = new Settings();
-        public ProjectChannel ProjectChannel = new ProjectChannel();
-    }
-
-    [Serializable]
-    public class Project
-    {
-        public ProjectSettings Settings;
-
-        /// <summary>
-        /// Initializes a new instance of the class.
-        /// </summary>
-        public Project()
-        {
-            Settings = new ProjectSettings();
-        }
-
-        private void SetToDefault()
-        {
-            Settings = new ProjectSettings();
-        }
-
-        #region Project Xml
-        private const string XmlNodeTag = "NODE";
-        private const string XmlNodeTextAtt = "TEXT";
-        private const string XmlNodeTagAtt = "TAG";
-        private const string XmlNodeImageIndexAtt = "KEYIMAGE";
-        #endregion Project Xml
-
-        public bool Load(string fileName, out string errMsg)
-        {
-            SetToDefault();
-            errMsg = "";
-
-            Settings settings = new Settings();
-            ProjectSettings project = new ProjectSettings();
-            ProjectChannel tmpProjectChannel = new ProjectChannel();
-            List<ProjectDevice> tmpProjectDevice = new List<ProjectDevice>();
-            List<ProjectGroupCommand> tmpProjectGroupCommand = new List<ProjectGroupCommand>();
-            List<ProjectCommand> tmpProjectCommand = new List<ProjectCommand>();
-            List<ProjectGroupTag> tmpProjectGroupTag = new List<ProjectGroupTag>();
-            List<ProjectTag> tmpProjectTag = new List<ProjectTag>();
-
-            XmlTextReader reader = null;
-            try
-            {
-                // disabling re-drawing of treeview till all nodes are added
-                reader = new XmlTextReader(fileName);
-
-                while (reader.Read())
-                {
-                    if (reader.NodeType == XmlNodeType.Element)
-                    {
-                        if (reader.Name == XmlNodeTag)
-                        {
-                            bool isEmptyElement = reader.IsEmptyElement;
-
-                            // loading node attributes
-                            int attributeCount = reader.AttributeCount;
-
-                            if (attributeCount > 0)
-                            {
-                                Dictionary<string, string> attributes = new Dictionary<string, string>();
-                                string newNodeName = string.Empty;
-                                string newNodeImageKey = string.Empty;
-                                string newNodeType = string.Empty;
-
-                                for (int i = 0; i < attributeCount; i++)
-                                {
-                                    reader.MoveToAttribute(i);
-                                    attributes.Add(reader.Name, reader.Value);
-                                }
-
-                                newNodeName = attributes[XmlNodeTextAtt];
-                                if (attributes.TryGetValue(XmlNodeTextAtt, out string attributesValue1))
-                                {
-                                    newNodeName = attributes[XmlNodeTextAtt];
-                                }
-
-                                newNodeImageKey = attributes[XmlNodeImageIndexAtt];
-                                if (attributes.TryGetValue(XmlNodeImageIndexAtt, out string attributesValue2))
-                                {
-                                    newNodeImageKey = attributes[XmlNodeImageIndexAtt];
-                                }
-
-                                if (attributes.TryGetValue(XmlNodeTagAtt, out string attributesValue3))
-                                {
-                                    newNodeType = attributes[XmlNodeTagAtt];
-                                }
-
-                                ProjectNodeData projectNodeData = new ProjectNodeData();
-
-                                switch (newNodeType)
-                                {
-                                    case "SETTINGS":
-                                        try { settings.AutoRun = Convert.ToBoolean(attributes["AUTORUN"]); } catch { }
-
-                                        break;
-
-                                    case "CHANNEL":
-                                        #region Channel
-                                        ProjectChannel projectChannel = new ProjectChannel();
-
-                                        try { projectChannel.KeyImage = attributes["NAME"]; } catch { }
-                                        try { projectChannel.ID = DriverUtils.StringToGuid(attributes["ID"]); } catch { }
-                                        try { projectChannel.Name = attributes["NAME"]; } catch { }
-                                        try { projectChannel.Description = attributes["DESCRIPTION"]; } catch { }
-                                        try { projectChannel.Enabled = Convert.ToBoolean(attributes["ENABLED"]); } catch { }
-                                        try { projectChannel.Type = Convert.ToInt32(attributes["TYPE"]); } catch { }
-                                        try { projectChannel.GatewayTypeProtocol = Convert.ToInt32(attributes["GATEWAY"]); } catch { }
-                                        try { projectChannel.GatewayPort = Convert.ToInt32(attributes["GATEWAYPORT"]); } catch { }
-                                        try { projectChannel.GatewayConnectedClientsMax = Convert.ToInt32(attributes["CONNECTEDCLIENTSMAX"]); } catch { }
-
-                                        try { projectChannel.WriteTimeout = Convert.ToInt32(attributes["WRITETIMEOUT"]); } catch { }
-                                        try { projectChannel.ReadTimeout = Convert.ToInt32(attributes["READTIMEOUT"]); } catch { }
-                                        try { projectChannel.Timeout = Convert.ToInt32(attributes["TIMEOUT"]); } catch { }
-
-                                        try { projectChannel.WriteBufferSize = Convert.ToInt32(attributes["WRITEBUFFERSIZE"]); } catch { }
-                                        try { projectChannel.ReadBufferSize = Convert.ToInt32(attributes["READBUFFERSIZE"]); } catch { }
-
-                                        try { projectChannel.CountError = Convert.ToInt32(attributes["COUNTERROR"]); } catch { }
-
-                                        if (Convert.ToInt32(attributes["TYPE"]) == 1) //Последовательный порт
-                                        {
-                                            try { projectChannel.SerialPortName = attributes["SERIALPORTNAME"]; } catch { }
-                                            try { projectChannel.SerialPortBaudRate = attributes["SERIALPORTBAUDRATE"]; } catch { }
-                                            try { projectChannel.SerialPortDataBits = attributes["SERIALPORTDATABITS"]; } catch { }
-                                            try { projectChannel.SerialPortParity = attributes["SERIALPORTPARITY"]; } catch { }
-                                            try { projectChannel.SerialPortStopBits = attributes["SERIALPORTSTOPBITS"]; } catch { }
-
-                                            try { projectChannel.SerialPortHandshake = attributes["HANDSHAKE"]; } catch { }
-                                            try { projectChannel.SerialPortDtrEnable = Convert.ToBoolean(attributes["DTR"]); } catch { }
-                                            try { projectChannel.SerialPortRtsEnable = Convert.ToBoolean(attributes["RTS"]); } catch { }
-                                            try { projectChannel.SerialPortReceivedBytesThreshold = Convert.ToInt32(attributes["RECEIVEDBYTESTHRESHOLD"]); } catch { }
-                                        }
-
-                                        if (Convert.ToInt32(attributes["TYPE"]) == 2 || Convert.ToInt32(attributes["TYPE"]) == 3) // TCP UDP клиент
-                                        {
-                                            try { projectChannel.ClientHost = attributes["CLIENTHOST"]; } catch { }
-                                            try { projectChannel.ClientPort = Convert.ToInt32(attributes["CLIENTPORT"]); } catch { }
-                                        }
-
-                                        try { projectChannel.Debug = Convert.ToBoolean(attributes["DEBUG"]); } catch { }
-
-                                        projectNodeData.channel = projectChannel;
-                                        projectNodeData.nodeType = ProjectNodeType.Channel;
-
-                                        tmpProjectChannel = projectChannel;
-                                        #endregion Channel
-                                        break;
-                                    case "DEVICE":
-                                        #region Device
-                                        ProjectDevice projectDevice = new ProjectDevice();
-
-                                        try { projectDevice.ID = DriverUtils.StringToGuid(attributes["IDPARENT"]); } catch { }
-                                        try { projectDevice.ID = DriverUtils.StringToGuid(attributes["ID"]); } catch { }
-                                        try { projectDevice.Address = Convert.ToUInt16(attributes["ADDRESS"]); } catch { }
-                                        try { projectDevice.Name = attributes["NAME"]; } catch { }
-                                        try { projectDevice.Description = attributes["DESCRIPTION"]; } catch { }
-                                        try { projectDevice.Enabled = Convert.ToBoolean(attributes["ENABLED"]); } catch { }
-
-                                        try { projectDevice.DeviceRegistersBytes = Convert.ToInt32(attributes["REGISTERSBYTES"]); } catch { }
-                                        try { projectDevice.DeviceGatewayRegistersBytes = Convert.ToInt32(attributes["GATEWAYREGISTERSBYTES"]); } catch { }
-
-                                        try { projectDevice.Status = Convert.ToInt32(attributes["STATUS"]); } catch { }
-                                        try { projectDevice.PollingOnScheduleStatus = Convert.ToBoolean(attributes["POLLINGONSCHEDULESTATUS"]); } catch { }
-                                        try { projectDevice.IntervalPool = Convert.ToInt32(attributes["INTERVALPOOL"]); } catch { }
-                                        try { projectDevice.TypeProtocol = Convert.ToInt32(attributes["TYPEPROTOCOL"]); } catch { }
-
-                                        try { projectDevice.DateTimeLastSuccessfully = DateTime.Parse(attributes["DATETIMELASTSUCCESSFULLY"]); } catch { }
-                                        try
-                                        {
-                                            // creating a buffer
-                                            // adding Registers 65535
-                                            for (ulong index = 0; index < (ulong)65535; ++index)
-                                            {
-                                                bool status = false;
-                                                ulong value = 0;
-
-                                                projectDevice.SetCoil(Convert.ToUInt64(index), status);
-                                                projectDevice.SetDiscreteInput(Convert.ToUInt64(index), status);
-                                                projectDevice.SetHoldingRegister(Convert.ToUInt64(index), value);
-                                                projectDevice.SetInputRegister(Convert.ToUInt64(index), value);
-                                            }
-
-                                            for (ulong index = 0; index < (ulong)9999999; ++index)
-                                            {
-                                                string value = string.Empty;
-                                                projectDevice.SetDataBuffer(Convert.ToUInt64(index), value);
-                                            }
-                                        }
-                                        catch { }
-
-                                        // fill in the registers by the name of the attribute and its value from the dictionary of Attribute registers 65535
-                                        foreach (string key in attributes.Keys)
-                                        {
-                                            if (key.Contains("COILREGISTER"))
-                                            {
-                                                try
-                                                {
-                                                    bool Coil = Convert.ToBoolean(attributes[key]);
-                                                    ulong RegAddr = Convert.ToUInt64(key.Replace("COILREGISTER", ""));
-                                                    projectDevice.SetCoil(RegAddr, Coil);
-                                                }
-                                                catch { }
-                                            }
-                                            else if (key.Contains("DISCRETEINPUT"))
-                                            {
-                                                try
-                                                {
-                                                    bool DiscreteInput = Convert.ToBoolean(attributes[key]);
-                                                    ulong RegAddr = Convert.ToUInt64(key.Replace("DISCRETEINPUT", ""));
-                                                    projectDevice.SetDiscreteInput(RegAddr, DiscreteInput);
-                                                }
-                                                catch { }
-                                            }
-                                            else if (key.Contains("HOLDINGREGISTER"))
-                                            {
-                                                try
-                                                {
-                                                    ulong HoldingRegister = Convert.ToUInt64(attributes[key]);
-                                                    ulong RegAddr = Convert.ToUInt64(key.Replace("HOLDINGREGISTER", ""));
-                                                    projectDevice.SetHoldingRegister(RegAddr, HoldingRegister);
-                                                }
-                                                catch { }
-                                            }
-                                            else if (key.Contains("INPUTREGISTER"))
-                                            {
-                                                try
-                                                {
-                                                    ulong InputRegister = Convert.ToUInt16(Convert.ToInt64(attributes[key]));
-                                                    ulong RegAddr = Convert.ToUInt64(key.Replace("INPUTREGISTER", ""));
-                                                    projectDevice.SetInputRegister(RegAddr, InputRegister);
-                                                }
-                                                catch { }
-                                            }
-                                        }
-
-                                        projectNodeData.device = projectDevice;
-                                        projectNodeData.nodeType = ProjectNodeType.Device;
-
-                                        tmpProjectDevice.Add(projectDevice);
-                                        #endregion Device
-                                        break;
-                                    case "GROUPCOMMAND":
-                                        #region Device Group Command
-                                        ProjectGroupCommand projectGroupCommand = new ProjectGroupCommand();
-
-                                        try { projectGroupCommand.ParentID = DriverUtils.StringToGuid(attributes["IDPARENT"]); } catch { }
-                                        try { projectGroupCommand.ID = DriverUtils.StringToGuid(attributes["ID"]); } catch { }
-                                        try { projectGroupCommand.Name = attributes["NAME"]; } catch { }
-                                        try { projectGroupCommand.Description = attributes["DESCRIPTION"]; } catch { }
-                                        try { projectGroupCommand.Enabled = Convert.ToBoolean(attributes["ENABLED"]); } catch { }
-
-                                        projectNodeData.groupCommand = projectGroupCommand;
-                                        projectNodeData.nodeType = ProjectNodeType.GroupCommand;
-
-                                        tmpProjectGroupCommand.Add(projectGroupCommand);
-                                        #endregion Device Group Command
-                                        break;
-                                    case "COMMAND":
-                                        #region Device
-                                        ProjectCommand projectCommand = new ProjectCommand();
-
-                                        try { projectCommand.ParentID = DriverUtils.StringToGuid(attributes["IDPARENT"]); } catch { }
-                                        try { projectCommand.ID = DriverUtils.StringToGuid(attributes["ID"]); } catch { }
-                                        try { projectCommand.Name = attributes["NAME"]; } catch { }
-                                        try { projectCommand.Description = attributes["DESCRIPTION"]; } catch { }
-                                        try { projectCommand.Enabled = Convert.ToBoolean(attributes["ENABLED"]); } catch { }
-                                        try { projectCommand.FunctionCode = Convert.ToUInt16(attributes["FUNCTION"]); } catch { }
-                                        try { projectCommand.RegisterStartAddress = Convert.ToUInt16(attributes["REGISTERSTARTADDRESS"]); } catch { }
-                                        try { projectCommand.RegisterCount = Convert.ToUInt16(attributes["REGISTERCOUNT"]); } catch { }
-                                        try { projectCommand.Parametr = Convert.ToUInt16(attributes["REGISTERPARAMETR"]); } catch { }
-                                        try { projectCommand.CurrentValue = Convert.ToBoolean(attributes["CURRENTVALUE"]); } catch { }
-
-                                        try { projectCommand.RegisterNameReadData = attributes["REGISTERNAMEREADDATA"].Split(' '); } catch { }
-                                        try { projectCommand.RegisterReadData = Array.ConvertAll(attributes["REGISTERREADDATA"].Split(' '), x => { ulong res = Convert.ToUInt64(x); return res; }); } catch { }
-
-                                        try { projectCommand.RegisterNameWriteData = attributes["REGISTERNAMEWRITEDATA"].Split(' '); } catch { }
-                                        try { projectCommand.RegisterWriteData = Array.ConvertAll(attributes["REGISTERWRITEDATA"].Split(' '), x => { ulong res = Convert.ToUInt64(x); return res; }); } catch { }
-
-                                        projectNodeData.command = projectCommand;
-                                        projectNodeData.nodeType = ProjectNodeType.Command;
-
-                                        tmpProjectCommand.Add(projectCommand);
-
-                                        #endregion Device
-                                        break;
-                                    case "GROUPTAG":
-                                        #region Device Group Tag
-                                        ProjectGroupTag projectGroupTag = new ProjectGroupTag();
-
-                                        try { projectGroupTag.ParentID = DriverUtils.StringToGuid(attributes["IDPARENT"]); } catch { }
-                                        try { projectGroupTag.ID = DriverUtils.StringToGuid(attributes["ID"]); } catch { }
-                                        try { projectGroupTag.Name = attributes["NAME"]; } catch { }
-                                        try { projectGroupTag.Description = attributes["DESCRIPTION"]; } catch { }
-                                        try { projectGroupTag.Enabled = Convert.ToBoolean(attributes["ENABLED"]); } catch { }
-
-                                        projectNodeData.groupTag = projectGroupTag;
-                                        projectNodeData.nodeType = ProjectNodeType.GroupTag;
-
-                                        tmpProjectGroupTag.Add(projectGroupTag);
-
-                                        #endregion Device Group Tag
-                                        break;
-                                    case "TAG":
-                                        #region Device Tag
-                                        ProjectTag projectTag = new ProjectTag();
-
-                                        try { projectTag.ParentID = DriverUtils.StringToGuid(attributes["IDPARENT"]); } catch { }
-                                        try { projectTag.ID = DriverUtils.StringToGuid(attributes["ID"]); } catch { }
-                                        try { projectTag.CommandID = DriverUtils.StringToGuid(attributes["COMMANDID"]); } catch { }
-                                        try { projectTag.Enabled = Convert.ToBoolean(attributes["ENABLED"]); } catch { }
-                                        try { projectTag.Address = attributes["ADDRESS"]; } catch { }
-                                        try { projectTag.Name = attributes["NAME"]; } catch { }
-                                        try { projectTag.Code = attributes["CODE"]; } catch { }
-                                        try { projectTag.Description = attributes["DESCRIPTION"]; } catch { }
-                                        try { projectTag.Coefficient = Convert.ToSingle(attributes["COEFFICIENT"]); } catch { }
-                                        try { projectTag.Sorting = attributes["SORTING"]; } catch { }
-
-                                        try { projectTag.Scaled = Convert.ToInt32(attributes["SCALED"]); } catch { }
-                                        try { projectTag.ScaledHigh = Convert.ToSingle(attributes["SCALEDHIGH"]); } catch { }
-                                        try { projectTag.ScaledLow = Convert.ToSingle(attributes["SCALEDLOW"]); } catch { }
-                                        try { projectTag.RowHigh = Convert.ToSingle(attributes["ROWHIGH"]); } catch { }
-                                        try { projectTag.RowLow = Convert.ToSingle(attributes["ROWLOW"]); } catch { }
-
-                                        try
-                                        {
-                                            ProjectTag.FormatData Type = (ProjectTag.FormatData)Enum.Parse(typeof(ProjectTag.FormatData), attributes["TYPE"]);
-                                            projectTag.TagType = Type;
-                                        }
-                                        catch { }
-
-                                        projectNodeData.tag = projectTag;
-                                        projectNodeData.nodeType = ProjectNodeType.Tag;
-
-                                        tmpProjectTag.Add(projectTag);
-                                        #endregion Device Tag
-                                        break;
-                                    default:
-
-                                        break;
-                                }
-                            }
-
-                        }
-                    }
-                    else if (reader.NodeType == XmlNodeType.XmlDeclaration)
-                    {
-                        //Ignore Xml Declaration                    
-                    }
-                    else if (reader.NodeType == XmlNodeType.None)
-                    {
-                        //Ignore Xml Declaration  
-                    }
-                    else if (reader.NodeType == XmlNodeType.Text)
-                    {
-                        //Ignore Xml Declaration  
-                    }
-
-                }
-            }
-            finally
-            {
-                // enabling redrawing of treeview after all nodes are added
-                reader.Close();
-            }
-
-            Settings.ProjectChannel = tmpProjectChannel;
-            //Settings.ProjectDevice = tmpProjectDevice;
-            //Settings.ProjectGroupCommand = tmpProjectGroupCommand;
-            //Settings.ProjectCommand = tmpProjectCommand;
-            //Settings.ProjectGroupTag = tmpProjectGroupTag;
-            //Settings.ProjectTag = tmpProjectTag;
-
-            errMsg = "";
-            return true;
-        }
-
-
-    }
-    #endregion Project
 
 }

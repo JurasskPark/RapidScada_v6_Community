@@ -17,6 +17,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DrvModbusCM.Utils\DrvModbusCM.Utils.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="ScadaCommCommon">
       <HintPath>..\Libraries\ScadaCommCommon.dll</HintPath>
     </Reference>
@@ -28,6 +32,9 @@
     </Reference>
     <Reference Include="ScadaCommon.Log">
       <HintPath>..\Libraries\ScadaCommon.Log.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.Ports">
+      <HintPath>..\Libraries\System.IO.Ports.dll</HintPath>
     </Reference>
   </ItemGroup>
 

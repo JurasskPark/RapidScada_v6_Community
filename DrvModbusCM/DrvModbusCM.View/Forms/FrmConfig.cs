@@ -1,5 +1,4 @@
 ﻿using CommunicationMethods;
-using DrvModbusCM.ViewData;
 using Scada.Comm.Config;
 using Scada.Comm.Devices;
 using Scada.Data.Entities;
@@ -2153,7 +2152,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             driverClient = new DriverClient(driverConfig);
             driverClient.InitializingDriver();
 
-            FrmViewData.ShowSplashScreen();
+            //FrmViewData.ShowSplashScreen();
 
 
         }
@@ -2224,12 +2223,12 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
 
         void PollLogGet(string text)
         {
-            FrmViewData.SetLog(text);
+            //FrmViewData.SetLog(text);
         }
 
         void PollLogGetTCPServer(string text)
         {
-            FrmViewData.SetLogTcpServer(text);
+            //FrmViewData.SetLogTcpServer(text);
         }
 
         /// <summary>

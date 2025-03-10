@@ -1,7 +1,7 @@
 ﻿
+using Splash;
 using System.Data;
 using System.Reflection;
-using DrvModbusCM.Form.Forms;
 
 namespace Scada.Comm.Drivers.DrvModbusCM.View.Forms
 {

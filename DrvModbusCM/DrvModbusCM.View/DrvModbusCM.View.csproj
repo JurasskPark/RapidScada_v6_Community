@@ -29,7 +29,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DrvModbusCM.Log\DrvModbusCM.ViewData.csproj" />
     <ProjectReference Include="..\DrvModbusCM.Utils\DrvModbusCM.Utils.csproj" />
   </ItemGroup>
 
