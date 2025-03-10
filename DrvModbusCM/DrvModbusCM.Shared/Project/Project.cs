@@ -1,15 +1,19 @@
-﻿using Master;
+﻿using DrvModbusCM.Shared.Communication;
+using Master;
 using Scada.Data.Entities;
 using Scada.Lang;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Ports;
 using System.Linq.Expressions;
 using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using System.Xml;
+using System.Xml.Linq;
 using System.Xml.Serialization;
 
 namespace Scada.Comm.Drivers.DrvModbusCM
@@ -637,7 +641,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
         #region Load
         /// <summary>
         /// Loads the settings from the XML node.
-        /// <para>Сохраняет настройки в узле XML.</para>
+        /// <para>Загружает настройки из узла XML.</para>
         /// </summary>
         public void LoadFromXml(XmlNode xmlNode)
         {
@@ -686,7 +690,8 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             KeyImage = string.Empty;
             Enabled = false;
             ThreadEnabled = false;
-            Type = 0;
+            TypeClient = CommunicationClient.None;
+            Behavior = OperationMode.Master;
             WriteTimeout = 1000;
             ReadTimeout = 1000;
             Timeout = 100;
@@ -697,6 +702,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
 
             TcpServerSettings = new ProjectTcpServer();
             SerialPortSettings = new ProjectSerialPort();
+            EthernetClientSettings = new ProjectEthernetClient();
             Devices = new List<ProjectDevice>();
         }
 
@@ -784,12 +790,12 @@ namespace Scada.Comm.Drivers.DrvModbusCM
         }
 
         // тип канала
-        private int type;
+        private CommunicationClient typeClient;
         [XmlAttribute]
-        public int Type
+        public CommunicationClient TypeClient
         {
-            get { return type; }
-            set { type = value; }
+            get { return typeClient; }
+            set { typeClient = value; }
         }
 
         // время записи
@@ -835,6 +841,15 @@ namespace Scada.Comm.Drivers.DrvModbusCM
         {
             get { return timeout; }
             set { timeout = value; }
+        }
+
+        // режим поведения
+        private OperationMode behavior;
+        [XmlAttribute]
+        public OperationMode Behavior
+        {
+            get { return behavior; }
+            set { behavior = value; }
         }
 
         // количество ошибок
@@ -903,7 +918,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
         #region Load
         /// <summary>
         /// Loads the settings from the XML node.
-        /// <para>Сохраняет настройки в узле XML.</para>
+        /// <para>Загружает настройки из узла XML.</para>
         /// </summary>
         public void LoadFromXml(XmlNode xmlNode)
         {
@@ -912,9 +927,40 @@ namespace Scada.Comm.Drivers.DrvModbusCM
                 throw new ArgumentNullException("xmlNode");
             }
 
-            //Name = xmlNode.GetChildAsString("Name");
-            //AutoRun = xmlNode.GetChildAsBool("AutoRun");
-            //Debug = xmlNode.GetChildAsBool("Debug");
+            ID = DriverUtils.StringToGuid(xmlNode.GetChildAsString("ID"));
+            Name = xmlNode.GetChildAsString("Name");
+            Description = xmlNode.GetChildAsString("Description");
+            KeyImage = xmlNode.GetChildAsString("KeyImage");
+            Enabled = xmlNode.GetChildAsBool("Enabled");
+            ThreadEnabled = xmlNode.GetChildAsBool("ThreadEnabled");
+            TypeClient = (CommunicationClient)Enum.Parse(typeof(CommunicationClient), xmlNode.GetChildAsString("TypeClient"));
+            Behavior = (OperationMode)Enum.Parse(typeof(OperationMode), xmlNode.GetChildAsString("Behavior"));
+            WriteTimeout = xmlNode.GetChildAsInt("WriteTimeout");
+            ReadTimeout = xmlNode.GetChildAsInt("ReadTimeout");
+            Timeout = xmlNode.GetChildAsInt("Timeout");
+            WriteBufferSize = xmlNode.GetChildAsInt("WriteBufferSize");
+            ReadBufferSize = xmlNode.GetChildAsInt("ReadBufferSize");
+            CountError = xmlNode.GetChildAsInt("CountError");
+            Debug = xmlNode.GetChildAsBool("Debug");
+
+            TcpServerSettings.LoadFromXml(xmlNode.SelectSingleNode("TcpServerSettings"));
+            SerialPortSettings.LoadFromXml(xmlNode.SelectSingleNode("SerialPortSettings"));
+            EthernetClientSettings.LoadFromXml(xmlNode.SelectSingleNode("EthernetClientSettings"));
+
+            try
+            {
+                if (xmlNode.SelectSingleNode("ListDevices") is XmlNode listDevicesNode)
+                {
+                    Devices = new List<ProjectDevice>();
+                    foreach (XmlNode deviceNode in listDevicesNode.SelectNodes("Device"))
+                    {
+                        ProjectDevice device = new ProjectDevice();
+                        device.LoadFromXml(deviceNode);
+                        Devices.Add(device);
+                    }
+                }
+            }
+            catch { Devices = new List<ProjectDevice>(); }
         }
         #endregion Load
 
@@ -930,9 +976,35 @@ namespace Scada.Comm.Drivers.DrvModbusCM
                 throw new ArgumentNullException("xmlElem");
             }
 
-            //xmlElem.AppendElem("Name", Name);
-            //xmlElem.AppendElem("AutoRun", AutoRun);
-            //xmlElem.AppendElem("Debug", Debug);
+            xmlElem.AppendElem("ID", ID.ToString());
+            xmlElem.AppendElem("Name", Name);
+            xmlElem.AppendElem("Description", Description);
+            xmlElem.AppendElem("KeyImage", KeyImage);
+            xmlElem.AppendElem("Enabled", Enabled);
+            xmlElem.AppendElem("ThreadEnabled", ThreadEnabled);
+            xmlElem.AppendElem("TypeClient", Enum.GetName(typeof(CommunicationClient), TypeClient));
+            xmlElem.AppendElem("Behavior", Enum.GetName(typeof(OperationMode), Behavior));
+            xmlElem.AppendElem("WriteTimeout", WriteTimeout);
+            xmlElem.AppendElem("ReadTimeout", ReadTimeout);
+            xmlElem.AppendElem("Timeout", Timeout);
+            xmlElem.AppendElem("WriteBufferSize", WriteBufferSize);
+            xmlElem.AppendElem("ReadBufferSize", ReadBufferSize);
+            xmlElem.AppendElem("CountError", CountError);
+            xmlElem.AppendElem("Debug", Debug);
+
+            TcpServerSettings.SaveToXml(xmlElem.AppendElem("TcpServerSettings"));
+            SerialPortSettings.SaveToXml(xmlElem.AppendElem("SerialPortSettings"));
+            EthernetClientSettings.SaveToXml(xmlElem.AppendElem("EthernetClientSettings"));
+
+            try
+            {
+                XmlElement listDevicesElem = xmlElem.AppendElem("ListDevices");
+                foreach (ProjectDevice device in Devices)
+                {
+                    listDevicesElem.AppendElem("Device", device);
+                }
+            }
+            catch { }
         }
         #endregion Save
     }
@@ -956,7 +1028,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             ConnectedClientsMax = 100;
         }
 
-
+        #region Variables
         /// <summary>
         /// Gets or sets the id.
         /// </summary>
@@ -987,13 +1059,19 @@ namespace Scada.Comm.Drivers.DrvModbusCM
         /// </summary>
         public int ConnectedClientsMax { get; set; }
 
+        #endregion Variables
+
+        #region Load
         /// <summary>
         /// Loads the settings from the XML node.
+        /// <para>Загружает настройки из узла XML.</para>
         /// </summary>
         public void LoadFromXml(XmlNode xmlNode)
         {
             if (xmlNode == null)
+            {
                 throw new ArgumentNullException("xmlNode");
+            }
 
             ID = Guid.Parse(xmlNode.GetChildAsString("ID"));
             Name = xmlNode.GetChildAsString("Name");
@@ -1002,14 +1080,19 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             Protocol = (DriverProtocol)Enum.Parse(typeof(DriverProtocol), xmlNode.GetChildAsString("Protocol"));
             ConnectedClientsMax = xmlNode.GetChildAsInt("ConnectedClientsMax");
         }
+        #endregion Load
 
+        #region Save
         /// <summary>
         /// Saves the settings into the XML node.
+        /// <para>Сохраняет настройки в узле XML.</para>
         /// </summary>
         public void SaveToXml(XmlElement xmlElem)
         {
             if (xmlElem == null)
+            {
                 throw new ArgumentNullException("xmlElem");
+            }
 
             xmlElem.AppendElem("ID", ID);
             xmlElem.AppendElem("Name", Name);
@@ -1018,6 +1101,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             xmlElem.AppendElem("Protocol", Enum.GetName(typeof(DriverProtocol), Protocol));
             xmlElem.AppendElem("ConnectedClientsMax", ConnectedClientsMax);
         }
+        #endregion Save
     }
 
     #endregion ProjectTcpServer
@@ -1042,6 +1126,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             SerialPortReceivedBytesThreshold = 1;
         }
 
+        #region Variables
 
         private string serialPortName;
         public string SerialPortName
@@ -1105,14 +1190,19 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             get { return serialPortReceivedBytesThreshold; }
             set { serialPortReceivedBytesThreshold = value; }
         }
+        #endregion Variables
 
+        #region Load
         /// <summary>
         /// Loads the settings from the XML node.
+        /// <para>Загружает настройки из узла XML.</para>     
         /// </summary>
         public void LoadFromXml(XmlNode xmlNode)
         {
             if (xmlNode == null)
+            {
                 throw new ArgumentNullException("xmlNode");
+            }
 
             SerialPortName = xmlNode.GetChildAsString("Name");
             SerialPortBaudRate = xmlNode.GetChildAsInt("BaudRate");
@@ -1124,14 +1214,19 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             SerialPortRtsEnable = xmlNode.GetChildAsBool("RtsEnable");
             SerialPortReceivedBytesThreshold = xmlNode.GetChildAsInt("ReceivedBytesThreshold");
         }
+        #endregion Load
 
+        #region Save
         /// <summary>
         /// Saves the settings into the XML node.
+        /// <para>Сохраняет настройки в узле XML.</para>
         /// </summary>
         public void SaveToXml(XmlElement xmlElem)
         {
             if (xmlElem == null)
+            {
                 throw new ArgumentNullException("xmlElem");
+            }
 
             xmlElem.AppendElem("Name", SerialPortName);
             xmlElem.AppendElem("BaudRate", SerialPortBaudRate);
@@ -1143,6 +1238,8 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             xmlElem.AppendElem("RtsEnable", SerialPortRtsEnable);
             xmlElem.AppendElem("ReceivedBytesThreshold", SerialPortReceivedBytesThreshold);
         }
+        #endregion Save
+
     }
 
     #endregion ProjectSerialPort
@@ -1174,6 +1271,40 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             set { clientPort = value; }
         }
         #endregion Variables
+
+        #region Load
+        /// <summary>
+        /// Loads the settings from the XML node.
+        /// <para>Загружает настройки из узла XML.</para>     
+        /// </summary>
+        public void LoadFromXml(XmlNode xmlNode)
+        {
+            if (xmlNode == null)
+            {
+                throw new ArgumentNullException("xmlNode");
+            }
+
+            ClientHost = IPAddress.Parse(xmlNode.GetChildAsString("ClientHost"));
+            ClientPort = xmlNode.GetChildAsInt("ClientPort");
+        }
+        #endregion Load
+
+        #region Save
+        /// <summary>
+        /// Saves the settings into the XML node.
+        /// <para>Сохраняет настройки в узле XML.</para>
+        /// </summary>
+        public void SaveToXml(XmlElement xmlElem)
+        {
+            if (xmlElem == null)
+            {
+                throw new ArgumentNullException("xmlElem");
+            }
+
+            xmlElem.AppendElem("ClientHost", ClientHost.ToString());
+            xmlElem.AppendElem("ClientPort", ClientPort);
+        }
+        #endregion Save
     }
 
     #endregion ProjectEthernetClient
@@ -1797,6 +1928,99 @@ namespace Scada.Comm.Drivers.DrvModbusCM
 
 
         #endregion DataBuffers
+
+        #region Load
+        /// <summary>
+        /// Loads the settings from the XML node.
+        /// <para>Загружает настройки из узла XML.</para>
+        /// </summary>
+        public void LoadFromXml(XmlNode xmlNode)
+        {
+            if (xmlNode == null)
+            {
+                throw new ArgumentNullException("xmlNode");
+            }
+
+            //ID = DriverUtils.StringToGuid(xmlNode.GetChildAsString("ID"));
+            //Name = xmlNode.GetChildAsString("Name");
+            //Description = xmlNode.GetChildAsString("Description");
+            //KeyImage = xmlNode.GetChildAsString("KeyImage");
+            //Enabled = xmlNode.GetChildAsBool("Enabled");
+            //ThreadEnabled = xmlNode.GetChildAsBool("ThreadEnabled");
+            //TypeClient = (CommunicationClient)Enum.Parse(typeof(CommunicationClient), xmlNode.GetChildAsString("TypeClient"));
+            //Behavior = (OperationMode)Enum.Parse(typeof(OperationMode), xmlNode.GetChildAsString("Behavior"));
+            //WriteTimeout = xmlNode.GetChildAsInt("WriteTimeout");
+            //ReadTimeout = xmlNode.GetChildAsInt("ReadTimeout");
+            //Timeout = xmlNode.GetChildAsInt("Timeout");
+            //WriteBufferSize = xmlNode.GetChildAsInt("WriteBufferSize");
+            //ReadBufferSize = xmlNode.GetChildAsInt("ReadBufferSize");
+            //CountError = xmlNode.GetChildAsInt("CountError");
+            //Debug = xmlNode.GetChildAsBool("Debug");
+
+            //TcpServerSettings.LoadFromXml(xmlNode.SelectSingleNode("TcpServerSettings"));
+            //SerialPortSettings.LoadFromXml(xmlNode.SelectSingleNode("SerialPortSettings"));
+            //EthernetClientSettings.LoadFromXml(xmlNode.SelectSingleNode("EthernetClientSettings"));
+
+            //try
+            //{
+            //    if (xmlNode.SelectSingleNode("ListDevices") is XmlNode listDevicesNode)
+            //    {
+            //        Devices = new List<ProjectDevice>();
+            //        foreach (XmlNode deviceNode in listDevicesNode.SelectNodes("Device"))
+            //        {
+            //            ProjectDevice device = new ProjectDevice);
+            //            device.LoadFromXml(deviceNode);
+            //            Devices.Add(device);
+            //        }
+            //    }
+            //}
+            //catch { Devices = new List<ProjectDevice>(); }
+        }
+        #endregion Load
+
+        #region Save
+        /// <summary>
+        /// Saves the settings into the XML node.
+        /// <para>Сохраняет настройки в узле XML.</para>
+        /// </summary>
+        public void SaveToXml(XmlElement xmlElem)
+        {
+            if (xmlElem == null)
+            {
+                throw new ArgumentNullException("xmlElem");
+            }
+
+            //xmlElem.AppendElem("ID", ID.ToString());
+            //xmlElem.AppendElem("Name", Name);
+            //xmlElem.AppendElem("Description", Description);
+            //xmlElem.AppendElem("KeyImage", KeyImage);
+            //xmlElem.AppendElem("Enabled", Enabled);
+            //xmlElem.AppendElem("ThreadEnabled", ThreadEnabled);
+            //xmlElem.AppendElem("TypeClient", Enum.GetName(typeof(CommunicationClient), TypeClient));
+            //xmlElem.AppendElem("Behavior", Enum.GetName(typeof(OperationMode), Behavior));
+            //xmlElem.AppendElem("WriteTimeout", WriteTimeout);
+            //xmlElem.AppendElem("ReadTimeout", ReadTimeout);
+            //xmlElem.AppendElem("Timeout", Timeout);
+            //xmlElem.AppendElem("WriteBufferSize", WriteBufferSize);
+            //xmlElem.AppendElem("ReadBufferSize", ReadBufferSize);
+            //xmlElem.AppendElem("CountError", CountError);
+            //xmlElem.AppendElem("Debug", Debug);
+
+            //TcpServerSettings.SaveToXml(xmlElem.AppendElem("TcpServerSettings"));
+            //SerialPortSettings.SaveToXml(xmlElem.AppendElem("SerialPortSettings"));
+            //EthernetClientSettings.SaveToXml(xmlElem.AppendElem("EthernetClientSettings"));
+
+            //try
+            //{
+            //    XmlElement listDevicesElem = xmlElem.AppendElem("ListDevices");
+            //    foreach (ProjectDevice device in Devices)
+            //    {
+            //        listDevicesElem.AppendElem("Device", device);
+            //    }
+            //}
+            //catch { }
+        }
+        #endregion Save
 
     }
 

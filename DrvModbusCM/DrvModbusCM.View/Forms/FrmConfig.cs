@@ -319,7 +319,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
         public void GetDefaultTreeNodes()
         {
             #region Settings
-            Settings settings = new Settings();
+            ProjectSettings settings = new ProjectSettings();
             settings.Name = DriverPhrases.SettingsName;
             settings.AutoRun = false;
             settings.Debug = false;
@@ -327,7 +327,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             //Добавляем в дерево
             TreeNode settingsNode = NodeProjectSettingsAdd(settings, cmnuDeviceAppend);
             //Добавляем в проект
-            driverConfig.Settings.Settings = settings;
+            driverConfig.Driver.Settings = settings;
             #endregion Settings
 
             #region Channel
@@ -337,9 +337,10 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             projectChannel.Name = DriverPhrases.ChannelName;
             projectChannel.Description = "";
             projectChannel.Enabled = true;
-            projectChannel.GatewayTypeProtocol = 0;
-            projectChannel.GatewayPort = 60000;
-            projectChannel.GatewayConnectedClientsMax = 10;
+
+            projectChannel.TcpServerSettings.Protocol = 0;
+            projectChannel.TcpServerSettings.Port = 60000;
+            projectChannel.TcpServerSettings.ConnectedClientsMax = 10;
 
             projectChannel.WriteTimeout = 1000;
             projectChannel.ReadTimeout = 1000;
@@ -352,7 +353,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             //Добавляем в дерево
             TreeNode channelNode = NodeProjectChannelAdd(projectChannel, cmnuDeviceAppend);
             //Добавляем в проект
-            driverConfig.Settings.ProjectChannel = projectChannel;
+            driverConfig.Driver.Channels.Add(projectChannel);
             #endregion Channel
 
             #region Device
@@ -411,7 +412,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             TreeNode groupTagNode = NodeGroupTagAdd(projectGroupTag, deviceNode, cmnuTagAppend);
 
             //Добавляем в проект
-            driverConfig.Settings.ProjectChannel.Devices.Add(projectDevice);
+            projectChannel.Devices.Add(projectDevice);
 
             deviceNode.ExpandAll();
             #endregion Device
@@ -672,8 +673,8 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
 
                 if (prNode.nodeType == ProjectNodeType.Settings)
                 {
-                    Settings settings = prNode.settings;
-                    driverConfig.Settings.Settings = settings;
+                    ProjectSettings settings = prNode.settings;
+                    driverConfig.Driver.Settings = settings;
                 }
                 #endregion Settings
 
@@ -737,7 +738,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
 
                     devices.Add(device);
                     channel.Devices = devices;
-                    driverConfig.Settings.ProjectChannel = channel;
+                    driverConfig.Driver.Channels.Add(channel);
                 }
                 #endregion Channel
 
@@ -790,7 +791,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
         #region Project Settings
 
         //Добавляем в дерево
-        public TreeNode NodeProjectSettingsAdd(Settings stg, ContextMenuStrip cms)
+        public TreeNode NodeProjectSettingsAdd(ProjectSettings stg, ContextMenuStrip cms)
         {
             TreeNode tn = new TreeNode(stg.Name);
             tn.Text = stg.Name;

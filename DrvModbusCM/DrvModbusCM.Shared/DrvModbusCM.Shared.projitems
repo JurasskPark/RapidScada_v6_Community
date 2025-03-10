@@ -10,6 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)CnlPrototypeFactory\CnlPrototypeFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Communication\ComminicationClient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Protocols\MasterDeviceReceiverSender.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Protocols\Master\Protocol.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Protocols\Master\ProtocolMaster.cs" />
@@ -77,13 +78,5 @@
     <Compile Include="$(MSBuildThisFileDirectory)Lang\DriverPhrases.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Project\Project.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Project\ProjectFile.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="$(MSBuildThisFileDirectory)Dll\ScadaCommCommon.dll" />
-    <None Include="$(MSBuildThisFileDirectory)Dll\ScadaCommFunc.dll" />
-    <None Include="$(MSBuildThisFileDirectory)Dll\ScadaCommon.dll" />
-    <None Include="$(MSBuildThisFileDirectory)Dll\ScadaCommon.Forms.dll" />
-    <None Include="$(MSBuildThisFileDirectory)Dll\ScadaCommon.Log.dll" />
-    <None Include="$(MSBuildThisFileDirectory)Dll\System.IO.Ports.dll" />
   </ItemGroup>
 </Project>
