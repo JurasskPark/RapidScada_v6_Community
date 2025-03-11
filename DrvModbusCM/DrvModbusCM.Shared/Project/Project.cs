@@ -1319,8 +1319,10 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             GroupTags = new List<ProjectGroupTag>();
         }
 
-        #region Устройство
-        //ID 
+        #region Variables
+
+        #region Device
+        // id 
         private Guid id;
         [XmlAttribute]
         public Guid ID
@@ -1329,7 +1331,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             set { id = value; }
         }
 
-        //ID родителя
+        // id родителя
         private Guid parentID;
         [XmlAttribute]
         public Guid ParentID
@@ -1338,7 +1340,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             set { parentID = value; }
         }
 
-        //Иконка
+        // иконка
         private string keyImage;
         [XmlAttribute]
         public string KeyImage
@@ -1347,7 +1349,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             set { keyImage = value; }
         }
 
-        //Иконка буфера
+        // иконка буфера
         private string bufferKeyImage;
         [XmlAttribute]
         public string BufferKeyImage
@@ -1356,7 +1358,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             set { bufferKeyImage = value; }
         }
 
-        //Адрес устройства       
+        // адрес устройства       
         private ushort address;
         [XmlAttribute]
         public ushort Address
@@ -1365,16 +1367,16 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             set { address = value; }
         }
 
-        //Протокол
-        private int typeProtocol;
+        // протокол
+        private DriverProtocol protocol;
         [XmlAttribute]
-        public int TypeProtocol
+        public DriverProtocol Protocol
         {
-            get { return typeProtocol; }
-            set { typeProtocol = value; }
+            get { return protocol; }
+            set { protocol = value; }
         }
 
-        //Название устройства
+        // название устройства
         private string name;
         [XmlAttribute]
         public string Name
@@ -1383,7 +1385,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             set { name = value; }
         }
 
-        //Описание устройства
+        // описание устройства
         private string description;
         [XmlAttribute]
         public string Description
@@ -1392,7 +1394,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             set { description = value; }
         }
 
-        //Состояние устройства. Включено ли устройство и производить ли его опрос
+        // состояние устройства (включено ли устройство и производить ли его опрос)
         private bool enabled;
         [XmlAttribute]
         public bool Enabled
@@ -1401,7 +1403,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             set { enabled = value; }
         }
 
-        //Признак опроса по расписанию
+        // признак опроса по расписанию
         private bool pollingOnScheduleStatus;
         [XmlAttribute]
         public bool PollingOnScheduleStatus
@@ -1410,7 +1412,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             set { pollingOnScheduleStatus = value; }
         }
 
-        //Дата последнего успешного опроса устройства    
+        // дата последнего успешного опроса устройства    
         private DateTime dateTimeLastSuccessfully;
         [XmlAttribute]
         public DateTime DateTimeLastSuccessfully
@@ -1419,7 +1421,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             set { dateTimeLastSuccessfully = value; }
         }
 
-        //Период опроса устройства                                    
+        // период опроса устройства                                    
         private int intervalPool;
         [XmlAttribute]
         public int IntervalPool
@@ -1428,7 +1430,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             set { intervalPool = value; }
         }
 
-        //Статус устройства
+        // статус устройства
         private int status;
         [XmlAttribute]
         public int Status
@@ -1437,10 +1439,10 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             set { status = value; }
         }
 
-        #endregion Устройство
+        #endregion Device
 
-        #region Команды
-        //Количество всего отправленных комманд
+        #region Commands
+        // количество всего отправленных комманд
         private int countCommands;
         [XmlAttribute]
         public int CountCommands
@@ -1449,7 +1451,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             set { countCommands = value; }
         }
 
-        //Количество комманд с успешным ответом
+        // количество комманд с успешным ответом
         private int countCommandsGood;
         [XmlAttribute]
         public int CountCommandsGood
@@ -1458,7 +1460,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             set { countCommandsGood = value; }
         }
 
-        //Дата последней команды
+        // дата последней команды
         private DateTime dateTimeCommandLast;
         [XmlAttribute]
         public DateTime DateTimeCommandLast
@@ -1467,7 +1469,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             set { dateTimeCommandLast = value; }
         }
 
-        //Дата последней успешной команды
+        // дата последней успешной команды
         private DateTime dateTimeCommandLastGood;
         [XmlAttribute]
         public DateTime DateTimeCommandLastGood
@@ -1476,7 +1478,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             set { dateTimeCommandLastGood = value; }
         }
 
-        //Приоритет комманд
+        // приоритет комманд
         private int priorityCommand;
         [XmlAttribute]
         public int PriorityCommand
@@ -1484,40 +1486,49 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             get { return priorityCommand; }
             set { priorityCommand = value; }
         }
-        #endregion Команды
+        #endregion Commands
 
-        #region Шлюз                                   
-        //Адрес устройства в шлюзе
-        private int aliesAddress;
+        #region Gateway                                  
+        // адрес устройства в шлюзе
+        private int gatewayAddress;
         [XmlAttribute]
-        public int AliesAddress
+        public int GatewayAddress
         {
-            get { return aliesAddress; }
-            set { aliesAddress = value; }
+            get { return gatewayAddress; }
+            set { gatewayAddress = value; }
         }
 
-        //Порт устройства в шлюзе
-        private int aliesPort;
+        // порт устройства в шлюзе
+        private int gatewayPort;
         [XmlAttribute]
-        public int AliesPort
+        public int GatewayPort
         {
-            get { return aliesPort; }
-            set { aliesPort = value; }
+            get { return gatewayPort; }
+            set { gatewayPort = value; }
         }
 
-        #endregion Шлюз             
+        #endregion Gateway        
 
-        #region Группа команд
-        public List<ProjectGroupCommand> GroupCommands { get; set; }
-        #endregion Группа команд
+        #region Group Commands
+        private List<ProjectGroupCommand> groupCommands;
+        public List<ProjectGroupCommand> GroupCommands 
+        { 
+            get { return groupCommands; } 
+            set {  groupCommands = value; } 
+        }
+        #endregion Group Commands
 
-        #region Группа тегов
-        public List<ProjectGroupTag> GroupTags { get; set; }
+        #region Group Tags
+        private List<ProjectGroupTag> groupTags;
+        public List<ProjectGroupTag> GroupTags 
+        { 
+            get {  return groupTags; }
+            set { groupTags = value; }
+        }
+        #endregion Group Tags
 
-        #endregion Группа тегов
-
-        #region Регистры
-        //Регистры 0 = 2 байтовые, 1 = 4 байтовые                                   
+        #region Registers
+        // регистры 0 = 2 байтовые, 1 = 4 байтовые                                   
         private int deviceRegistersBytes;
         [XmlAttribute]
         public int DeviceRegistersBytes
@@ -1557,7 +1568,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
         [XmlIgnore]
         public bool[] ExistDataBuffers = new bool[9999999];                     //Буфер устройства           (Фунция с 80 по 99)
 
-        #endregion Регистры
+        
 
         #region Coils
         public bool[] DeviceIDDataCoil()
@@ -1592,19 +1603,6 @@ namespace Scada.Comm.Drivers.DrvModbusCM
         {
             return DataCoils[(ulong)RegAddr];
         }
-
-        //public byte[] GetBooleanCoil(ushort RegAddr, ushort Count)
-        //{
-        //    byte[] result = (byte[])null;
-
-        //    bool[] Coils = new bool[(int)Count];
-        //    for (int index = 0; index < Coils.Length; ++index)
-        //    {
-        //        Coils[index] = GetBooleanDiscreteInput((ushort)(RegAddr + (uint)index));
-        //    }
-        //    result = HEX_BOOLEAN.ToByteArray(Coils);
-        //    return result;
-        //}
 
         #endregion Coils
 
@@ -1642,19 +1640,6 @@ namespace Scada.Comm.Drivers.DrvModbusCM
         {
             return DataDiscreteInputs[(ulong)RegAddr];
         }
-
-        //public byte[] GetBooleanDiscreteInput(ushort RegAddr, ushort Count)
-        //{
-        //    byte[] result = (byte[])null;
-
-        //    bool[] DiscreteInput = new bool[(int)Count];
-        //    for (int index = 0; index < DiscreteInput.Length; ++index)
-        //    {
-        //        DiscreteInput[index] = GetBooleanDiscreteInput((ushort)(RegAddr + (uint)index));
-        //    }
-        //    result = HEX_BOOLEAN.ToByteArray(DiscreteInput);
-        //    return result;
-        //}
 
         #endregion DiscreteInputs
 
@@ -1862,9 +1847,6 @@ namespace Scada.Comm.Drivers.DrvModbusCM
                     Value = Value + arrData[n] + '.';
                 }
 
-                //DebugerLog("Address = " + Address.ToString());
-                //DebugerLog("Value = " + Value.ToString());
-
                 SetDataBuffer(Address, Value);
             }
         }
@@ -1928,6 +1910,10 @@ namespace Scada.Comm.Drivers.DrvModbusCM
 
 
         #endregion DataBuffers
+
+        #endregion Registers
+
+        #endregion Variables
 
         #region Load
         /// <summary>
@@ -3170,6 +3156,5 @@ namespace Scada.Comm.Drivers.DrvModbusCM
     }
 
     #endregion ProjectTag
-
 
 }

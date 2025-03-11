@@ -301,7 +301,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
         {
             try
             {
-                channel = project.Settings.ProjectChannel;
+                //channel = project.Settings.ProjectChannel;
                 //devices = project.Settings.ProjectDevice;
                 //groupCommands = project.Settings.ProjectGroupCommand;
                 //commands = project.Settings.ProjectCommand;
@@ -344,28 +344,28 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             string errMsg = string.Empty;
 
             #region TCPServer
-            //Передаем настройки Шлюза из свойств канала
-            gatewaytypeprotocol = channel.GatewayTypeProtocol; //Тип протокола Шлюза 0 - выключен
-            gatewayport = channel.GatewayPort; //Порт
-            gatewayсonnectedclientsmax = channel.GatewayConnectedClientsMax; //Максимальное количество подключений
-            gatewayid = channel.ID; //ID канала
+            ////Передаем настройки Шлюза из свойств канала
+            //gatewaytypeprotocol = channel.GatewayTypeProtocol; //Тип протокола Шлюза 0 - выключен
+            //gatewayport = channel.GatewayPort; //Порт
+            //gatewayсonnectedclientsmax = channel.GatewayConnectedClientsMax; //Максимальное количество подключений
+            //gatewayid = channel.ID; //ID канала
 
-            //Если поставлен признак не "Не задан" = 0, то значит выбран режим и нужно запустить 
-            if (channel.GatewayTypeProtocol != 0)
-            {
-                //Передаем параметры в переменные
-                gatewayport = channel.GatewayPort;
-                gatewayсonnectedclientsmax = channel.GatewayConnectedClientsMax;
-                //Если TCP сервер не запущен, то запускаем
-                if (channel.ThreadEnabled == true)
-                {
-                    TCPServerStart();
-                }
-                else
-                {
-                    TCPServerStop();
-                }
-            }
+            ////Если поставлен признак не "Не задан" = 0, то значит выбран режим и нужно запустить 
+            //if (channel.GatewayTypeProtocol != 0)
+            //{
+            //    //Передаем параметры в переменные
+            //    gatewayport = channel.GatewayPort;
+            //    gatewayсonnectedclientsmax = channel.GatewayConnectedClientsMax;
+            //    //Если TCP сервер не запущен, то запускаем
+            //    if (channel.ThreadEnabled == true)
+            //    {
+            //        TCPServerStart();
+            //    }
+            //    else
+            //    {
+            //        TCPServerStop();
+            //    }
+            //}
             #endregion TCPServer
 
             #region Опрос устройств
@@ -470,246 +470,246 @@ namespace Scada.Comm.Drivers.DrvModbusCM
                             //VTD
                             VTD masterVTD = new VTD();
 
-                            switch (device.TypeProtocol)
-                            {
-                                case 0:
-                                    // Пусто
-                                    DebugerLog(DriverPhrases.NoProtocol);
-                                    continue;
-                                case 1:
-                                    //Формирование буфера данных запроса
-                                    bufferSender = masterRTU.CalculateSendData(device.Address, (ushort)command.FunctionCode, (ushort)command.RegisterStartAddress, (ushort)command.RegisterCount, DriverUtils.ConvertUlongToUshort(command.RegisterWriteData));
-                                    byteNumberFunctionReceived = masterRTU.byteNumberFunctionReceived;
-                                    byteNumberAmountDataReceived = masterRTU.byteNumberAmountDataReceived;
-                                    DebugerLog(DriverPhrases.Request + "[" + HEX_STRING.BYTEARRAY_TO_HEXSTRING(bufferSender) + "]");
-                                    break;
-                                case 2:
-                                    //Формирование буфера данных запроса
-                                    bufferSender = masterTCP.CalculateSendData(device.Address, (ushort)command.FunctionCode, (ushort)command.RegisterStartAddress, (ushort)command.RegisterCount, DriverUtils.ConvertUlongToUshort(command.RegisterWriteData));
-                                    byteNumberFunctionReceived = masterTCP.byteNumberFunctionReceived;
-                                    byteNumberAmountDataReceived = masterTCP.byteNumberAmountDataReceived;
-                                    DebugerLog(DriverPhrases.Request + "[" + HEX_STRING.BYTEARRAY_TO_HEXSTRING(bufferSender) + "]");
-                                    break;
-                                case 3:
-                                    //Формирование буфера данных запроса
-                                    bufferSender = masterASCII.CalculateSendData(device.Address, (ushort)command.FunctionCode, (ushort)command.RegisterStartAddress, (ushort)command.RegisterCount, DriverUtils.ConvertUlongToUshort(command.RegisterWriteData));
-                                    byteNumberFunctionReceived = masterASCII.byteNumberFunctionReceived;
-                                    byteNumberAmountDataReceived = masterASCII.byteNumberAmountDataReceived;
-                                    DebugerLog(DriverPhrases.Request + "[ASCII][" + HEX_STRING.BYTEARRAY_TO_HEXSTRING(bufferSender) + "][HEX][" + HEX_STRING.BYTEARRAY_TO_HEXSTRING(HEX_ASCII.ASCIIBYTEARRAY_TO_BYTEARRAY(bufferSender)) + "]");
-                                    break;
-                                case 4:
-                                    //Формирование буфера данных запроса
-                                    bufferSender = masterVTD.CalculateSendData(device.Address, (ushort)command.FunctionCode, (ushort)command.Parametr, (ushort)command.RegisterStartAddress, (ushort)command.RegisterCount, DriverUtils.ConvertUlongToUshort(command.RegisterWriteData), command.CurrentValue);
-                                    byteNumberFunctionReceived = masterVTD.byteNumberFunctionReceived;
-                                    byteNumberAmountDataReceived = masterVTD.byteNumberAmountDataReceived;
-                                    DebugerLog(DriverPhrases.Request + "[" + HEX_STRING.BYTEARRAY_TO_HEXSTRING(bufferSender) + "]");
-                                    break;
-                                default:
-                                    continue;
-                            }
+                            //switch (device.TypeProtocol)
+                            //{
+                            //    case 0:
+                            //        // Пусто
+                            //        DebugerLog(DriverPhrases.NoProtocol);
+                            //        continue;
+                            //    case 1:
+                            //        //Формирование буфера данных запроса
+                            //        bufferSender = masterRTU.CalculateSendData(device.Address, (ushort)command.FunctionCode, (ushort)command.RegisterStartAddress, (ushort)command.RegisterCount, DriverUtils.ConvertUlongToUshort(command.RegisterWriteData));
+                            //        byteNumberFunctionReceived = masterRTU.byteNumberFunctionReceived;
+                            //        byteNumberAmountDataReceived = masterRTU.byteNumberAmountDataReceived;
+                            //        DebugerLog(DriverPhrases.Request + "[" + HEX_STRING.BYTEARRAY_TO_HEXSTRING(bufferSender) + "]");
+                            //        break;
+                            //    case 2:
+                            //        //Формирование буфера данных запроса
+                            //        bufferSender = masterTCP.CalculateSendData(device.Address, (ushort)command.FunctionCode, (ushort)command.RegisterStartAddress, (ushort)command.RegisterCount, DriverUtils.ConvertUlongToUshort(command.RegisterWriteData));
+                            //        byteNumberFunctionReceived = masterTCP.byteNumberFunctionReceived;
+                            //        byteNumberAmountDataReceived = masterTCP.byteNumberAmountDataReceived;
+                            //        DebugerLog(DriverPhrases.Request + "[" + HEX_STRING.BYTEARRAY_TO_HEXSTRING(bufferSender) + "]");
+                            //        break;
+                            //    case 3:
+                            //        //Формирование буфера данных запроса
+                            //        bufferSender = masterASCII.CalculateSendData(device.Address, (ushort)command.FunctionCode, (ushort)command.RegisterStartAddress, (ushort)command.RegisterCount, DriverUtils.ConvertUlongToUshort(command.RegisterWriteData));
+                            //        byteNumberFunctionReceived = masterASCII.byteNumberFunctionReceived;
+                            //        byteNumberAmountDataReceived = masterASCII.byteNumberAmountDataReceived;
+                            //        DebugerLog(DriverPhrases.Request + "[ASCII][" + HEX_STRING.BYTEARRAY_TO_HEXSTRING(bufferSender) + "][HEX][" + HEX_STRING.BYTEARRAY_TO_HEXSTRING(HEX_ASCII.ASCIIBYTEARRAY_TO_BYTEARRAY(bufferSender)) + "]");
+                            //        break;
+                            //    case 4:
+                            //        //Формирование буфера данных запроса
+                            //        bufferSender = masterVTD.CalculateSendData(device.Address, (ushort)command.FunctionCode, (ushort)command.Parametr, (ushort)command.RegisterStartAddress, (ushort)command.RegisterCount, DriverUtils.ConvertUlongToUshort(command.RegisterWriteData), command.CurrentValue);
+                            //        byteNumberFunctionReceived = masterVTD.byteNumberFunctionReceived;
+                            //        byteNumberAmountDataReceived = masterVTD.byteNumberAmountDataReceived;
+                            //        DebugerLog(DriverPhrases.Request + "[" + HEX_STRING.BYTEARRAY_TO_HEXSTRING(bufferSender) + "]");
+                            //        break;
+                            //    default:
+                            //        continue;
+                            //}
 
                             #endregion Протокол
 
                             #region Тип канала (отправка и получение данных)
 
-                            switch (channel.Type)
-                            {
-                                case 0:
-                                    //Пусто
-                                    DebugerLog(DriverPhrases.NoType);
-                                    continue;
-                                case 1:
-                                    // Последовательный порт
-                                    using (SerialPortClient serialClient = new SerialPortClient())
-                                    {
-                                        //Отправка команды
-                                        serialClient.Data(channel.SerialPortName, Convert.ToInt32(channel.SerialPortBaudRate), channel.SerialPortParity, Convert.ToInt32(channel.SerialPortDataBits), channel.SerialPortStopBits, channel.SerialPortHandshake, channel.SerialPortReceivedBytesThreshold, channel.SerialPortDtrEnable, channel.SerialPortRtsEnable, channel.WriteTimeout, channel.ReadTimeout, bufferSender, ref bufferReceiver, ref errMsg);
-                                    }
-                                    break;
-                                case 2:
-                                    // TCP клиент
-                                    using (TCPClient tcpclient = new TCPClient())
-                                    {
-                                        //Отправка команды
-                                        tcpclient.Data(1, channel.ClientHost, channel.ClientPort, channel.WriteTimeout, channel.ReadTimeout, bufferSender, ref bufferReceiver, ref errMsg);
-                                    }
-                                    break;
-                                case 3:
-                                    // UDP клиент
-                                    using (UDPClient udpclient = new UDPClient())
-                                    {
-                                        //Отправка команды
-                                        udpclient.Data(channel.ClientHost, channel.ClientPort, channel.WriteTimeout, channel.ReadTimeout, channel.Timeout, bufferSender, ref bufferReceiver, ref errMsg);
-                                    }
-                                    break;
-                                default:
-                                    continue;
-                            }
+                            //switch (channel.Type)
+                            //{
+                            //    case 0:
+                            //        //Пусто
+                            //        DebugerLog(DriverPhrases.NoType);
+                            //        continue;
+                            //    case 1:
+                            //        // Последовательный порт
+                            //        using (SerialPortClient serialClient = new SerialPortClient())
+                            //        {
+                            //            //Отправка команды
+                            //            serialClient.Data(channel.SerialPortName, Convert.ToInt32(channel.SerialPortBaudRate), channel.SerialPortParity, Convert.ToInt32(channel.SerialPortDataBits), channel.SerialPortStopBits, channel.SerialPortHandshake, channel.SerialPortReceivedBytesThreshold, channel.SerialPortDtrEnable, channel.SerialPortRtsEnable, channel.WriteTimeout, channel.ReadTimeout, bufferSender, ref bufferReceiver, ref errMsg);
+                            //        }
+                            //        break;
+                            //    case 2:
+                            //        // TCP клиент
+                            //        using (TCPClient tcpclient = new TCPClient())
+                            //        {
+                            //            //Отправка команды
+                            //            tcpclient.Data(1, channel.ClientHost, channel.ClientPort, channel.WriteTimeout, channel.ReadTimeout, bufferSender, ref bufferReceiver, ref errMsg);
+                            //        }
+                            //        break;
+                            //    case 3:
+                            //        // UDP клиент
+                            //        using (UDPClient udpclient = new UDPClient())
+                            //        {
+                            //            //Отправка команды
+                            //            udpclient.Data(channel.ClientHost, channel.ClientPort, channel.WriteTimeout, channel.ReadTimeout, channel.Timeout, bufferSender, ref bufferReceiver, ref errMsg);
+                            //        }
+                            //        break;
+                            //    default:
+                            //        continue;
+                            //}
 
-                            if (errMsg != string.Empty)
-                            {
-                                DebugerLog(errMsg);
-                                goto ERROR;
-                            }
+                            //if (errMsg != string.Empty)
+                            //{
+                            //    DebugerLog(errMsg);
+                            //    goto ERROR;
+                            //}
 
                             #endregion Тип канала (отправка и получение данных)
 
                             #region Протокол
 
-                            switch (device.TypeProtocol)
-                            {
-                                case 0:
-                                    continue;
-                                case 1:
+                            //switch (device.TypeProtocol)
+                            //{
+                            //    case 0:
+                            //        continue;
+                            //    case 1:
 
-                                    #region Проверка валидатности данных
-                                    //Проверка корректности поступленных данных
-                                    try
-                                    {
-                                        if (bufferReceiver == null)
-                                        {
-                                            device.Status = 2;
-                                            goto ERROR;
-                                        }
+                            //        #region Проверка валидатности данных
+                            //        //Проверка корректности поступленных данных
+                            //        try
+                            //        {
+                            //            if (bufferReceiver == null)
+                            //            {
+                            //                device.Status = 2;
+                            //                goto ERROR;
+                            //            }
 
-                                        validate = masterRTU.ValidateData(bufferSender, bufferReceiver, ref validateMessage);
-                                        DebugerLog(DriverPhrases.Response + "[" + HEX_STRING.BYTEARRAY_TO_HEXSTRING(bufferReceiver) + "]" + validateMessage + "");
+                            //            validate = masterRTU.ValidateData(bufferSender, bufferReceiver, ref validateMessage);
+                            //            DebugerLog(DriverPhrases.Response + "[" + HEX_STRING.BYTEARRAY_TO_HEXSTRING(bufferReceiver) + "]" + validateMessage + "");
 
-                                        if (validate)
-                                        {
-                                            numArrayRegisters = masterRTU.DecodeData(bufferReceiver);
-                                            if (debug)
-                                            {
-                                                DebugerLog("[NumArrayRegisters][" + HEX_STRING.BYTEARRAY_TO_HEXSTRING(numArrayRegisters) + "]");
-                                            }
-                                        }
-                                        else
-                                        {
-                                            device.Status = 2;
-                                            goto ERROR;
-                                        }
-                                    }
-                                    catch
-                                    {
-                                        goto ERROR;
-                                    }
-                                    #endregion Проверка валидатности данных
+                            //            if (validate)
+                            //            {
+                            //                numArrayRegisters = masterRTU.DecodeData(bufferReceiver);
+                            //                if (debug)
+                            //                {
+                            //                    DebugerLog("[NumArrayRegisters][" + HEX_STRING.BYTEARRAY_TO_HEXSTRING(numArrayRegisters) + "]");
+                            //                }
+                            //            }
+                            //            else
+                            //            {
+                            //                device.Status = 2;
+                            //                goto ERROR;
+                            //            }
+                            //        }
+                            //        catch
+                            //        {
+                            //            goto ERROR;
+                            //        }
+                            //        #endregion Проверка валидатности данных
 
-                                    break;
-                                case 2:
+                            //        break;
+                            //    case 2:
 
-                                    #region Проверка валидатности данных
-                                    //Проверка корректности поступленны данных  
-                                    try
-                                    {
-                                        if (bufferReceiver == null)
-                                        {
-                                            device.Status = 2;
-                                            goto ERROR;
-                                        }
+                            //        #region Проверка валидатности данных
+                            //        //Проверка корректности поступленны данных  
+                            //        try
+                            //        {
+                            //            if (bufferReceiver == null)
+                            //            {
+                            //                device.Status = 2;
+                            //                goto ERROR;
+                            //            }
 
-                                        validate = masterTCP.ValidateData(bufferSender, bufferReceiver, ref validateMessage);
-                                        DebugerLog(DriverPhrases.Response + "[" + HEX_STRING.BYTEARRAY_TO_HEXSTRING(bufferReceiver) + "]" + validateMessage + "");
+                            //            validate = masterTCP.ValidateData(bufferSender, bufferReceiver, ref validateMessage);
+                            //            DebugerLog(DriverPhrases.Response + "[" + HEX_STRING.BYTEARRAY_TO_HEXSTRING(bufferReceiver) + "]" + validateMessage + "");
 
-                                        if (validate)
-                                        {
-                                            numArrayRegisters = masterTCP.DecodeData(bufferReceiver);
-                                            if (debug)
-                                            {
-                                                DebugerLog("[NumArrayRegisters][" + HEX_STRING.BYTEARRAY_TO_HEXSTRING(numArrayRegisters) + "]");
-                                            }
-                                        }
-                                        else
-                                        {
-                                            device.Status = 2;
-                                            goto ERROR;
-                                        }
-                                    }
-                                    catch
-                                    {
-                                        goto ERROR;
-                                    }
-                                    #endregion Проверка валидатности данных
+                            //            if (validate)
+                            //            {
+                            //                numArrayRegisters = masterTCP.DecodeData(bufferReceiver);
+                            //                if (debug)
+                            //                {
+                            //                    DebugerLog("[NumArrayRegisters][" + HEX_STRING.BYTEARRAY_TO_HEXSTRING(numArrayRegisters) + "]");
+                            //                }
+                            //            }
+                            //            else
+                            //            {
+                            //                device.Status = 2;
+                            //                goto ERROR;
+                            //            }
+                            //        }
+                            //        catch
+                            //        {
+                            //            goto ERROR;
+                            //        }
+                            //        #endregion Проверка валидатности данных
 
-                                    break;
-                                case 3:
+                            //        break;
+                            //    case 3:
 
-                                    #region Проверка валидатности данных
-                                    try
-                                    {
-                                        //Проверка корректности поступленны данных
-                                        if (bufferReceiver == null)
-                                        {
-                                            device.Status = 2;
-                                            goto ERROR;
-                                        }
+                            //        #region Проверка валидатности данных
+                            //        try
+                            //        {
+                            //            //Проверка корректности поступленны данных
+                            //            if (bufferReceiver == null)
+                            //            {
+                            //                device.Status = 2;
+                            //                goto ERROR;
+                            //            }
 
-                                        validate = masterASCII.ValidateData(bufferSender, bufferReceiver, ref validateMessage);
-                                        DebugerLog(DriverPhrases.Response + "[ASCII][" + HEX_STRING.BYTEARRAY_TO_HEXSTRING(bufferReceiver) + "][HEX][" + HEX_STRING.BYTEARRAY_TO_HEXSTRING(HEX_ASCII.ASCIIBYTEARRAY_TO_BYTEARRAY(bufferReceiver)) + "]" + validateMessage + "");
-                                        bufferReceiver = HEX_ASCII.ASCIIBYTEARRAY_TO_BYTEARRAY(bufferReceiver);
+                            //            validate = masterASCII.ValidateData(bufferSender, bufferReceiver, ref validateMessage);
+                            //            DebugerLog(DriverPhrases.Response + "[ASCII][" + HEX_STRING.BYTEARRAY_TO_HEXSTRING(bufferReceiver) + "][HEX][" + HEX_STRING.BYTEARRAY_TO_HEXSTRING(HEX_ASCII.ASCIIBYTEARRAY_TO_BYTEARRAY(bufferReceiver)) + "]" + validateMessage + "");
+                            //            bufferReceiver = HEX_ASCII.ASCIIBYTEARRAY_TO_BYTEARRAY(bufferReceiver);
 
-                                        if (validate)
-                                        {
-                                            numArrayRegisters = masterASCII.DecodeData(bufferReceiver);
-                                            if (debug)
-                                            {
-                                                DebugerLog("[NumArrayRegisters][" + HEX_STRING.BYTEARRAY_TO_HEXSTRING(numArrayRegisters) + "]");
-                                            }
-                                        }
-                                        else
-                                        {
-                                            device.Status = 2;
-                                            goto ERROR;
-                                        }
-                                    }
-                                    catch
-                                    {
-                                        goto ERROR;
-                                    }
-                                    #endregion Проверка валидатности данных
+                            //            if (validate)
+                            //            {
+                            //                numArrayRegisters = masterASCII.DecodeData(bufferReceiver);
+                            //                if (debug)
+                            //                {
+                            //                    DebugerLog("[NumArrayRegisters][" + HEX_STRING.BYTEARRAY_TO_HEXSTRING(numArrayRegisters) + "]");
+                            //                }
+                            //            }
+                            //            else
+                            //            {
+                            //                device.Status = 2;
+                            //                goto ERROR;
+                            //            }
+                            //        }
+                            //        catch
+                            //        {
+                            //            goto ERROR;
+                            //        }
+                            //        #endregion Проверка валидатности данных
 
-                                    break;
-                                case 4:
+                            //        break;
+                            //    case 4:
 
-                                    #region Проверка валидатности данных
-                                    //Проверка корректности поступленных данных
-                                    try
-                                    {
-                                        if (bufferReceiver == null)
-                                        {
-                                            device.Status = 2;
-                                            goto ERROR;
-                                        }
+                            //        #region Проверка валидатности данных
+                            //        //Проверка корректности поступленных данных
+                            //        try
+                            //        {
+                            //            if (bufferReceiver == null)
+                            //            {
+                            //                device.Status = 2;
+                            //                goto ERROR;
+                            //            }
 
-                                        validate = masterVTD.ValidateData(bufferSender, bufferReceiver, ref validateMessage);
-                                        DebugerLog(DriverPhrases.Response + "[" + HEX_STRING.BYTEARRAY_TO_HEXSTRING(bufferReceiver) + "]" + validateMessage + "");
+                            //            validate = masterVTD.ValidateData(bufferSender, bufferReceiver, ref validateMessage);
+                            //            DebugerLog(DriverPhrases.Response + "[" + HEX_STRING.BYTEARRAY_TO_HEXSTRING(bufferReceiver) + "]" + validateMessage + "");
 
-                                        if (validate)
-                                        {
-                                            numArrayRegisters = masterVTD.DecodeData(bufferReceiver);
-                                            if (debug)
-                                            {
-                                                DebugerLog("[NumArrayRegisters][" + HEX_STRING.BYTEARRAY_TO_HEXSTRING(numArrayRegisters) + "]");
-                                            }
-                                        }
-                                        else
-                                        {
-                                            device.Status = 2;
-                                            goto ERROR;
-                                        }
-                                    }
-                                    catch
-                                    {
-                                        goto ERROR;
-                                    }
-                                    #endregion Проверка валидатности данных
+                            //            if (validate)
+                            //            {
+                            //                numArrayRegisters = masterVTD.DecodeData(bufferReceiver);
+                            //                if (debug)
+                            //                {
+                            //                    DebugerLog("[NumArrayRegisters][" + HEX_STRING.BYTEARRAY_TO_HEXSTRING(numArrayRegisters) + "]");
+                            //                }
+                            //            }
+                            //            else
+                            //            {
+                            //                device.Status = 2;
+                            //                goto ERROR;
+                            //            }
+                            //        }
+                            //        catch
+                            //        {
+                            //            goto ERROR;
+                            //        }
+                            //        #endregion Проверка валидатности данных
 
-                                    break;
+                            //        break;
 
-                                default:
-                                    continue;
+                            //    default:
+                            //        continue;
 
-                            }
+                            //}
 
                             #endregion Протокол
 

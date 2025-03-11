@@ -102,7 +102,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             ckbPollingOnScheduleStatus.Checked = currentDevice.PollingOnScheduleStatus;
 
             numIntervalPool.Value = currentDevice.IntervalPool;
-            cmbTypeProtocol.SelectedIndex = currentDevice.TypeProtocol;
+            //cmbTypeProtocol.SelectedIndex = currentDevice.TypeProtocol;
 
             txtDateTimeLastSuccessfully.Text = currentDevice.DateTimeLastSuccessfully.ToString();
 
@@ -176,7 +176,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             currentDevice.Status = cmbStatus.SelectedIndex;
             currentDevice.PollingOnScheduleStatus = ckbPollingOnScheduleStatus.Checked;
             currentDevice.IntervalPool = Convert.ToInt32(numIntervalPool.Value);
-            currentDevice.TypeProtocol = cmbTypeProtocol.SelectedIndex;
+            //currentDevice.TypeProtocol = cmbTypeProtocol.SelectedIndex;
 
             currentDevice.DateTimeLastSuccessfully = DateTime.Parse(txtDateTimeLastSuccessfully.Text.Trim());
         }

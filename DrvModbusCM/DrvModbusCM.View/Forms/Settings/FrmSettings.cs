@@ -27,8 +27,8 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
         private void LoadSettings()
         {
             #region Debug
-            ckbAutoRun.Checked = settings.Settings.AutoRun;
-            ckbDebug.Checked = settings.Settings.Debug;
+            ckbAutoRun.Checked = settings.AutoRun;
+            ckbDebug.Checked = settings.Debug;
 
             #endregion Debug
         }
@@ -36,8 +36,8 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
         private void SaveSettings()
         {
             #region Debug
-            settings.Settings.AutoRun = ckbAutoRun.Checked;
-            settings.Settings.Debug = ckbDebug.Checked;
+            settings.AutoRun = ckbAutoRun.Checked;
+            settings.Debug = ckbDebug.Checked;
             #endregion Debug
         }
 

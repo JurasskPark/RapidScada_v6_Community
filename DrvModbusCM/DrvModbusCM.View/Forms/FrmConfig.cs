@@ -110,32 +110,32 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             driverConfig = new Project();
 
             // load configuration
-            if (deviceNum == 0)
-            {
-                this.driverConfigPath = configDir;
-                if (!File.Exists(driverConfigPath))
-                {
-                    ProjectFile.SaveXml(driverConfig, driverConfigPath);
-                    driverConfig = ProjectFile.LoadXml(typeof(Project), driverConfigPath) as Project;
-                }
-                else
-                {
-                    driverConfig = ProjectFile.LoadXml(typeof(Project), driverConfigPath) as Project;
-                }
-            }
-            else
-            {
-                this.driverConfigPath = Path.Combine(configDir, DriverUtils.GetFileName(deviceNum));
-                if (!File.Exists(driverConfigPath))
-                {
-                    ProjectFile.SaveXml(driverConfig, driverConfigPath);
-                    driverConfig = ProjectFile.LoadXml(typeof(Project), driverConfigPath) as Project;
-                }
-                else
-                {
-                    driverConfig = ProjectFile.LoadXml(typeof(Project), driverConfigPath) as Project;
-                }
-            }
+            //if (deviceNum == 0)
+            //{
+            //    this.driverConfigPath = configDir;
+            //    if (!File.Exists(driverConfigPath))
+            //    {
+            //        ProjectFile.SaveXml(driverConfig, driverConfigPath);
+            //        driverConfig = ProjectFile.LoadXml(typeof(Project), driverConfigPath) as Project;
+            //    }
+            //    else
+            //    {
+            //        driverConfig = ProjectFile.LoadXml(typeof(Project), driverConfigPath) as Project;
+            //    }
+            //}
+            //else
+            //{
+            //    this.driverConfigPath = Path.Combine(configDir, DriverUtils.GetFileName(deviceNum));
+            //    if (!File.Exists(driverConfigPath))
+            //    {
+            //        ProjectFile.SaveXml(driverConfig, driverConfigPath);
+            //        driverConfig = ProjectFile.LoadXml(typeof(Project), driverConfigPath) as Project;
+            //    }
+            //    else
+            //    {
+            //        driverConfig = ProjectFile.LoadXml(typeof(Project), driverConfigPath) as Project;
+            //    }
+            //}
         }
 
         public void LoadLanguage(string languageDir, bool IsRussian = false)
@@ -825,9 +825,9 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             projectChannel.Name = DriverPhrases.ChannelName;
             projectChannel.Description = "";
             projectChannel.Enabled = true;
-            projectChannel.GatewayTypeProtocol = 0;
-            projectChannel.GatewayPort = 60000;
-            projectChannel.GatewayConnectedClientsMax = 10;
+            //projectChannel.GatewayTypeProtocol = 0;
+            //projectChannel.GatewayPort = 60000;
+            //projectChannel.GatewayConnectedClientsMax = 10;
 
             projectChannel.WriteTimeout = 1000;
             projectChannel.ReadTimeout = 1000;
@@ -848,24 +848,24 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             tn.Text = cnl.Name;
 
             string imageKey = string.Empty;
-            switch (cnl.Type)
-            {
-                case 0:
-                    imageKey = ListImages.ImageKey.ChannelEmpty;
-                    break;
-                case 1:
-                    imageKey = ListImages.ImageKey.ChannelSerialPort;
-                    break;
-                case 2:
-                    imageKey = ListImages.ImageKey.ChannelEthernet;
-                    break;
-                case 3:
-                    imageKey = ListImages.ImageKey.ChannelEthernet;
-                    break;
-                default:
-                    imageKey = ListImages.ImageKey.ChannelEmpty;
-                    break;
-            }
+            //switch (cnl.Type)
+            //{
+            //    case 0:
+            //        imageKey = ListImages.ImageKey.ChannelEmpty;
+            //        break;
+            //    case 1:
+            //        imageKey = ListImages.ImageKey.ChannelSerialPort;
+            //        break;
+            //    case 2:
+            //        imageKey = ListImages.ImageKey.ChannelEthernet;
+            //        break;
+            //    case 3:
+            //        imageKey = ListImages.ImageKey.ChannelEthernet;
+            //        break;
+            //    default:
+            //        imageKey = ListImages.ImageKey.ChannelEmpty;
+            //        break;
+            //}
 
             cnl.KeyImage = imageKey;
             tn.ImageKey = imageKey;
@@ -1984,13 +1984,13 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
         private void Settings()
         {
             FrmSettings frmSettings = new FrmSettings();
-            frmSettings.settings = driverConfig.Settings;
+            frmSettings.settings = driverConfig.Driver.Settings;
             // showing the form
             DialogResult dialog = frmSettings.ShowDialog();
             // if you have closed the form, click OK
             if (DialogResult.OK == dialog)
             {
-                driverConfig.Settings = frmSettings.settings;
+                driverConfig.Driver.Settings = frmSettings.settings;
                 ControlsToConfig();
                 SaveProject();
 
@@ -2132,20 +2132,20 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
 
             #region Port
 
-            if (driverConfig.Settings.ProjectChannel.GatewayTypeProtocol == 0)
-            {
-                //Если шлюз не указан т.е. выключен, то генерируем порт 
-                currentPort = TcpServerPortGenerator.New();
-            }
-            else
-            {
-                bool checkedPort = TcpServerPortGenerator.CheckAvailableServerPort(Convert.ToInt32(driverConfig.Settings.ProjectChannel.GatewayPort));
-                if (checkedPort == false)
-                {
-                    //MessageBox.Show("Указанный порт " + project.Settings.ProjectChannel.GatewayPort + " занят! Попробуйте другой!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-            }
+            //if (driverConfig.Driver.Settings.ProjectChannel.GatewayTypeProtocol == 0)
+            //{
+            //    //Если шлюз не указан т.е. выключен, то генерируем порт 
+            //    currentPort = TcpServerPortGenerator.New();
+            //}
+            //else
+            //{
+            //    bool checkedPort = TcpServerPortGenerator.CheckAvailableServerPort(Convert.ToInt32(driverConfig.Settings.ProjectChannel.GatewayPort));
+            //    if (checkedPort == false)
+            //    {
+            //        //MessageBox.Show("Указанный порт " + project.Settings.ProjectChannel.GatewayPort + " занят! Попробуйте другой!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //        return;
+            //    }
+            //}
 
             #endregion Port
 
