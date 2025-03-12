@@ -12,7 +12,7 @@ using System.Threading.Channels;
 using System.Windows.Forms;
 using System.Xml;
 using DrvModbusCMForm.Control;
-using DrvModbusCM.ViewData;
+//using DrvModbusCM.ViewData;
 using static Scada.Comm.Drivers.DrvIEC61107.View.ListImages;
 using Scada.Data.Entities;
 using System.Xml.Linq;
@@ -199,7 +199,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View.Forms
 
         #region Form
 
-        FrmViewData frmViewData = new FrmViewData();
+        //FrmViewData frmViewData = new FrmViewData();
 
 
         #endregion Form
@@ -1412,9 +1412,9 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View.Forms
             projectChannel.Name = DriverPhrases.ChannelName;
             projectChannel.Description = "";
             projectChannel.Enabled = true;
-            projectChannel.GatewayTypeProtocol = 0;
-            projectChannel.GatewayPort = 60000;
-            projectChannel.GatewayConnectedClientsMax = 10;
+            //projectChannel.GatewayTypeProtocol = 0;
+            //projectChannel.GatewayPort = 60000;
+            //projectChannel.GatewayConnectedClientsMax = 10;
 
             projectChannel.WriteTimeout = 1000;
             projectChannel.ReadTimeout = 1000;

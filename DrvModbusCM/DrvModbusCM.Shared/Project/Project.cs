@@ -1315,6 +1315,55 @@ namespace Scada.Comm.Drivers.DrvModbusCM
     {
         public ProjectDevice()
         {
+            ID = new Guid();
+            ParentID = new Guid();
+            KeyImage = string.Empty;
+            BufferKeyImage = string.Empty;
+
+            Name = string.Empty;
+            Description = string.Empty;
+
+            Address = 0;
+            Protocol = DriverProtocol.None;
+
+            Enabled = true;
+            PollingOnScheduleStatus = false;
+            IntervalPool = 100;
+            Status = 0;
+
+            DateTimeCommandLast = DateTime.MinValue;
+            DateTimeCommandLastGood = DateTime.MinValue;
+            DateTimeLastSuccessfully = DateTime.MinValue;
+
+            CountCommandsSend = 0;
+            CountCommandsAnswerGood = 0;
+            PriorityCommand = 0;
+
+            GatewayAddress = 0;
+            GatewayPort = 60000;
+
+            DeviceRegistersBytes = 2;
+            DeviceGatewayRegistersBytes = 2;
+
+            try
+            {
+                // creating a buffer
+                // adding Registers 65535
+                for (ulong index = 0; index < (ulong)65535; ++index)
+                {
+                    bool status = false;
+                    ulong value = 0;
+                    string s = string.Empty;
+
+                    SetCoil(Convert.ToUInt64(index), status);
+                    SetDiscreteInput(Convert.ToUInt64(index), status);
+                    SetHoldingRegister(Convert.ToUInt64(index), value);
+                    SetInputRegister(Convert.ToUInt64(index), value);
+                    SetDataBuffer(Convert.ToUInt64(index), s);
+                }
+            }
+            catch { }
+
             GroupCommands = new List<ProjectGroupCommand>();
             GroupTags = new List<ProjectGroupTag>();
         }
@@ -1443,21 +1492,21 @@ namespace Scada.Comm.Drivers.DrvModbusCM
 
         #region Commands
         // количество всего отправленных комманд
-        private int countCommands;
+        private int countCommandsSend;
         [XmlAttribute]
-        public int CountCommands
+        public int CountCommandsSend
         {
-            get { return countCommands; }
-            set { countCommands = value; }
+            get { return countCommandsSend; }
+            set { countCommandsSend = value; }
         }
 
         // количество комманд с успешным ответом
-        private int countCommandsGood;
+        private int countCommandsAnswerGood;
         [XmlAttribute]
-        public int CountCommandsGood
+        public int CountCommandsAnswerGood
         {
-            get { return countCommandsGood; }
-            set { countCommandsGood = value; }
+            get { return countCommandsAnswerGood; }
+            set { countCommandsAnswerGood = value; }
         }
 
         // дата последней команды
@@ -1554,7 +1603,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
         [XmlIgnore]
         public ulong[] DataInputRegisters = new ulong[65535];                   //InputRegister устройства   (Функция 4) 
         [XmlIgnore]
-        public string[] DataBuffers = new string[9999999];                      //Буфер устройства           (Фунция с 80 по 99)
+        public string[] DataBuffers = new string[65535];                      //Буфер устройства           (Фунция с 80 по 99)
 
 
         [XmlIgnore]
@@ -1566,9 +1615,8 @@ namespace Scada.Comm.Drivers.DrvModbusCM
         [XmlIgnore]
         public bool[] ExistInputRegisters = new bool[65535];                    //InputRegister устройства   (Функция 4)
         [XmlIgnore]
-        public bool[] ExistDataBuffers = new bool[9999999];                     //Буфер устройства           (Фунция с 80 по 99)
-
-        
+        public bool[] ExistDataBuffers = new bool[65535];                     //Буфер устройства           (Фунция с 80 по 99)
+   
 
         #region Coils
         public bool[] DeviceIDDataCoil()
@@ -1905,10 +1953,6 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             return value;
         }
 
-
-
-
-
         #endregion DataBuffers
 
         #endregion Registers
@@ -1927,21 +1971,30 @@ namespace Scada.Comm.Drivers.DrvModbusCM
                 throw new ArgumentNullException("xmlNode");
             }
 
-            //ID = DriverUtils.StringToGuid(xmlNode.GetChildAsString("ID"));
-            //Name = xmlNode.GetChildAsString("Name");
-            //Description = xmlNode.GetChildAsString("Description");
-            //KeyImage = xmlNode.GetChildAsString("KeyImage");
-            //Enabled = xmlNode.GetChildAsBool("Enabled");
-            //ThreadEnabled = xmlNode.GetChildAsBool("ThreadEnabled");
-            //TypeClient = (CommunicationClient)Enum.Parse(typeof(CommunicationClient), xmlNode.GetChildAsString("TypeClient"));
-            //Behavior = (OperationMode)Enum.Parse(typeof(OperationMode), xmlNode.GetChildAsString("Behavior"));
-            //WriteTimeout = xmlNode.GetChildAsInt("WriteTimeout");
-            //ReadTimeout = xmlNode.GetChildAsInt("ReadTimeout");
-            //Timeout = xmlNode.GetChildAsInt("Timeout");
-            //WriteBufferSize = xmlNode.GetChildAsInt("WriteBufferSize");
-            //ReadBufferSize = xmlNode.GetChildAsInt("ReadBufferSize");
-            //CountError = xmlNode.GetChildAsInt("CountError");
-            //Debug = xmlNode.GetChildAsBool("Debug");
+            ID = DriverUtils.StringToGuid(xmlNode.GetChildAsString("ID"));
+            ParentID = DriverUtils.StringToGuid(xmlNode.GetChildAsString("ParentID"));
+
+            KeyImage = xmlNode.GetChildAsString("KeyImage");
+            BufferKeyImage = xmlNode.GetChildAsString("BufferKeyImage");
+
+            Address = Convert.ToUInt16(xmlNode.GetChildAsInt("Address"));
+            Protocol = (DriverProtocol)Enum.Parse(typeof(DriverProtocol), xmlNode.GetChildAsString("Protocol"));
+
+            Name = xmlNode.GetChildAsString("Name");
+            Description = xmlNode.GetChildAsString("Description");
+           
+            Enabled = xmlNode.GetChildAsBool("Enabled");
+            PollingOnScheduleStatus = xmlNode.GetChildAsBool("PollingOnScheduleStatus");
+            IntervalPool = xmlNode.GetChildAsInt("IntervalPool");
+            Status = xmlNode.GetChildAsInt("Status");
+
+            DeviceRegistersBytes = xmlNode.GetChildAsInt("DeviceRegistersBytes");
+            DeviceGatewayRegistersBytes = xmlNode.GetChildAsInt("DeviceGatewayRegistersBytes");
+
+            GatewayAddress = xmlNode.GetChildAsInt("GatewayAddress");
+            GatewayPort = xmlNode.GetChildAsInt("GatewayPort");
+
+            
 
             //TcpServerSettings.LoadFromXml(xmlNode.SelectSingleNode("TcpServerSettings"));
             //SerialPortSettings.LoadFromXml(xmlNode.SelectSingleNode("SerialPortSettings"));
