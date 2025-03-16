@@ -679,7 +679,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View.Forms
         private void ProjectNew()
         {
             //Проверка вкладок
-            ValidateTabPage();
+            //ValidateTabPage();
             //Убираем имя проекта и путь до него
             ProjectFileName = "";
             ProjectPath = "";
@@ -1406,86 +1406,86 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View.Forms
 
         public void GetDefaultTreeNodes()
         {
-            ProjectChannel projectChannel = new ProjectChannel();
-            projectChannel.KeyImage = ListImages.ImageKey.ChannelEmpty;
-            projectChannel.ID = Guid.NewGuid();
-            projectChannel.Name = DriverPhrases.ChannelName;
-            projectChannel.Description = "";
-            projectChannel.Enabled = true;
-            //projectChannel.GatewayTypeProtocol = 0;
-            //projectChannel.GatewayPort = 60000;
-            //projectChannel.GatewayConnectedClientsMax = 10;
+            //ProjectChannel projectChannel = new ProjectChannel();
+            //projectChannel.KeyImage = ListImages.ImageKey.ChannelEmpty;
+            //projectChannel.ID = Guid.NewGuid();
+            //projectChannel.Name = DriverPhrases.ChannelName;
+            //projectChannel.Description = "";
+            //projectChannel.Enabled = true;
+            ////projectChannel.GatewayTypeProtocol = 0;
+            ////projectChannel.GatewayPort = 60000;
+            ////projectChannel.GatewayConnectedClientsMax = 10;
 
-            projectChannel.WriteTimeout = 1000;
-            projectChannel.ReadTimeout = 1000;
-            projectChannel.Timeout = 1000;
+            //projectChannel.WriteTimeout = 1000;
+            //projectChannel.ReadTimeout = 1000;
+            //projectChannel.Timeout = 1000;
 
-            projectChannel.WriteBufferSize = 8192;
-            projectChannel.ReadBufferSize = 8192;
+            //projectChannel.WriteBufferSize = 8192;
+            //projectChannel.ReadBufferSize = 8192;
 
-            projectChannel.CountError = 3;
-            //Добавляем в дерево
-            TreeNode channelNode = NodeProjectChannelAdd(projectChannel, cmnuDeviceAppend);
-            //Добавляем в проект
-            project.Settings.ProjectChannel = projectChannel;
+            //projectChannel.CountError = 3;
+            ////Добавляем в дерево
+            //TreeNode channelNode = NodeProjectChannelAdd(projectChannel, cmnuDeviceAppend);
+            ////Добавляем в проект
+            ////project.Settings.ProjectChannel = projectChannel;
 
-            //////////////////////////////////////////////////////////////////////
+            ////////////////////////////////////////////////////////////////////////
 
-            ProjectDevice projectDevice = new ProjectDevice();
-            projectDevice.ParentID = projectChannel.ID;
-            projectDevice.ID = Guid.NewGuid();
-            projectDevice.Name = DriverPhrases.DeviceName;
-            projectDevice.Description = "";
-            projectDevice.Enabled = true;
-            projectDevice.Status = 0;                     // статус Неизвестно
-            projectDevice.DeviceRegistersBytes = 2;             // 2 регистра по умолчанию
-            projectDevice.DeviceGatewayRegistersBytes = 2;      // 2 регистра по умолчанию (шлюз)
-            projectDevice.Address = 1;
-            projectDevice.DateTimeLastSuccessfully = new DateTime(2000, 1, 1, 0, 0, 0);
+            //ProjectDevice projectDevice = new ProjectDevice();
+            //projectDevice.ParentID = projectChannel.ID;
+            //projectDevice.ID = Guid.NewGuid();
+            //projectDevice.Name = DriverPhrases.DeviceName;
+            //projectDevice.Description = "";
+            //projectDevice.Enabled = true;
+            //projectDevice.Status = 0;                     // статус Неизвестно
+            //projectDevice.DeviceRegistersBytes = 2;             // 2 регистра по умолчанию
+            //projectDevice.DeviceGatewayRegistersBytes = 2;      // 2 регистра по умолчанию (шлюз)
+            //projectDevice.Address = 1;
+            //projectDevice.DateTimeLastSuccessfully = new DateTime(2000, 1, 1, 0, 0, 0);
 
-            //Добавление регистров 65535
-            for (ulong index = 0; index < (ulong)65535; ++index)
-            {
-                bool status = false;
-                ulong value = 0;
+            ////Добавление регистров 65535
+            //for (ulong index = 0; index < (ulong)65535; ++index)
+            //{
+            //    bool status = false;
+            //    ulong value = 0;
 
-                projectDevice.SetCoil(Convert.ToUInt64(index), status);
-                projectDevice.SetDiscreteInput(Convert.ToUInt64(index), status);
-                projectDevice.SetHoldingRegister(Convert.ToUInt64(index), value);
-                projectDevice.SetInputRegister(Convert.ToUInt64(index), value);
-            }
+            //    projectDevice.SetCoil(Convert.ToUInt64(index), status);
+            //    projectDevice.SetDiscreteInput(Convert.ToUInt64(index), status);
+            //    projectDevice.SetHoldingRegister(Convert.ToUInt64(index), value);
+            //    projectDevice.SetInputRegister(Convert.ToUInt64(index), value);
+            //}
 
-            //Иницилизация групп
-            projectDevice.GroupCommands = new List<ProjectGroupCommand>();
-            projectDevice.GroupTags = new List<ProjectGroupTag>();
+            ////Иницилизация групп
+            //projectDevice.GroupCommands = new List<ProjectGroupCommand>();
+            //projectDevice.GroupTags = new List<ProjectGroupTag>();
 
-            //Делаем активно меню 
-            TreeNode deviceNode = NodeProjectDeviceAdd(projectDevice, channelNode, cmnuDeviceDelete);
+            ////Делаем активно меню 
+            //TreeNode deviceNode = NodeProjectDeviceAdd(projectDevice, channelNode, cmnuDeviceDelete);
 
-            //Добавляем группу комманд
-            ProjectGroupCommand projectGroupCommand = new ProjectGroupCommand();
-            projectGroupCommand.ParentID = projectDevice.ID;
-            projectGroupCommand.ID = Guid.NewGuid();
-            projectGroupCommand.GroupCommandEnabled = true;
-            projectGroupCommand.GroupCommandName = DriverPhrases.GroupCommandName;
-            projectGroupCommand.Commands = new List<ProjectCommand>();
-            projectDevice.GroupCommands.Add(projectGroupCommand);
-            //Добавляем в дерево
-            TreeNode groupCommandNode = NodeGroupCommandAdd(projectGroupCommand, deviceNode, cmnuCommandAppend);
+            ////Добавляем группу комманд
+            //ProjectGroupCommand projectGroupCommand = new ProjectGroupCommand();
+            //projectGroupCommand.ParentID = projectDevice.ID;
+            //projectGroupCommand.ID = Guid.NewGuid();
+            //projectGroupCommand.GroupCommandEnabled = true;
+            //projectGroupCommand.GroupCommandName = DriverPhrases.GroupCommandName;
+            //projectGroupCommand.Commands = new List<ProjectCommand>();
+            //projectDevice.GroupCommands.Add(projectGroupCommand);
+            ////Добавляем в дерево
+            //TreeNode groupCommandNode = NodeGroupCommandAdd(projectGroupCommand, deviceNode, cmnuCommandAppend);
 
-            //Добавляем группу тегов
-            ProjectGroupTag projectGroupTag = new ProjectGroupTag();
-            projectGroupTag.ParentID = projectDevice.ID;
-            projectGroupTag.ID = Guid.NewGuid();
-            projectGroupTag.DeviceGroupTagEnabled = true;
-            projectGroupTag.GroupTagName = DriverPhrases.GroupTagName;
-            projectGroupTag.DeviceTags = new List<ProjectTag>();
-            projectDevice.GroupTags.Add(projectGroupTag);
-            //Добавляем в дерево
-            TreeNode groupTagNode = NodeGroupTagAdd(projectGroupTag, deviceNode, cmnuDeviceTagAppend);
+            ////Добавляем группу тегов
+            //ProjectGroupTag projectGroupTag = new ProjectGroupTag();
+            //projectGroupTag.ParentID = projectDevice.ID;
+            //projectGroupTag.ID = Guid.NewGuid();
+            //projectGroupTag.DeviceGroupTagEnabled = true;
+            //projectGroupTag.GroupTagName = DriverPhrases.GroupTagName;
+            //projectGroupTag.DeviceTags = new List<ProjectTag>();
+            //projectDevice.GroupTags.Add(projectGroupTag);
+            ////Добавляем в дерево
+            //TreeNode groupTagNode = NodeGroupTagAdd(projectGroupTag, deviceNode, cmnuDeviceTagAppend);
 
-            //Добавляем в проект
-            project.Settings.ProjectChannel.Devices.Add(projectDevice);
+            ////Добавляем в проект
+            //project.Settings.ProjectChannel.Devices.Add(projectDevice);
         }
 
         #endregion ProjectDefault
@@ -1493,28 +1493,28 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View.Forms
         #region ProjectChannel
         private void ProjectChannelAdd()
         {
-            ProjectChannel projectChannel = new ProjectChannel();
-            projectChannel.KeyImage = ListImages.ImageKey.ChannelEmpty;
-            projectChannel.ID = Guid.NewGuid();
-            projectChannel.Name = DriverPhrases.ChannelName;
-            projectChannel.Description = "";
-            projectChannel.Enabled = true;
-            projectChannel.GatewayTypeProtocol = 0;
-            projectChannel.GatewayPort = 60000;
-            projectChannel.GatewayConnectedClientsMax = 10;
+            //ProjectChannel projectChannel = new ProjectChannel();
+            //projectChannel.KeyImage = ListImages.ImageKey.ChannelEmpty;
+            //projectChannel.ID = Guid.NewGuid();
+            //projectChannel.Name = DriverPhrases.ChannelName;
+            //projectChannel.Description = "";
+            //projectChannel.Enabled = true;
+            //projectChannel.GatewayTypeProtocol = 0;
+            //projectChannel.GatewayPort = 60000;
+            //projectChannel.GatewayConnectedClientsMax = 10;
 
-            projectChannel.WriteTimeout = 1000;
-            projectChannel.ReadTimeout = 1000;
-            projectChannel.Timeout = 1000;
+            //projectChannel.WriteTimeout = 1000;
+            //projectChannel.ReadTimeout = 1000;
+            //projectChannel.Timeout = 1000;
 
-            projectChannel.WriteBufferSize = 8192;
-            projectChannel.ReadBufferSize = 8192;
+            //projectChannel.WriteBufferSize = 8192;
+            //projectChannel.ReadBufferSize = 8192;
 
-            projectChannel.CountError = 3;
-            //Добавляем в дерево
-            NodeProjectChannelAdd(projectChannel, cmnuDeviceAppend);
-            //Добавляем в проект
-            project.Settings.ProjectChannel = projectChannel;
+            //projectChannel.CountError = 3;
+            ////Добавляем в дерево
+            //NodeProjectChannelAdd(projectChannel, cmnuDeviceAppend);
+            ////Добавляем в проект
+            //project.Settings.ProjectChannel = projectChannel;
 
 
         }
@@ -1537,42 +1537,42 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View.Forms
             if (null == stn)
             {
                 TreeNode tn = new TreeNode(cnl.Name);
-                tn.Text = cnl.Name;
+                //    tn.Text = cnl.Name;
 
-                string imageKey = string.Empty;
-                switch (cnl.Type)
-                {
-                    case 0:
-                        imageKey = ListImages.ImageKey.ChannelEmpty;
-                        break;
-                    case 1:
-                        imageKey = ListImages.ImageKey.ChannelSerialPort;
-                        break;
-                    case 2:
-                        imageKey = ListImages.ImageKey.ChannelEthernet;
-                        break;
-                    case 3:
-                        imageKey = ListImages.ImageKey.ChannelEthernet;
-                        break;
-                    default:
-                        imageKey = ListImages.ImageKey.ChannelEmpty;
-                        break;
-                }
+                //    string imageKey = string.Empty;
+                //    switch (cnl.Type)
+                //    {
+                //        case 0:
+                //            imageKey = ListImages.ImageKey.ChannelEmpty;
+                //            break;
+                //        case 1:
+                //            imageKey = ListImages.ImageKey.ChannelSerialPort;
+                //            break;
+                //        case 2:
+                //            imageKey = ListImages.ImageKey.ChannelEthernet;
+                //            break;
+                //        case 3:
+                //            imageKey = ListImages.ImageKey.ChannelEthernet;
+                //            break;
+                //        default:
+                //            imageKey = ListImages.ImageKey.ChannelEmpty;
+                //            break;
+                //    }
 
-                cnl.KeyImage = imageKey;
-                tn.ImageKey = imageKey;
-                tn.SelectedImageKey = imageKey;
-                //tn.ImageIndex = imgList.Images.IndexOfKey(imageKey);
+                //    cnl.KeyImage = imageKey;
+                //    tn.ImageKey = imageKey;
+                //    tn.SelectedImageKey = imageKey;
+                //    //tn.ImageIndex = imgList.Images.IndexOfKey(imageKey);
 
 
-                this.trvProject.Nodes.Add(tn);
+                //    this.trvProject.Nodes.Add(tn);
 
-                ProjectNodeData ProjectNodeData = new ProjectNodeData();
-                ProjectNodeData.channel = cnl;
-                ProjectNodeData.nodeType = ProjectNodeType.Channel;
+                //    ProjectNodeData ProjectNodeData = new ProjectNodeData();
+                //    ProjectNodeData.channel = cnl;
+                //    ProjectNodeData.nodeType = ProjectNodeType.Channel;
 
-                tn.ContextMenuStrip = cms;
-                tn.Tag = ProjectNodeData;
+                //    tn.ContextMenuStrip = cms;
+                //    tn.Tag = ProjectNodeData;
 
                 return tn;
             }
@@ -1621,30 +1621,30 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View.Forms
             //Делаем активно меню 
             TreeNode deviceNode = NodeProjectDeviceAdd(projectDevice, selectNode, cmnuDeviceDelete);
 
-            //Добавляем группу комманд
-            ProjectGroupCommand projectGroupCommand = new ProjectGroupCommand();
-            projectGroupCommand.ParentID = projectDevice.ID;
-            projectGroupCommand.ID = Guid.NewGuid();
-            projectGroupCommand.GroupCommandEnabled = true;
-            projectGroupCommand.GroupCommandName = DriverPhrases.GroupCommandName;
-            projectGroupCommand.Commands = new List<ProjectCommand>();
-            projectDevice.GroupCommands.Add(projectGroupCommand);
-            //Добавляем в дерево
-            TreeNode groupCommandNode = NodeGroupCommandAdd(projectGroupCommand, deviceNode, cmnuCommandAppend);
+            ////Добавляем группу комманд
+            //ProjectGroupCommand projectGroupCommand = new ProjectGroupCommand();
+            //projectGroupCommand.ParentID = projectDevice.ID;
+            //projectGroupCommand.ID = Guid.NewGuid();
+            //projectGroupCommand.GroupCommandEnabled = true;
+            //projectGroupCommand.GroupCommandName = DriverPhrases.GroupCommandName;
+            //projectGroupCommand.Commands = new List<ProjectCommand>();
+            //projectDevice.GroupCommands.Add(projectGroupCommand);
+            ////Добавляем в дерево
+            //TreeNode groupCommandNode = NodeGroupCommandAdd(projectGroupCommand, deviceNode, cmnuCommandAppend);
 
-            //Добавляем группу тегов
-            ProjectGroupTag projectGroupTag = new ProjectGroupTag();
-            projectGroupTag.ParentID = projectDevice.ID;
-            projectGroupTag.ID = Guid.NewGuid();
-            projectGroupTag.DeviceGroupTagEnabled = true;
-            projectGroupTag.GroupTagName = DriverPhrases.GroupTagName;
-            projectGroupTag.DeviceTags = new List<ProjectTag>();
-            projectDevice.GroupTags.Add(projectGroupTag);
-            //Добавляем в дерево
-            TreeNode groupTagNode = NodeGroupTagAdd(projectGroupTag, deviceNode, cmnuDeviceTagAppend);
+            ////Добавляем группу тегов
+            //ProjectGroupTag projectGroupTag = new ProjectGroupTag();
+            //projectGroupTag.ParentID = projectDevice.ID;
+            //projectGroupTag.ID = Guid.NewGuid();
+            //projectGroupTag.DeviceGroupTagEnabled = true;
+            //projectGroupTag.GroupTagName = DriverPhrases.GroupTagName;
+            //projectGroupTag.DeviceTags = new List<ProjectTag>();
+            //projectDevice.GroupTags.Add(projectGroupTag);
+            ////Добавляем в дерево
+            //TreeNode groupTagNode = NodeGroupTagAdd(projectGroupTag, deviceNode, cmnuDeviceTagAppend);
 
-            //Добавляем в проект
-            project.Settings.ProjectChannel.Devices.Add(projectDevice);
+            ////Добавляем в проект
+            //project.Settings.ProjectChannel.Devices.Add(projectDevice);
         }
 
         //Добавляем в дерево
@@ -1696,22 +1696,23 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View.Forms
         {
             if (null == stn)
             {
-                TreeNode tn = new TreeNode(grpCmd.GroupCommandName);
+                TreeNode tn = new TreeNode();
+                //TreeNode tn = new TreeNode(grpCmd.GroupCommandName);
 
-                string imageKey = ListImages.ImageKey.GroupCmd;
-                grpCmd.KeyImage = imageKey;
-                tn.ImageKey = imageKey;
-                tn.SelectedImageKey = imageKey;
-                //tn.ImageIndex = imgList.Images.IndexOfKey(imageKey);
+                //string imageKey = ListImages.ImageKey.GroupCmd;
+                //grpCmd.KeyImage = imageKey;
+                //tn.ImageKey = imageKey;
+                //tn.SelectedImageKey = imageKey;
+                ////tn.ImageIndex = imgList.Images.IndexOfKey(imageKey);
 
-                ptn.Nodes.Add(tn);
-                tn.ContextMenuStrip = cms;
-                ProjectNodeData ProjectNodeData = new ProjectNodeData();
-                ProjectNodeData.groupCommand = ((ProjectNodeData)ptn.Tag).groupCommand;
-                ProjectNodeData.nodeType = ProjectNodeType.GroupCommand;
-                ProjectNodeData.groupCommand = grpCmd;
-                tn.Tag = ProjectNodeData;
-                ptn.Expand();
+                //ptn.Nodes.Add(tn);
+                //tn.ContextMenuStrip = cms;
+                //ProjectNodeData ProjectNodeData = new ProjectNodeData();
+                //ProjectNodeData.groupCommand = ((ProjectNodeData)ptn.Tag).groupCommand;
+                //ProjectNodeData.nodeType = ProjectNodeType.GroupCommand;
+                //ProjectNodeData.groupCommand = grpCmd;
+                //tn.Tag = ProjectNodeData;
+                //ptn.Expand();
                 return tn;
             }
             return null;
@@ -1722,49 +1723,50 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View.Forms
         #region Command
         private void ProjectCommandAdd(ulong command)
         {
-            ProjectCommand projectCommand = new ProjectCommand();
-            //В дереве выбран объект
-            TreeNode selectNode = trvProject.SelectedNode;
+            //ProjectCommand projectCommand = new ProjectCommand();
+            ////В дереве выбран объект
+            //TreeNode selectNode = trvProject.SelectedNode;
 
-            ProjectGroupCommand projectGroupCommand = ((ProjectNodeData)selectNode.Tag).groupCommand;
-            Guid ParentID = projectGroupCommand.ID;
-            //Guid DeviceID = projectGroupCommand.DeviceID;
+            //ProjectGroupCommand projectGroupCommand = ((ProjectNodeData)selectNode.Tag).groupCommand;
+            //Guid ParentID = projectGroupCommand.ID;
+            ////Guid DeviceID = projectGroupCommand.DeviceID;
 
-            //projectCommand.DeviceID = DeviceID;
-            projectCommand.ParentID = ParentID;
-            projectCommand.ID = Guid.NewGuid();
-            projectCommand.KeyImage = ProjectCommand.KeyImageName(command);
-            projectCommand.CommandEnabled = true;
-            projectCommand.CommandFunctionCode = command;
-            projectCommand.CommandRegisterStartAddress = 0;
-            projectCommand.CommandRegisterCount = 1;
-            projectCommand.CommandParametr = 0;
-            projectCommand.CommandName = projectCommand.GenerateName();
-            projectCommand.CommandDescription = "";
+            ////projectCommand.DeviceID = DeviceID;
+            //projectCommand.ParentID = ParentID;
+            //projectCommand.ID = Guid.NewGuid();
+            //projectCommand.KeyImage = ProjectCommand.KeyImageName(command);
+            //projectCommand.CommandEnabled = true;
+            //projectCommand.CommandFunctionCode = command;
+            //projectCommand.CommandRegisterStartAddress = 0;
+            //projectCommand.CommandRegisterCount = 1;
+            //projectCommand.CommandParametr = 0;
+            //projectCommand.CommandName = projectCommand.GenerateName();
+            //projectCommand.CommandDescription = "";
 
-            //Добавляем в дерево
-            NodeCommandAdd(projectCommand, selectNode, cmnuCommandDelete);
+            ////Добавляем в дерево
+            //NodeCommandAdd(projectCommand, selectNode, cmnuCommandDelete);
 
-            //Добавляем в проект
-            projectGroupCommand.Commands.Add(projectCommand);
+            ////Добавляем в проект
+            //projectGroupCommand.Commands.Add(projectCommand);
         }
 
         public TreeNode NodeCommandAdd(ProjectCommand devCmd, TreeNode ptn, ContextMenuStrip cms, TreeNode stn = null)
         {
             if (null == stn)
             {
-                TreeNode tn = new TreeNode(devCmd.CommandName);
+                TreeNode tn = new TreeNode();
+                //    TreeNode tn = new TreeNode(devCmd.CommandName);
 
-                tn.ImageKey = tn.SelectedImageKey = ProjectCommand.KeyImageName(devCmd.CommandFunctionCode);
+                //    tn.ImageKey = tn.SelectedImageKey = ProjectCommand.KeyImageName(devCmd.CommandFunctionCode);
 
-                ptn.Nodes.Add(tn);
-                tn.ContextMenuStrip = cms;
-                ProjectNodeData ProjectNodeData = new ProjectNodeData();
-                ProjectNodeData.command = ((ProjectNodeData)ptn.Tag).command;
-                ProjectNodeData.nodeType = ProjectNodeType.Command;
-                ProjectNodeData.command = devCmd;
-                tn.Tag = ProjectNodeData;
-                ptn.Expand();
+                //    ptn.Nodes.Add(tn);
+                //    tn.ContextMenuStrip = cms;
+                //    ProjectNodeData ProjectNodeData = new ProjectNodeData();
+                //    ProjectNodeData.command = ((ProjectNodeData)ptn.Tag).command;
+                //    ProjectNodeData.nodeType = ProjectNodeType.Command;
+                //    ProjectNodeData.command = devCmd;
+                //    tn.Tag = ProjectNodeData;
+                //    ptn.Expand();
                 return tn;
             }
             return null;
@@ -1772,16 +1774,16 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View.Forms
 
         private void ProjectCommandDelete()
         {
-            TreeNode selectNode = trvProject.SelectedNode;
-            ProjectGroupCommand projectGroupCommand = ((ProjectNodeData)selectNode.Parent.Tag).groupCommand;
-            ProjectCommand projectCommand = ((ProjectNodeData)selectNode.Tag).command;
-            string text = selectNode.Text;
-            DialogResult dr = MessageBox.Show(DriverPhrases.DeleteQuestion + text + " ?", DriverPhrases.Delete, MessageBoxButtons.YesNo);
-            if (DialogResult.Yes == dr)
-            {
-                projectGroupCommand.Commands.Remove(projectCommand);
-                selectNode.Remove();
-            }
+            //TreeNode selectNode = trvProject.SelectedNode;
+            //ProjectGroupCommand projectGroupCommand = ((ProjectNodeData)selectNode.Parent.Tag).groupCommand;
+            //ProjectCommand projectCommand = ((ProjectNodeData)selectNode.Tag).command;
+            //string text = selectNode.Text;
+            //DialogResult dr = MessageBox.Show(DriverPhrases.DeleteQuestion + text + " ?", DriverPhrases.Delete, MessageBoxButtons.YesNo);
+            //if (DialogResult.Yes == dr)
+            //{
+            //    projectGroupCommand.Commands.Remove(projectCommand);
+            //    selectNode.Remove();
+            //}
         }
 
         #endregion Command
@@ -1791,22 +1793,23 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View.Forms
         {
             if (null == stn)
             {
-                TreeNode tn = new TreeNode(grpTgs.GroupTagName);
+                TreeNode tn = new TreeNode();
+                //TreeNode tn = new TreeNode(grpTgs.GroupTagName);
 
-                string imageKey = ListImages.ImageKey.GroupTag;
-                grpTgs.KeyImage = imageKey;
-                tn.ImageKey = imageKey;
-                tn.SelectedImageKey = imageKey;
-                //tn.ImageIndex = imgList.Images.IndexOfKey(imageKey);
+                //string imageKey = ListImages.ImageKey.GroupTag;
+                //grpTgs.KeyImage = imageKey;
+                //tn.ImageKey = imageKey;
+                //tn.SelectedImageKey = imageKey;
+                ////tn.ImageIndex = imgList.Images.IndexOfKey(imageKey);
 
-                ptn.Nodes.Add(tn);
-                tn.ContextMenuStrip = cms;
-                ProjectNodeData ProjectNodeData = new ProjectNodeData();
-                ProjectNodeData.groupTag = ((ProjectNodeData)ptn.Tag).groupTag;
-                ProjectNodeData.nodeType = ProjectNodeType.DeviceGroupTag;
-                ProjectNodeData.groupTag = grpTgs;
-                tn.Tag = ProjectNodeData;
-                ptn.Expand();
+                //ptn.Nodes.Add(tn);
+                //tn.ContextMenuStrip = cms;
+                //ProjectNodeData ProjectNodeData = new ProjectNodeData();
+                //ProjectNodeData.groupTag = ((ProjectNodeData)ptn.Tag).groupTag;
+                //ProjectNodeData.nodeType = ProjectNodeType.DeviceGroupTag;
+                //ProjectNodeData.groupTag = grpTgs;
+                //tn.Tag = ProjectNodeData;
+                //ptn.Expand();
                 return tn;
             }
             return null;
@@ -1818,34 +1821,34 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View.Forms
 
         private void ProjectTagAdd()
         {
-            ProjectTag projectTag = new ProjectTag();
-            //В дереве выбран объект
-            TreeNode selectNode = trvProject.SelectedNode;
+            //ProjectTag projectTag = new ProjectTag();
+            ////В дереве выбран объект
+            //TreeNode selectNode = trvProject.SelectedNode;
 
-            ProjectGroupTag projectGroupTag = ((ProjectNodeData)selectNode.Tag).groupTag;
-            Guid ParentID = projectGroupTag.ParentID;
-            Guid DeviceID = projectGroupTag.ID;
+            //ProjectGroupTag projectGroupTag = ((ProjectNodeData)selectNode.Tag).groupTag;
+            //Guid ParentID = projectGroupTag.ParentID;
+            //Guid DeviceID = projectGroupTag.ID;
 
-            projectTag.DeviceID = DeviceID;
-            projectTag.DeviceGroupTagID = ParentID;
-            projectTag.DeviceTagID = Guid.NewGuid();
-            projectTag.DeviceTagEnabled = true;
-            projectTag.DeviceTagAddress = "";
-            projectTag.DeviceTagName = DriverPhrases.TagName;
-            projectTag.DeviceTagDescription = "";
-            projectTag.DeviceTagCoefficient = 1;
+            //projectTag.DeviceID = DeviceID;
+            //projectTag.DeviceGroupTagID = ParentID;
+            //projectTag.DeviceTagID = Guid.NewGuid();
+            //projectTag.DeviceTagEnabled = true;
+            //projectTag.DeviceTagAddress = "";
+            //projectTag.DeviceTagName = DriverPhrases.TagName;
+            //projectTag.DeviceTagDescription = "";
+            //projectTag.DeviceTagCoefficient = 1;
 
-            projectTag.DeviceTagScaled = 0;
-            projectTag.DeviceTagScaledHigh = 1000;
-            projectTag.DeviceTagScaledLow = 0;
-            projectTag.DeviceTagRowHigh = 1000;
-            projectTag.DeviceTagRowLow = 0;
+            //projectTag.DeviceTagScaled = 0;
+            //projectTag.DeviceTagScaledHigh = 1000;
+            //projectTag.DeviceTagScaledLow = 0;
+            //projectTag.DeviceTagRowHigh = 1000;
+            //projectTag.DeviceTagRowLow = 0;
 
-            //Добавляем в дерево
-            NodeDeviceTagAdd(projectTag, selectNode, cmnuDeviceTagDelete);
+            ////Добавляем в дерево
+            //NodeDeviceTagAdd(projectTag, selectNode, cmnuDeviceTagDelete);
 
-            //Добавляем в проект
-            projectGroupTag.DeviceTags.Add(projectTag);
+            ////Добавляем в проект
+            //projectGroupTag.DeviceTags.Add(projectTag);
 
         }
 
@@ -1853,16 +1856,17 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View.Forms
         {
             if (null == stn)
             {
-                TreeNode tn = new TreeNode(devTag.DeviceTagName);
-                devTag.KeyImage = tn.ImageKey = tn.SelectedImageKey = ListImages.ImageKey.Tag;
-                ptn.Nodes.Add(tn);
-                tn.ContextMenuStrip = cms;
-                ProjectNodeData ProjectNodeData = new ProjectNodeData();
-                ProjectNodeData.tag = ((ProjectNodeData)ptn.Tag).tag;
-                ProjectNodeData.nodeType = ProjectNodeType.DeviceTag;
-                ProjectNodeData.tag = devTag;
-                tn.Tag = ProjectNodeData;
-                ptn.Expand();
+                TreeNode tn = new TreeNode();
+                //TreeNode tn = new TreeNode(devTag.DeviceTagName);
+                //devTag.KeyImage = tn.ImageKey = tn.SelectedImageKey = ListImages.ImageKey.Tag;
+                //ptn.Nodes.Add(tn);
+                //tn.ContextMenuStrip = cms;
+                //ProjectNodeData ProjectNodeData = new ProjectNodeData();
+                //ProjectNodeData.tag = ((ProjectNodeData)ptn.Tag).tag;
+                //ProjectNodeData.nodeType = ProjectNodeType.DeviceTag;
+                //ProjectNodeData.tag = devTag;
+                //tn.Tag = ProjectNodeData;
+                //ptn.Expand();
                 return tn;
             }
             return null;
@@ -1870,16 +1874,16 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View.Forms
 
         private void ProjectTagDelete()
         {
-            TreeNode selectNode = trvProject.SelectedNode;
-            ProjectGroupTag projectGroupTag = ((ProjectNodeData)selectNode.Parent.Tag).groupTag;
-            ProjectTag projectTag = ((ProjectNodeData)selectNode.Tag).tag;
-            string text = selectNode.Text;
-            DialogResult dr = MessageBox.Show(DriverPhrases.DeleteQuestion + text + " ?", DriverPhrases.Delete, MessageBoxButtons.YesNo);
-            if (DialogResult.Yes == dr)
-            {
-                projectGroupTag.DeviceTags.Remove(projectTag);
-                selectNode.Remove();
-            }
+            //TreeNode selectNode = trvProject.SelectedNode;
+            //ProjectGroupTag projectGroupTag = ((ProjectNodeData)selectNode.Parent.Tag).groupTag;
+            //ProjectTag projectTag = ((ProjectNodeData)selectNode.Tag).tag;
+            //string text = selectNode.Text;
+            //DialogResult dr = MessageBox.Show(DriverPhrases.DeleteQuestion + text + " ?", DriverPhrases.Delete, MessageBoxButtons.YesNo);
+            //if (DialogResult.Yes == dr)
+            //{
+            //    projectGroupTag.DeviceTags.Remove(projectTag);
+            //    selectNode.Remove();
+            //}
         }
 
         #endregion DeviceTag
@@ -1951,70 +1955,70 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View.Forms
         /// <param name="e"></param>
         private void trvProject_BeforeSelect(object sender, TreeViewCancelEventArgs e)
         {
-            bool status = false;
+            //bool status = false;
 
-            TreeNode selectNode = trvProject.SelectedNode;
+            //TreeNode selectNode = trvProject.SelectedNode;
 
-            if (SwitchingNewControlLock != true)
-            {
-                selectNodePrevious = trvProject.SelectedNode;
-            }
+            //if (SwitchingNewControlLock != true)
+            //{
+            //    selectNodePrevious = trvProject.SelectedNode;
+            //}
 
-            if (selectNode == null)
-            {
-                return;
-            }
+            //if (selectNode == null)
+            //{
+            //    return;
+            //}
 
-            mtNodeData = (ProjectNodeData)selectNode.Tag;
-            mtNodeDataPrevious = (ProjectNodeData)selectNodePrevious.Tag;
+            //mtNodeData = (ProjectNodeData)selectNode.Tag;
+            //mtNodeDataPrevious = (ProjectNodeData)selectNodePrevious.Tag;
 
-            if (SwitchingNewControlLock == true)
-            {
-                modified = false;
-            }
-            else
-            {
-                if (ProjectNodeType.Channel == mtNodeData.nodeType && mtNodeData.channel != null)
-                {
-                    modified = status = ((uscChannel)uscPropertyControl).modified;
-                }
+            //if (SwitchingNewControlLock == true)
+            //{
+            //    modified = false;
+            //}
+            //else
+            //{
+            //    if (ProjectNodeType.Channel == mtNodeData.nodeType && mtNodeData.channel != null)
+            //    {
+            //        modified = status = ((uscChannel)uscPropertyControl).modified;
+            //    }
 
-                if (ProjectNodeType.Device == mtNodeData.nodeType && mtNodeData.device != null)
-                {
-                    modified = status = ((uscDevice)uscPropertyControl).modified;
-                }
+            //    if (ProjectNodeType.Device == mtNodeData.nodeType && mtNodeData.device != null)
+            //    {
+            //        modified = status = ((uscDevice)uscPropertyControl).modified;
+            //    }
 
-                if (ProjectNodeType.Command == mtNodeData.nodeType && mtNodeData.command != null)
-                {
-                    modified = status = ((uscCommandParametr)uscPropertyControl).modified;
-                    modified = status = ((uscCommandRead)uscPropertyControl).modified;
-                    modified = status = ((uscCommandWrite)uscPropertyControl).modified;
-                }
+            //    if (ProjectNodeType.Command == mtNodeData.nodeType && mtNodeData.command != null)
+            //    {
+            //        modified = status = ((uscCommandParametr)uscPropertyControl).modified;
+            //        modified = status = ((uscCommandRead)uscPropertyControl).modified;
+            //        modified = status = ((uscCommandWrite)uscPropertyControl).modified;
+            //    }
 
-                if (ProjectNodeType.DeviceGroupTag == mtNodeData.nodeType && mtNodeData.groupTag != null)
-                {
-                    modified = status = ((uscGroupTag)uscPropertyControl).modified;
-                }
+            //    if (ProjectNodeType.DeviceGroupTag == mtNodeData.nodeType && mtNodeData.groupTag != null)
+            //    {
+            //        modified = status = ((uscGroupTag)uscPropertyControl).modified;
+            //    }
 
-                if (ProjectNodeType.DeviceTag == mtNodeData.nodeType && mtNodeData.tag != null)
-                {
-                    modified = status = ((FrmTag)frmPropertyForm).modified;
-                }
+            //    if (ProjectNodeType.DeviceTag == mtNodeData.nodeType && mtNodeData.tag != null)
+            //    {
+            //        modified = status = ((FrmTag)frmPropertyForm).modified;
+            //    }
 
-                if (status)
-                {
-                    DialogResult dialogResult = MessageBox.Show(DriverDictonary.QuestionAboutChanges, "", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                    if (dialogResult == DialogResult.Yes)
-                    {
-                        SwitchingNewControlLock = true;
-                        trvProject.SendToBack();
-                    }
-                    else if (dialogResult == DialogResult.No)
-                    {
-                        //none
-                    }
-                }
-            }
+            //    if (status)
+            //    {
+            //        DialogResult dialogResult = MessageBox.Show(DriverDictonary.QuestionAboutChanges, "", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            //        if (dialogResult == DialogResult.Yes)
+            //        {
+            //            SwitchingNewControlLock = true;
+            //            trvProject.SendToBack();
+            //        }
+            //        else if (dialogResult == DialogResult.No)
+            //        {
+            //            //none
+            //        }
+            //    }
+            //}
         }
 
         private void trvProject_AfterSelect(object sender, TreeViewEventArgs e)
@@ -2046,35 +2050,35 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View.Forms
 
         private void trvProject_MouseClick(object sender, MouseEventArgs e)
         {
-            TreeNode selectNode = trvProject.GetNodeAt(new Point(e.X, e.Y));
-            selectNode = trvProject.SelectedNode;
+            //TreeNode selectNode = trvProject.GetNodeAt(new Point(e.X, e.Y));
+            //selectNode = trvProject.SelectedNode;
 
-            mtNodeData = (ProjectNodeData)selectNode.Tag;
+            //mtNodeData = (ProjectNodeData)selectNode.Tag;
 
-            if (ProjectNodeType.Channel == mtNodeData.nodeType && mtNodeData.channel != null)
-            {
-                trvProject.ContextMenuStrip = cmnuDeviceAppend;
-            }
-            else if (ProjectNodeType.Device == mtNodeData.nodeType && mtNodeData.device != null)
-            {
-                trvProject.ContextMenuStrip = cmnuDeviceDelete;
-            }
-            else if (ProjectNodeType.GroupCommand == mtNodeData.nodeType && mtNodeData.groupCommand != null)
-            {
-                trvProject.ContextMenuStrip = cmnuCommandAppend;
-            }
-            else if (ProjectNodeType.Command == mtNodeData.nodeType && mtNodeData.command != null)
-            {
-                trvProject.ContextMenuStrip = cmnuCommandDelete;
-            }
-            else if (ProjectNodeType.DeviceGroupTag == mtNodeData.nodeType && mtNodeData.groupTag != null)
-            {
-                trvProject.ContextMenuStrip = cmnuDeviceTagAppend;
-            }
-            else if (ProjectNodeType.DeviceTag == mtNodeData.nodeType && mtNodeData.tag != null)
-            {
-                trvProject.ContextMenuStrip = cmnuDeviceTagDelete;
-            }
+            //if (ProjectNodeType.Channel == mtNodeData.nodeType && mtNodeData.channel != null)
+            //{
+            //    trvProject.ContextMenuStrip = cmnuDeviceAppend;
+            //}
+            //else if (ProjectNodeType.Device == mtNodeData.nodeType && mtNodeData.device != null)
+            //{
+            //    trvProject.ContextMenuStrip = cmnuDeviceDelete;
+            //}
+            //else if (ProjectNodeType.GroupCommand == mtNodeData.nodeType && mtNodeData.groupCommand != null)
+            //{
+            //    trvProject.ContextMenuStrip = cmnuCommandAppend;
+            //}
+            //else if (ProjectNodeType.Command == mtNodeData.nodeType && mtNodeData.command != null)
+            //{
+            //    trvProject.ContextMenuStrip = cmnuCommandDelete;
+            //}
+            //else if (ProjectNodeType.DeviceGroupTag == mtNodeData.nodeType && mtNodeData.groupTag != null)
+            //{
+            //    trvProject.ContextMenuStrip = cmnuDeviceTagAppend;
+            //}
+            //else if (ProjectNodeType.DeviceTag == mtNodeData.nodeType && mtNodeData.tag != null)
+            //{
+            //    trvProject.ContextMenuStrip = cmnuDeviceTagDelete;
+            //}
         }
 
         private void trvProject_MouseDown(object sender, MouseEventArgs e)
@@ -2100,152 +2104,152 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View.Forms
 
         private void LoadWindow(ProjectNodeData mtNodeData)
         {
-            // checking tabs
-            ValidateTabPage();
+        //    // checking tabs
+        //    ValidateTabPage();
 
-            if (SwitchingNewControlLock == true)
-            {
-                return;
-            }
+        //    if (SwitchingNewControlLock == true)
+        //    {
+        //        return;
+        //    }
 
-            bool showForm = false;
-            string keyImage = string.Empty;
-            int indexImage = 0;
+        //    bool showForm = false;
+        //    string keyImage = string.Empty;
+        //    int indexImage = 0;
 
-            if (ProjectNodeType.Channel == mtNodeData.nodeType && mtNodeData.channel != null)
-            {
-                keyImage = mtNodeData.channel.KeyImage;
-                indexImage = imgList.Images.IndexOfKey(keyImage);
+        //    if (ProjectNodeType.Channel == mtNodeData.nodeType && mtNodeData.channel != null)
+        //    {
+        //        keyImage = mtNodeData.channel.KeyImage;
+        //        indexImage = imgList.Images.IndexOfKey(keyImage);
 
-                uscChannel uscChannelControl = new uscChannel(mtNodeData);
-                uscChannelControl.frmParentGloabal = this;
-                uscPropertyControl = uscChannelControl;
-            }
-            else if (ProjectNodeType.Device == mtNodeData.nodeType && mtNodeData.device != null)
-            {
-                keyImage = mtNodeData.device.KeyImage;
-                indexImage = imgList.Images.IndexOfKey(keyImage);
+        //        uscChannel uscChannelControl = new uscChannel(mtNodeData);
+        //        uscChannelControl.frmParentGloabal = this;
+        //        uscPropertyControl = uscChannelControl;
+        //    }
+        //    else if (ProjectNodeType.Device == mtNodeData.nodeType && mtNodeData.device != null)
+        //    {
+        //        keyImage = mtNodeData.device.KeyImage;
+        //        indexImage = imgList.Images.IndexOfKey(keyImage);
 
-                uscDevice uscDeviceControl = new uscDevice(mtNodeData);
-                uscDeviceControl.frmParentGloabal = this;
-                uscPropertyControl = uscDeviceControl;
-            }
-            else if (ProjectNodeType.GroupCommand == mtNodeData.nodeType && mtNodeData.groupCommand != null)
-            {
-                keyImage = mtNodeData.groupCommand.KeyImage;
-                indexImage = imgList.Images.IndexOfKey(keyImage);
+        //        uscDevice uscDeviceControl = new uscDevice(mtNodeData);
+        //        uscDeviceControl.frmParentGloabal = this;
+        //        uscPropertyControl = uscDeviceControl;
+        //    }
+        //    else if (ProjectNodeType.GroupCommand == mtNodeData.nodeType && mtNodeData.groupCommand != null)
+        //    {
+        //        keyImage = mtNodeData.groupCommand.KeyImage;
+        //        indexImage = imgList.Images.IndexOfKey(keyImage);
 
-                uscEmpty uscEmptyControl = new uscEmpty();
-                uscPropertyControl = uscEmptyControl;
-            }
-            else if (ProjectNodeType.Command == mtNodeData.nodeType && mtNodeData.command != null)
-            {
-                if (mtNodeData.command.CommandFunctionCode <= 4)
-                {
-                    uscPropertyControl = new uscCommandRead(mtNodeData);
-                    keyImage = mtNodeData.command.KeyImage;
-                }
-                else if (mtNodeData.command.CommandFunctionCode >= 80 && mtNodeData.command.CommandFunctionCode <= 96)
-                {
-                    uscPropertyControl = new uscCommandParametr(mtNodeData);
-                    keyImage = mtNodeData.command.KeyImage;
-                }
-                else
-                {
+        //        uscEmpty uscEmptyControl = new uscEmpty();
+        //        uscPropertyControl = uscEmptyControl;
+        //    }
+        //    else if (ProjectNodeType.Command == mtNodeData.nodeType && mtNodeData.command != null)
+        //    {
+        //        if (mtNodeData.command.CommandFunctionCode <= 4)
+        //        {
+        //            uscPropertyControl = new uscCommandRead(mtNodeData);
+        //            keyImage = mtNodeData.command.KeyImage;
+        //        }
+        //        else if (mtNodeData.command.CommandFunctionCode >= 80 && mtNodeData.command.CommandFunctionCode <= 96)
+        //        {
+        //            uscPropertyControl = new uscCommandParametr(mtNodeData);
+        //            keyImage = mtNodeData.command.KeyImage;
+        //        }
+        //        else
+        //        {
 
-                }
-            }
-            else if (ProjectNodeType.DeviceGroupTag == mtNodeData.nodeType && mtNodeData.groupTag != null)
-            {
-                keyImage = mtNodeData.groupTag.KeyImage;
-                indexImage = imgList.Images.IndexOfKey(keyImage);
+        //        }
+        //    }
+        //    else if (ProjectNodeType.DeviceGroupTag == mtNodeData.nodeType && mtNodeData.groupTag != null)
+        //    {
+        //        keyImage = mtNodeData.groupTag.KeyImage;
+        //        indexImage = imgList.Images.IndexOfKey(keyImage);
 
-                TreeNode selectNode = trvProject.SelectedNode;
-                ProjectGroupTag projectGroupTag = mtNodeData.groupTag;
+        //        TreeNode selectNode = trvProject.SelectedNode;
+        //        ProjectGroupTag projectGroupTag = mtNodeData.groupTag;
 
-                if (projectGroupTag.DeviceTags == null)
-                {
-                    projectGroupTag.DeviceTags = new List<ProjectTag>();
-                }
-                projectGroupTag.DeviceTags.Clear();
+        //        if (projectGroupTag.DeviceTags == null)
+        //        {
+        //            projectGroupTag.DeviceTags = new List<ProjectTag>();
+        //        }
+        //        projectGroupTag.DeviceTags.Clear();
 
-                foreach (TreeNode tagNode in selectNode.Nodes)
-                {
-                    ProjectNodeData mtTagNodeData = (ProjectNodeData)tagNode.Tag;
-                    ProjectTag projectTag = mtTagNodeData.tag;
-                    projectGroupTag.DeviceTags.Add(projectTag);
-                }
+        //        foreach (TreeNode tagNode in selectNode.Nodes)
+        //        {
+        //            ProjectNodeData mtTagNodeData = (ProjectNodeData)tagNode.Tag;
+        //            ProjectTag projectTag = mtTagNodeData.tag;
+        //            projectGroupTag.DeviceTags.Add(projectTag);
+        //        }
 
-                uscGroupTag uscGroupTag = new uscGroupTag(mtNodeData);
-                uscGroupTag.frmParentGloabal = this;
-                uscPropertyControl = uscGroupTag;
+        //        uscGroupTag uscGroupTag = new uscGroupTag(mtNodeData);
+        //        uscGroupTag.frmParentGloabal = this;
+        //        uscPropertyControl = uscGroupTag;
 
-            }
-            else if (ProjectNodeType.DeviceTag == mtNodeData.nodeType && mtNodeData.tag != null)
-            {
+        //    }
+        //    else if (ProjectNodeType.DeviceTag == mtNodeData.nodeType && mtNodeData.tag != null)
+        //    {
 
-                keyImage = mtNodeData.tag.KeyImage;
-                indexImage = imgList.Images.IndexOfKey(keyImage);
+        //        keyImage = mtNodeData.tag.KeyImage;
+        //        indexImage = imgList.Images.IndexOfKey(keyImage);
 
-                showForm = true;
-                FrmTag frmTag = new FrmTag(mtNodeData);
-                frmTag.frmParentGloabal = this;
-                frmPropertyForm = frmTag;
-            }
+        //        showForm = true;
+        //        FrmTag frmTag = new FrmTag(mtNodeData);
+        //        frmTag.frmParentGloabal = this;
+        //        frmPropertyForm = frmTag;
+        //    }
 
-            try
-            {
-                tabControl.ImageList = imgList;
+        //    try
+        //    {
+        //        tabControl.ImageList = imgList;
 
-                TabPage tabPageNew = new TabPage(trvProject.SelectedNode.Text);
-                tabPageNew.Name = trvProject.SelectedNode.Text;
-                tabPageNew.Text = trvProject.SelectedNode.Text;
-                tabPageNew.ImageIndex = indexImage;
+        //        TabPage tabPageNew = new TabPage(trvProject.SelectedNode.Text);
+        //        tabPageNew.Name = trvProject.SelectedNode.Text;
+        //        tabPageNew.Text = trvProject.SelectedNode.Text;
+        //        tabPageNew.ImageIndex = indexImage;
 
-                if (showForm == false)
-                {
-                    tabPageNew.Controls.Add(uscPropertyControl);
-                }
-                else
-                {
-                    tabPageNew.Controls.Add(frmPropertyForm);
-                }
+        //        if (showForm == false)
+        //        {
+        //            tabPageNew.Controls.Add(uscPropertyControl);
+        //        }
+        //        else
+        //        {
+        //            tabPageNew.Controls.Add(frmPropertyForm);
+        //        }
 
 
-                tabControl.TabPages.Add(tabPageNew);
-                tabControl.SelectedTab = tabPageNew;
+        //        tabControl.TabPages.Add(tabPageNew);
+        //        tabControl.SelectedTab = tabPageNew;
 
-                if (showForm == false)
-                {
-                    uscPropertyControl.Dock = DockStyle.Fill;
-                    uscPropertyControl.Show();
-                }
-                else
-                {
-                    frmPropertyForm.Dock = DockStyle.Fill;
-                    frmPropertyForm.Show();
-                }
-            }
-            catch (System.ObjectDisposedException) { }
-        }
+        //        if (showForm == false)
+        //        {
+        //            uscPropertyControl.Dock = DockStyle.Fill;
+        //            uscPropertyControl.Show();
+        //        }
+        //        else
+        //        {
+        //            frmPropertyForm.Dock = DockStyle.Fill;
+        //            frmPropertyForm.Show();
+        //        }
+        //    }
+        //    catch (System.ObjectDisposedException) { }
+        //}
 
-        private void ValidateTabPage()
-        {
-            if (uscPropertyControl != null)
-            {
-                uscPropertyControl.Dispose();
-            }
+        //private void ValidateTabPage()
+        //{
+        //    if (uscPropertyControl != null)
+        //    {
+        //        uscPropertyControl.Dispose();
+        //    }
 
-            if (frmPropertyForm != null)
-            {
-                frmPropertyForm.Close();
-                frmPropertyForm.Dispose();
-            }
+        //    if (frmPropertyForm != null)
+        //    {
+        //        frmPropertyForm.Close();
+        //        frmPropertyForm.Dispose();
+        //    }
 
-            foreach (TabPage tabPage in tabControl.TabPages)
-            {
-                tabControl.Controls.Remove(tabPage);
-            }
+        //    foreach (TabPage tabPage in tabControl.TabPages)
+        //    {
+        //        tabControl.Controls.Remove(tabPage);
+        //    }
         }
 
         #endregion Selection of nodes and elements on the project 
@@ -2253,11 +2257,11 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View.Forms
         #region Timer
         private void tmrTimer_Tick(object sender, EventArgs e)
         {
-            List<ProjectDevice> tmpDevices = project.Settings.ProjectDevice;
-            foreach (ProjectDevice device in tmpDevices)
-            {
+            //List<ProjectDevice> tmpDevices = project.Settings.ProjectDevice;
+            //foreach (ProjectDevice device in tmpDevices)
+            //{
 
-            }
+            //}
         }
 
         #endregion Timer
@@ -2324,71 +2328,71 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View.Forms
 
         private void Start()
         {
-            string errMsg = string.Empty;
+            //string errMsg = string.Empty;
 
-            // save the configuration
-            ControlsToConfig();
+            //// save the configuration
+            //ControlsToConfig();
 
-            // load a configuration
-            ConfigToControls();
+            //// load a configuration
+            //ConfigToControls();
 
-            int port = 0;
-            if (project.Settings.ProjectChannel.GatewayTypeProtocol == 0)
-            {
-                //Если шлюз не указан т.е. выключен, то генерируем порт 
-                port = GENERATE_TCP_SERVER_PORT.PORT_NEW();
-            }
-            else
-            {
-                bool checked_port = GENERATE_TCP_SERVER_PORT.CheckAvailableServerPort(Convert.ToInt32(project.Settings.ProjectChannel.GatewayPort));
-                if (checked_port == false)
-                {
-                    MessageBox.Show("Указанный порт " + project.Settings.ProjectChannel.GatewayPort + " занят! Попробуйте другой!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-            }
+            //int port = 0;
+            //if (project.Settings.ProjectChannel.GatewayTypeProtocol == 0)
+            //{
+            //    //Если шлюз не указан т.е. выключен, то генерируем порт 
+            //    port = GENERATE_TCP_SERVER_PORT.PORT_NEW();
+            //}
+            //else
+            //{
+            //    bool checked_port = GENERATE_TCP_SERVER_PORT.CheckAvailableServerPort(Convert.ToInt32(project.Settings.ProjectChannel.GatewayPort));
+            //    if (checked_port == false)
+            //    {
+            //        MessageBox.Show("Указанный порт " + project.Settings.ProjectChannel.GatewayPort + " занят! Попробуйте другой!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //        return;
+            //    }
+            //}
 
-            project.Settings.ProjectChannel.ThreadEnabled = true;
+            //project.Settings.ProjectChannel.ThreadEnabled = true;
 
-            //Получение RxTx 
-            DriverClient.EventHandlerEventDevicePollTxRx = new DriverClient.EventDevicePollTxRx(PollTxRxGet);
-            //Получение лога
-            DriverClient.OnDebug = new DriverClient.DebugData(PollLogGet);
-            //Получение информации с TCP сервера
-            DriverClient.OnDebugTCPServer = new DriverClient.DebugDataTCPServer(PollLogGetTCPServer);
+            ////Получение RxTx 
+            //DriverClient.EventHandlerEventDevicePollTxRx = new DriverClient.EventDevicePollTxRx(PollTxRxGet);
+            ////Получение лога
+            //DriverClient.OnDebug = new DriverClient.DebugData(PollLogGet);
+            ////Получение информации с TCP сервера
+            //DriverClient.OnDebugTCPServer = new DriverClient.DebugDataTCPServer(PollLogGetTCPServer);
 
-            DriverClient driverClient = new DriverClient(project);
-            driverClient.InitializingDriver();
+            //DriverClient driverClient = new DriverClient(project);
+            //driverClient.InitializingDriver();
 
-            new Thread(new ParameterizedThreadStart(driverClient.ExecuteCycle))
-            {
-                IsBackground = true
-            }.Start((object)driverClient);
-
-
+            //new Thread(new ParameterizedThreadStart(driverClient.ExecuteCycle))
+            //{
+            //    IsBackground = true
+            //}.Start((object)driverClient);
 
 
-            if (errMsg != string.Empty)
-            {
-                ScadaUiUtils.ShowError(errMsg);
-            }
+
+
+            //if (errMsg != string.Empty)
+            //{
+            //    ScadaUiUtils.ShowError(errMsg);
+            //}
         }
 
 
         private void Stop()
         {
-            project.Settings.ProjectChannel.ThreadEnabled = false;
+            //project.Settings.ProjectChannel.ThreadEnabled = false;
         }
 
 
         void PollLogGet(string text)
         {
-            FrmViewData.SetLog(text);
+            //FrmViewData.SetLog(text);
         }
 
         void PollLogGetTCPServer(string text)
         {
-            FrmViewData.SetLogTcpServer(text);
+            //FrmViewData.SetLogTcpServer(text);
         }
 
         void PollTxRxGet(string type, int data)
@@ -2398,8 +2402,8 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View.Forms
 
         private void tlsProjectDataView_Click(object sender, EventArgs e)
         {
-            FrmViewData.CloseForm();
-            FrmViewData.ShowSplashScreen();
+            //FrmViewData.CloseForm();
+            //FrmViewData.ShowSplashScreen();
         }
 
         private void toolStripButton1_Click(object sender, EventArgs e)

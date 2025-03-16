@@ -258,7 +258,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
                 }
             }
 
-            ProjectFile.SaveXml(driverConfig, driverConfigPath);
+            //ProjectFile.SaveXml(driverConfig, driverConfigPath);
         }
 
         #endregion Driver Config
@@ -745,7 +745,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
                 
             }
 
-            ProjectFile.SaveXml(driverConfig, fileName);
+            //ProjectFile.SaveXml(driverConfig, fileName);
         }
 
         #endregion Project Save
