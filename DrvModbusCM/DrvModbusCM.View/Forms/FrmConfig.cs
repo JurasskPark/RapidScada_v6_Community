@@ -1051,7 +1051,6 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             projectCommand.FunctionCode = command;
             projectCommand.RegisterStartAddress = 0;
             projectCommand.RegisterCount = 1;
-            projectCommand.Parametr = 0;
             projectCommand.Name = projectCommand.GenerateName();
             projectCommand.Description = "";
 

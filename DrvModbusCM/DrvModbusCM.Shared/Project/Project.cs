@@ -1018,6 +1018,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             catch { }
         }
         #endregion Save
+
     }
 
     #endregion ProjectChannel
@@ -1358,8 +1359,6 @@ namespace Scada.Comm.Drivers.DrvModbusCM
 
             try
             {
-                // creating a buffer
-
                 // adding Registers 65535
                 for (ulong index = 0; index < (ulong)65535; ++index)
                 {
@@ -2138,6 +2137,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             xmlElem.AppendElem("GatewayAddress", GatewayAddress);
             xmlElem.AppendElem("GatewayPort", GatewayPort);
 
+            #region Save Registers
             if (SaveRegisters)
             {
                 try
@@ -2218,26 +2218,33 @@ namespace Scada.Comm.Drivers.DrvModbusCM
                         }
                         #endregion Input
 
+                        #region DataBuffer
+                        // databuffer
+                        if (DataBuffersExists(Convert.ToUInt64(i)))
+                        {
+                            string TextDataBufferAddr = (i).ToString();
+                            string TextDataBufferValue = GetUlongDataBuffer(Convert.ToUInt64(i)).ToString();
 
-
+                            if (TextDataBufferValue != "0")
+                            {
+                                ProjectRegister registerDataBuffer = new ProjectRegister();
+                                registerDataBuffer.RegAddr = TextDataBufferAddr;
+                                registerDataBuffer.RegValue = TextDataBufferValue;
+                                listRegistersHoldingElem.AppendElem("RegistersDataBuffer", registerDataBuffer);
+                            }
+                        }
+                        #endregion DataBuffer
                     }
                 }
                 catch { }
             }
+            #endregion Save Registers
 
+            
             //TcpServerSettings.SaveToXml(xmlElem.AppendElem("TcpServerSettings"));
             //SerialPortSettings.SaveToXml(xmlElem.AppendElem("SerialPortSettings"));
             //EthernetClientSettings.SaveToXml(xmlElem.AppendElem("EthernetClientSettings"));
 
-            //try
-            //{
-            //    XmlElement listDevicesElem = xmlElem.AppendElem("ListDevices");
-            //    foreach (ProjectDevice device in Devices)
-            //    {
-            //        listDevicesElem.AppendElem("Device", device);
-            //    }
-            //}
-            //catch { }
         }
         #endregion Save
     }
@@ -2245,7 +2252,6 @@ namespace Scada.Comm.Drivers.DrvModbusCM
     #endregion ProjectDevice
 
     #region ProjectRegister
-
     public class ProjectRegister
     {
         public ProjectRegister() 
@@ -2304,8 +2310,6 @@ namespace Scada.Comm.Drivers.DrvModbusCM
         }
         #endregion Save
     }
-
-
     #endregion ProjectRegister
 
     #region ProjectGroupCommand
@@ -2314,11 +2318,22 @@ namespace Scada.Comm.Drivers.DrvModbusCM
     {
         public ProjectGroupCommand()
         {
+            ID = new Guid();
+            ParentID = new Guid();
+            KeyImage = string.Empty;
+
+            Name = string.Empty;
+            Description = string.Empty;
+
+            Enabled = true;
+
             ListCommands = new List<ProjectCommand>();
         }
 
-        #region Группа  
-        //ID
+        #region Variables
+
+        #region Group
+        // id
         private Guid id;
         [XmlAttribute]
         public Guid ID
@@ -2327,7 +2342,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             set { id = value; }
         }
 
-        //ID родителя
+        // id родителя
         private Guid parentID;
         [XmlAttribute]
         public Guid ParentID
@@ -2336,7 +2351,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             set { parentID = value; }
         }
 
-        //Иконка
+        // иконка
         private string keyImage;
         [XmlAttribute]
         public string KeyImage
@@ -2345,7 +2360,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             set { keyImage = value; }
         }
 
-        //Название группы команд
+        // название группы команд
         private string name;
         [XmlAttribute]
         public string Name
@@ -2354,7 +2369,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             set { name = value; }
         }
 
-        //Описание группы команд
+        // описание группы команд
         private string description;
         [XmlAttribute]
         public string Description
@@ -2363,7 +2378,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             set { description = value; }
         }
 
-        //Состояние группы команд
+        // состояние группы команд
         private bool enabled;
         [XmlAttribute]
         public bool Enabled
@@ -2372,7 +2387,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             set { enabled = value; }
         }
 
-        #endregion Группа
+        #endregion Group
 
         #region List Commands
         private List<ProjectCommand> listCommands;
@@ -2382,6 +2397,73 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             set { listCommands = value; }
         }
         #endregion List Commands
+
+        #endregion Variables
+
+        #region Load
+        /// <summary>
+        /// Loads the settings from the XML node.
+        /// <para>Загружает настройки из узла XML.</para>
+        /// </summary>
+        public void LoadFromXml(XmlNode xmlNode)
+        {
+            if (xmlNode == null)
+            {
+                throw new ArgumentNullException("xmlNode");
+            }
+
+            ID = DriverUtils.StringToGuid(xmlNode.GetChildAsString("ID"));
+            Name = xmlNode.GetChildAsString("Name");
+            Description = xmlNode.GetChildAsString("Description");
+            KeyImage = xmlNode.GetChildAsString("KeyImage");
+            Enabled = xmlNode.GetChildAsBool("Enabled");
+
+            try
+            {
+                if (xmlNode.SelectSingleNode("ListCommands") is XmlNode listCommandsNode)
+                {
+                    ListCommands = new List<ProjectCommand>();
+                    foreach (XmlNode commandNode in listCommandsNode.SelectNodes("Command"))
+                    {
+                        ProjectCommand command = new ProjectCommand();
+                        command.LoadFromXml(commandNode);
+                        ListCommands.Add(command);
+                    }
+                }
+            }
+            catch { ListCommands = new List<ProjectCommand>(); }
+        }
+        #endregion Load
+
+        #region Save
+        /// <summary>
+        /// Saves the settings into the XML node.
+        /// <para>Сохраняет настройки в узле XML.</para>
+        /// </summary>
+        public void SaveToXml(XmlElement xmlElem)
+        {
+            if (xmlElem == null)
+            {
+                throw new ArgumentNullException("xmlElem");
+            }
+
+            xmlElem.AppendElem("ID", ID.ToString());
+            xmlElem.AppendElem("Name", Name);
+            xmlElem.AppendElem("Description", Description);
+            xmlElem.AppendElem("KeyImage", KeyImage);
+            xmlElem.AppendElem("Enabled", Enabled);
+
+            try
+            {
+                XmlElement listCommandsElem = xmlElem.AppendElem("ListCommands");
+                foreach (ProjectCommand command in ListCommands)
+                {
+                    listCommandsElem.AppendElem("Command", command);
+                }
+            }
+            catch { }
+        }
+        #endregion Save
     }
 
     #endregion ProjectGroupCommand
@@ -2392,11 +2474,31 @@ namespace Scada.Comm.Drivers.DrvModbusCM
     {
         public ProjectCommand()
         {
+            ID = new Guid();
+            ParentID = new Guid();
+            KeyImage = string.Empty;
+            Name = string.Empty;
+            Description = string.Empty;
+            CmdCode = string.Empty;
+            Enabled = true;
 
+            FunctionCode = 1;
+            FunctionCodeWrite = 1;
+
+            RegisterStartAddress = 0;
+            RegisterStartAddressWrite = 0;
+
+            RegisterCount = 1;
+            RegisterCountWrite = 1;
+
+            RegisterNameWriteData = new string[1];
+            RegisterWriteData = new ulong[1];
+
+            WriteDataOther = false;
         }
 
         #region Command
-        //ID
+        // id
         private Guid id;
         [XmlAttribute]
         public Guid ID
@@ -2405,7 +2507,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             set { id = value; }
         }
 
-        //ID родителя
+        // id родителя
         private Guid parentID;
         [XmlAttribute]
         public Guid ParentID
@@ -2414,7 +2516,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             set { parentID = value; }
         }
 
-        //Иконка
+        // иконка
         private string keyImage;
         [XmlAttribute]
         public string KeyImage
@@ -2571,16 +2673,13 @@ namespace Scada.Comm.Drivers.DrvModbusCM
                             KeyImage = "cmd_00_off_16.png";
                             break;
                     }
-
                     break;
             }
-
-
 
             return KeyImage;
         }
 
-        //Название команды
+        // название команды
         private string name;
         [XmlAttribute]
         public string Name
@@ -2589,7 +2688,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             set { name = value; }
         }
 
-        //Описание команды
+        // описание команды
         private string description;
         [XmlAttribute]
         public string Description
@@ -2598,7 +2697,16 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             set { description = value; }
         }
 
-        //Состояние команды. Включено ли команда и отправлять ли её
+        // код команды
+        private string cmdCode;
+        [XmlAttribute]
+        public string CmdCode
+        {
+            get { return cmdCode; }
+            set { cmdCode = value; }
+        }
+
+        // состояние команды. Включено ли команда и отправлять ли её
         private bool enabled;
         [XmlAttribute]
         public bool Enabled
@@ -2607,7 +2715,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             set { enabled = value; }
         }
 
-        //Записывать данные в другие регистры, если это необходимо
+        // Записывать данные в другие регистры, если это необходимо
         private bool writeDataOther;
         [XmlAttribute]
         public bool WriteDataOther
@@ -2616,7 +2724,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             set { writeDataOther = value; }
         }
 
-        //Функция (чтения)
+        // функция (чтения)
         private ulong functionCode;
         [XmlAttribute]
         public ulong FunctionCode
@@ -2625,7 +2733,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             set { functionCode = value; }
         }
 
-        //Функция (если надо сохранить в другое место)
+        // функция (если надо сохранить в другое место)
         private ulong functionCodeWrite;
         [XmlAttribute]
         public ulong FunctionCodeWrite
@@ -2634,7 +2742,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             set { functionCodeWrite = value; }
         }
 
-        //Начальный регистр
+        // начальный регистр
         private ulong registerStartAddress;
         [XmlAttribute]
         public ulong RegisterStartAddress
@@ -2643,7 +2751,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             set { registerStartAddress = value; }
         }
 
-        //Начальный регистр (если надо сохранить в другое место)
+        // начальный регистр (если надо сохранить в другое место)
         private ulong registerStartAddressWrite;
         [XmlAttribute]
         public ulong RegisterStartAddressWrite
@@ -2652,7 +2760,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             set { registerStartAddressWrite = value; }
         }
 
-        //Количество регистров
+        // количество регистров
         private ulong registerCount;
         [XmlAttribute]
         public ulong RegisterCount
@@ -2661,29 +2769,13 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             set { registerCount = value; }
         }
 
-        //Количество регистров (если надо сохранить в другое место)
+        // количество регистров (если надо сохранить в другое место)
         private ulong registerCountWrite;
         [XmlAttribute]
         public ulong RegisterCountWrite
         {
             get { return registerCountWrite; }
             set { registerCountWrite = value; }
-        }
-
-        private string[] registerNameReadData;
-        [XmlAttribute]
-        public string[] RegisterNameReadData
-        {
-            get { return registerNameReadData; }
-            set { registerNameReadData = value; }
-        }
-
-        private ulong[] registerReadData;
-        [XmlAttribute]
-        public ulong[] RegisterReadData
-        {
-            get { return registerReadData; }
-            set { registerReadData = value; }
         }
 
         private string[] registerNameWriteData;
@@ -2702,21 +2794,6 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             set { registerWriteData = value; }
         }
 
-        private ulong parametr;
-        [XmlAttribute]
-        public ulong Parametr
-        {
-            get { return parametr; }
-            set { parametr = value; }
-        }
-
-        private bool currentValue;
-        [XmlAttribute]
-        public bool CurrentValue
-        {
-            get { return currentValue; }
-            set { currentValue = value; }
-        }
 
         #endregion Command
 
@@ -2726,9 +2803,185 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             return name = DriverPhrases.CommandName + ":[" + FunctionCode.ToString().PadLeft(2, '0') + "][" + RegisterStartAddress.ToString().PadLeft(5, '0') + "][" + RegisterCount.ToString().PadLeft(2, '0') + "]";
         }
 
+        #region Load
+        /// <summary>
+        /// Loads the settings from the XML node.
+        /// <para>Загружает настройки из узла XML.</para>
+        /// </summary>
+        public void LoadFromXml(XmlNode xmlNode)
+        {
+            if (xmlNode == null)
+            {
+                throw new ArgumentNullException("xmlNode");
+            }
+
+            ID = DriverUtils.StringToGuid(xmlNode.GetChildAsString("ID"));
+            Name = xmlNode.GetChildAsString("Name");
+            Description = xmlNode.GetChildAsString("Description");
+            KeyImage = xmlNode.GetChildAsString("KeyImage");
+            Enabled = xmlNode.GetChildAsBool("Enabled");
+
+            FunctionCode = Convert.ToUInt64(xmlNode.GetChildAsString("FunctionCode"));
+            FunctionCodeWrite = Convert.ToUInt64(xmlNode.GetChildAsString("FunctionCodeWrite"));
+
+            RegisterStartAddress = Convert.ToUInt64(xmlNode.GetChildAsString("RegisterStartAddress"));
+            RegisterStartAddressWrite = Convert.ToUInt64(xmlNode.GetChildAsString("RegisterStartAddressWrite"));
+
+            RegisterCount = Convert.ToUInt64(xmlNode.GetChildAsString("RegisterCount"));
+            RegisterCountWrite = Convert.ToUInt64(xmlNode.GetChildAsString("RegisterCountWrite"));
+
+            try
+            {
+                if (xmlNode.SelectSingleNode("ListRegistersWriteData") is XmlNode listRegistersWriteDataNode)
+                {
+                    List<ProjectRegisterWriteData> ListRegistersWriteData = new List<ProjectRegisterWriteData>();
+                    foreach (XmlNode registerWriteDataNode in listRegistersWriteDataNode.SelectNodes("RegisterWriteData"))
+                    {
+                        ProjectRegisterWriteData registerWriteData = new ProjectRegisterWriteData();
+                        registerWriteData.LoadFromXml(registerWriteDataNode);
+                        ListRegistersWriteData.Add(registerWriteData);
+                    }
+
+                    RegisterNameWriteData = new string[ListRegistersWriteData.Count];
+                    RegisterWriteData = new ulong[ListRegistersWriteData.Count];
+                    for (int i = 0; i < ListRegistersWriteData.Count; i++)
+                    {
+                        int regAddr = ListRegistersWriteData[i].RegAddr;
+                        RegisterNameWriteData[regAddr] = ListRegistersWriteData[i].RegName;
+                        RegisterWriteData[regAddr] = ListRegistersWriteData[i].RegValue;
+                    }
+                }
+            }
+            catch 
+            {
+                RegisterNameWriteData = new string[1];
+                RegisterWriteData = new ulong[1];
+            }
+
+            for (ulong i = 0; i < RegisterCount; i++)
+            {
+                RegisterNameWriteData = new string[1];
+                RegisterWriteData = new ulong[1];
+            }
+
+            WriteDataOther = xmlNode.GetChildAsBool("WriteDataOther");
+        }
+        #endregion Load
+
+        #region Save
+        /// <summary>
+        /// Saves the settings into the XML node.
+        /// <para>Сохраняет настройки в узле XML.</para>
+        /// </summary>
+        public void SaveToXml(XmlElement xmlElem)
+        {
+            if (xmlElem == null)
+            {
+                throw new ArgumentNullException("xmlElem");
+            }
+
+            xmlElem.AppendElem("ID", ID.ToString());
+            xmlElem.AppendElem("Name", Name);
+            xmlElem.AppendElem("Description", Description);
+            xmlElem.AppendElem("KeyImage", KeyImage);
+            xmlElem.AppendElem("Enabled", Enabled);
+
+            try
+            {
+                if (RegisterCount == Convert.ToUInt64(RegisterWriteData.Length))
+                {
+                    XmlElement listRegistersWriteDataElem = xmlElem.AppendElem("ListRegistersWriteData");
+                    for (int i = 0; i < Convert.ToInt32(RegisterCount); i++)
+                    {
+                        ProjectRegisterWriteData projectRegisterWriteData = new ProjectRegisterWriteData();
+                        projectRegisterWriteData.RegAddr = i;
+                        projectRegisterWriteData.RegName = RegisterNameWriteData[i];
+                        projectRegisterWriteData.RegValue = RegisterWriteData[i];
+                        listRegistersWriteDataElem.AppendElem("RegisterWriteData", listRegistersWriteDataElem);
+                    }
+                }
+            }
+            catch { }
+        }
+        #endregion Save
+    }
+    #endregion ProjectCommand
+
+    #region Project Register Write Data
+
+    public class ProjectRegisterWriteData
+    {
+        public ProjectRegisterWriteData()
+        {
+            RegAddr = 0;
+            RegName = string.Empty;
+            RegValue = 0;
+        }
+
+        #region Variables
+        private int regAddr;
+        [XmlAttribute]
+        public int  RegAddr 
+        {
+            get { return regAddr; } 
+            set { regAddr = value; }
+        }
+
+        private string regName;
+        [XmlAttribute] 
+        public string RegName
+        {
+            get { return regName; }
+            set { regName = value; }
+        }
+
+        private ulong regValue;
+        [XmlAttribute]
+        public ulong RegValue
+        {
+            get { return regValue; }
+            set { regValue = value; }
+        }
+        #endregion Variables
+
+        #region Load
+        /// <summary>
+        /// Loads the settings from the XML node.
+        /// <para>Загружает настройки из узла XML.</para>
+        /// </summary>
+        public void LoadFromXml(XmlNode xmlNode)
+        {
+            if (xmlNode == null)
+            {
+                throw new ArgumentNullException("xmlNode");
+            }
+
+            RegAddr = xmlNode.GetChildAsInt("RegAddr");
+            RegName = xmlNode.GetChildAsString("RegName");
+            RegValue = Convert.ToUInt64(xmlNode.GetChildAsString("RegValue"));
+        }
+        #endregion Load
+
+        #region Save
+        /// <summary>
+        /// Saves the settings into the XML node.
+        /// <para>Сохраняет настройки в узле XML.</para>
+        /// </summary>
+        public void SaveToXml(XmlElement xmlElem)
+        {
+            if (xmlElem == null)
+            {
+                throw new ArgumentNullException("xmlElem");
+            }
+
+            xmlElem.AppendElem("RegAddr", RegAddr);
+            xmlElem.AppendElem("RegName", RegName);
+            xmlElem.AppendElem("RegValue", RegValue);
+        }
+        #endregion Save
     }
 
-    #endregion ProjectCommand
+    #endregion Project Register Write Data
 
     #region ProjectGroupTag
     [Serializable]

@@ -400,7 +400,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
                     {
                         ProjectGroupCommand groupCommand = lstGroupCommnad[g];
 
-                        List <ProjectCommand> lstCommands = commands.Where(c => c.ParentID == groupCommand.ID).ToList();
+                        List<ProjectCommand> lstCommands = commands.Where(c => c.ParentID == groupCommand.ID).ToList();
                         for (int comi = 0; comi < lstCommands.Count; comi++)
                         {
                             #region Команда
@@ -427,7 +427,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
                             {
                                 DebugerLog("[Debug]");
                                 DebugerLog("[FunctionCod][" + command.FunctionCode + "]");
-                                DebugerLog("[Parametr][" + command.Parametr + "]");
+                                //DebugerLog("[Parametr][" + command.Parametr + "]");
                                 DebugerLog("[RegisterStartAddress][" + command.RegisterStartAddress + "]");
                                 DebugerLog("[RegisterCount][" + command.RegisterCount + "]");
                             }
@@ -720,7 +720,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
                             {
                                 //Переводим в Offline
                                 device.Status = 2;
-                                goto ERROR;
+                                //goto ERROR;
                             }
                             else if (numArrayRegisters != null)
                             {
@@ -782,165 +782,166 @@ namespace Scada.Comm.Drivers.DrvModbusCM
 
                                     #endregion Write Data InputRegister
                                     break;
-                                case ulong n when (n >= 80 && n <= 96):
-                                    #region Data Buffer
-                                    if (numArrayRegisters == null)
+                                //case ulong n when (n >= 80 && n <= 96):
+                                //    #region Data Buffer
+                                //    if (numArrayRegisters == null)
+                                //    {
+                                //        goto ERROR;
+                                //    }
+
+                                    //// write data
+                                    //regAddr = masterVTD.GenerateRegisterAddress(command.FunctionCode, command.Parametr, command.RegisterStartAddress);
+                                    //device.SetDataBuffer(HEX_STRING.BYTEARRAY_TO_HEXSTRING(numArrayRegisters), regAddr, deviceRegistersBytes);
+
+                                    //if (debug)
+                                    //{
+                                    //    DebugerLog("Tag Address = " + regAddr.ToString() + "");
+                                    //}
+
+                                    //// read data
+                                    //for (ulong index = 0; (ulong)index < (ulong)numArrayRegisters.Length / deviceRegistersBytes; ++index)
+                                    //{
+                                    //    regAddrStr = DriverUtils.NullToString(regAddr + index);
+
+                                    //    List<ProjectTag> findTags = tags.Where(r => r.ID == device.ID && r.Address.StartsWith(regAddrStr)).ToList();
+                                    //    if (findTags == null || findTags.Count == 0)
+                                    //    {
+                                    //        goto NEXTCOMMAND;
+                                    //    }
+
+
+                                    //if (command.CurrentValue)
+                                    //{
+                                    //    float[] arrValue = HEX_FLOAT.BYTEARRAY_TO_FLOATARRAY(numArrayRegisters, "");
+                                    //    float value = 0f;
+                                    //    if (command.FunctionCode == 84)
+                                    //    {
+                                    //        int indArrValue = arrValue.Length - 1;
+                                    //        if (indArrValue <= 0)
+                                    //        {
+                                    //            value = arrValue[indArrValue];
+                                    //        }
+                                    //        else
+                                    //        {
+                                    //            value = arrValue[indArrValue - 1];
+                                    //        }
+                                    //    }
+                                    //    else
+                                    //    {
+                                    //        value = arrValue[arrValue.Length - 1];
+                                    //    }
+
+                                    //    DebugerLog("Tag Address Current = " + regAddrStr + "");
+
+                                    //    for (int t = 0; t < findTags.Count; t++)
+                                    //    {
+                                    //        ServerSendValue(findTags[t].Code, value, 1);
+                                    //    }
+                                    //    goto NEXTCOMMAND;
+                                    //}
+
+                                    //            for (int t = 0; t < findTags.Count; t++)
+                                    //            {
+                                    //                ulong countReg = (ulong)ProjectTag.DeviceTagFormatDataRegisterCount(findTags[t], (int)deviceRegistersBytes);
+                                    //                byte[] buffer = device.GetByteDataBuffer(Convert.ToUInt64(regAddr + index), countReg);
+
+                                    //                if (debug)
+                                    //                {
+                                    //                    DebugerLog("findTagAddress = " + regAddrStr + " countReg = " + countReg + " deviceRegistersBytes = " + (int)deviceRegistersBytes + " hex = " + HEX_STRING.BYTEARRAY_TO_HEXSTRING(buffer));
+                                    //                }
+
+                                    //                byte[] bufferOrder = HEX_ARRAY.ArrayByteOrder(buffer, findTags[t].Sorting);
+
+                                    //                if (debug)
+                                    //                {
+                                    //                    DebugerLog("Order by [" + findTags[t].Sorting + "]= " + HEX_STRING.BYTEARRAY_TO_HEXSTRING(bufferOrder));
+                                    //                }
+
+                                    //                findTags[t].DataValue = ProjectTag.GetValue(findTags[t], bufferOrder);
+
+                                    //                if (debug)
+                                    //                {
+                                    //                    DebugerLog("[" + findTags[t].Name.PadRight(32) + "][" + findTags[t].Address.PadRight(14) + "][" + findTags[t].TagType.ToString().PadRight(6) + "][" + HEX_STRING.BYTEARRAY_TO_HEXSTRING(bufferOrder).PadRight(24) + "][" + countReg + "][" + findTags[t].DataValue.ToString() + "]");
+                                    //                }
+
+                                    //                ServerSendValue(findTags[t].Code, findTags[t].DataValue, 1);
+                                    //            }
+                                    //        }
+                                    //        #endregion Data Buffer
+                                    //        break;
+                                    //    default:
+                                    //        continue;
+                                    //}
+
+                                    //if (device.Status == 1)
+                                    //{
+                                    //    goto NEXTCOMMAND;
+                                    //}
+
+                                //#endregion Расшифровка
+
+                                #region Запись данных
+
+
+
+                                #endregion Запись данных
+
+                                #region Обработка ошибок
+                                ERROR:
+
+                                    if (CountError == channel.CountError)
                                     {
-                                        goto ERROR;
-                                    }
+                                        CountError = 0;
 
-                                    // write data
-                                    regAddr = masterVTD.GenerateRegisterAddress(command.FunctionCode, command.Parametr, command.RegisterStartAddress);
-                                    device.SetDataBuffer(HEX_STRING.BYTEARRAY_TO_HEXSTRING(numArrayRegisters), regAddr, deviceRegistersBytes);
+                                        DebugerLog(DriverPhrases.ExecutedError);
 
-                                    if (debug)
-                                    {
-                                        DebugerLog("Tag Address = " + regAddr.ToString() + "");
-                                    }
-
-                                    // read data
-                                    for (ulong index = 0; (ulong)index < (ulong)numArrayRegisters.Length / deviceRegistersBytes; ++index)
-                                    {
-                                        regAddrStr = DriverUtils.NullToString(regAddr + index);
-
-                                        List<ProjectTag> findTags = tags.Where(r => r.ID == device.ID && r.Address.StartsWith(regAddrStr)).ToList();
-                                        if (findTags == null || findTags.Count == 0)
-                                        {
-                                            goto NEXTCOMMAND;
-                                        }
-
-
-                                        if (command.CurrentValue)
-                                        {
-                                            float[] arrValue = HEX_FLOAT.BYTEARRAY_TO_FLOATARRAY(numArrayRegisters, "");
-                                            float value = 0f;
-                                            if (command.FunctionCode == 84)
-                                            {
-                                                int indArrValue = arrValue.Length - 1;
-                                                if (indArrValue <= 0)
-                                                {
-                                                    value = arrValue[indArrValue];
-                                                }
-                                                else
-                                                {
-                                                    value = arrValue[indArrValue - 1];
-                                                }
-                                            }
-                                            else
-                                            {
-                                                value = arrValue[arrValue.Length - 1];
-                                            }
-
-                                            DebugerLog("Tag Address Current = " + regAddrStr + "");
-
-                                            for (int t = 0; t < findTags.Count; t++)
-                                            {
-                                                ServerSendValue(findTags[t].Code, value, 1);
-                                            }
-                                            goto NEXTCOMMAND;
-                                        }
-
-                                        for (int t = 0; t < findTags.Count; t++)
-                                        {
-                                            ulong countReg = (ulong)ProjectTag.DeviceTagFormatDataRegisterCount(findTags[t], (int)deviceRegistersBytes);
-                                            byte[] buffer = device.GetByteDataBuffer(Convert.ToUInt64(regAddr + index), countReg);
-
-                                            if (debug)
-                                            {
-                                                DebugerLog("findTagAddress = " + regAddrStr + " countReg = " + countReg + " deviceRegistersBytes = " + (int)deviceRegistersBytes + " hex = " + HEX_STRING.BYTEARRAY_TO_HEXSTRING(buffer));
-                                            }
-
-                                            byte[] bufferOrder = HEX_ARRAY.ArrayByteOrder(buffer, findTags[t].Sorting);
-
-                                            if (debug)
-                                            {
-                                                DebugerLog("Order by [" + findTags[t].Sorting + "]= " + HEX_STRING.BYTEARRAY_TO_HEXSTRING(bufferOrder));
-                                            }
-
-                                            findTags[t].DataValue = ProjectTag.GetValue(findTags[t], bufferOrder);
-
-                                            if (debug)
-                                            {
-                                                DebugerLog("[" + findTags[t].Name.PadRight(32) + "][" + findTags[t].Address.PadRight(14) + "][" + findTags[t].TagType.ToString().PadRight(6) + "][" + HEX_STRING.BYTEARRAY_TO_HEXSTRING(bufferOrder).PadRight(24) + "][" + countReg + "][" + findTags[t].DataValue.ToString() + "]");
-                                            }
-
-                                            ServerSendValue(findTags[t].Code, findTags[t].DataValue, 1);
-                                        }
-                                    }
-                                    #endregion Data Buffer
-                                    break;
-                                default:
-                                    continue;
-                            }
-
-                            if (device.Status == 1)
-                            {
-                                goto NEXTCOMMAND;
-                            }
-
-                            #endregion Расшифровка
-
-                        #region Запись данных
+                                        //switch (command.FunctionCode)
+                                        //{
+                                        //    case 0:
+                                        //        continue;
+                                        //    case ulong n when (n >= 1 && n <= 16):
 
 
 
-                        #endregion Запись данных
+                                        //        break;
+                                        //    case ulong n when (n >= 80 && n <= 96):
 
-                        #region Обработка ошибок
-                        ERROR:
+                                        //        List<ProjectTag> findTags = tags.Where(r => r.CommandID == command.ID).ToList();
+                                        //        if (findTags != null && findTags.Count > 0)
+                                        //        {
+                                        //            for (int t = 0; t < findTags.Count; t++)
+                                        //            {
+                                        //                if (debug)
+                                        //                {
+                                        //                    DebugerLog("[" + findTags[t].Code + "][Bad]");
+                                        //                }
 
-                            if (CountError == channel.CountError)
-                            {
-                                CountError = 0;
+                                        //                ServerSendValue(findTags[t].Code, 0, 0);
+                                        //            }
+                                        //        }
 
-                                DebugerLog(DriverPhrases.ExecutedError);
+                                        //        break;
+                                        //    default:
+                                        //        continue;
+                                        //}
 
-                                switch (command.FunctionCode)
-                                {
-                                    case 0:
                                         continue;
-                                    case ulong n when (n >= 1 && n <= 16):
+                                    }
+                                    else
+                                    {
+                                        goto STEP_REPEAT_COMMAND;
+                                    }
+                                #endregion Обработка ошибок
 
-
-
-                                        break;
-                                    case ulong n when (n >= 80 && n <= 96):
-
-                                        List<ProjectTag> findTags = tags.Where(r => r.CommandID == command.ID).ToList();
-                                        if (findTags != null && findTags.Count > 0)
-                                        {
-                                            for (int t = 0; t < findTags.Count; t++)
-                                            {
-                                                if (debug)
-                                                {
-                                                    DebugerLog("[" + findTags[t].Code + "][Bad]");
-                                                }
-
-                                                ServerSendValue(findTags[t].Code, 0, 0);
-                                            }
-                                        }
-
-                                        break;
-                                    default:
-                                        continue;
-                                }
-
-                                continue;
+                                NEXTCOMMAND:
+                                    try { } catch { }
                             }
-                            else
-                            {
-                                goto STEP_REPEAT_COMMAND;
-                            }
-                        #endregion Обработка ошибок
-
-                        NEXTCOMMAND:
-                            try { } catch { }
+                            #endregion
                         }
 
+                    NEXTDEVICE:
+                        try { } catch { }
                     }
-
-                NEXTDEVICE:
-                    try { } catch { }
                 }
             }
             catch (Exception ex)
@@ -949,7 +950,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
                 {
                     errMsg = DriverUtils.InfoError(ex);
                     DebugerLog("[ERROR] [" + errMsg + "]");
-                   
+
                 }
                 catch { }
 
