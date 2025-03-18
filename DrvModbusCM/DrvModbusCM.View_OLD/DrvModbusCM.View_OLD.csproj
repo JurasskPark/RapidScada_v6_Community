@@ -39,9 +39,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Forms\FrmConfigForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Update="Forms\FrmConfigForm.cs" />
     <Compile Update="Forms\FrmConverter.cs">
       <SubType>Form</SubType>
     </Compile>

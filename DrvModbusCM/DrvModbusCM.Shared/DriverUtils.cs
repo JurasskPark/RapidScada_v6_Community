@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -12,7 +13,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
 {
     public class DriverUtils
     {
-        #region General
+        #region Basic
         /// <summary>
         /// The driver code.
         /// </summary>
@@ -21,7 +22,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
         /// <summary>
         /// The driver version.
         /// </summary>
-        public const string Version = "6.1.0.0";
+        public const string Version = "6.4.0.0";
 
         /// <summary>
         /// The default filename of the configuration.
@@ -31,21 +32,74 @@ namespace Scada.Comm.Drivers.DrvModbusCM
         /// <summary>
         /// Gets the short name of the device configuration file.
         /// </summary>
-        public static string GetFileName(int deviceNum)
+        public static string GetFileName(int deviceNum = 0)
         {
-            return DeviceConfigBase.GetFileName(DriverUtils.DriverCode, deviceNum);
+            if (deviceNum == 0)
+            {
+                return $"{DriverCode}.xml";
+            }
+            else
+            {
+                return $"{DriverCode}_{deviceNum:D3}.xml";
+            }
         }
 
         /// <summary>
-        /// Gets the path of the device configuration file.
+        /// Gets the short name of the license file activation.
         /// </summary>
-        /// <param name="deviceNum">Device number</param>
-        /// <returns></returns>
-        public static string GetDirPathName(int deviceNum) 
+        public static string GetFileActivation(int deviceNum = 0)
         {
-            return DeviceConfigBase.GetFileName(DriverUtils.DriverCode, deviceNum); 
+            return $"{DriverCode}_{deviceNum:D3}.bin";
         }
-        #endregion General
+
+        /// <summary>
+        /// Gets the short name of the device configuration file.
+        /// </summary>
+        public static string GetFileName()
+        {
+            return $"{DriverCode}.xml";
+        }
+
+        /// <summary>
+        /// Application name.
+        /// </summary>
+        public static string Name(bool isRussian = false)
+        {
+            string text = isRussian ? "Взаимодействует с контроллерами по протоколу Modbus." : "Interacts with controllers via Modbus protocol.";
+            return text;
+        }
+
+        /// <summary>
+        /// Description of the application.
+        /// </summary>
+        public static string Description(bool isRussian = false)
+        {
+            string text = isRussian ?
+                    "Преобразование текстовых файлов в данные SCADA." :
+                    "Parsing text files to SCADA data.";
+            return text;
+        }
+
+        /// <summary>
+        /// Writes an configuration file depending on operating system.
+        /// </summary>
+        public static void WriteConfigFile(string fileName, bool windows)
+        {
+            string suffix = windows ? "Win" : "Linux";
+            string resourceName = $"Scada.Comm.Drivers.DrvTextParserJP.Config.DrvTextParserJP.{suffix}.xml";
+            string fileContents;
+
+            using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
+            {
+                using (StreamReader reader = new StreamReader(stream))
+                {
+                    fileContents = reader.ReadToEnd();
+                }
+            }
+
+            File.WriteAllText(fileName, fileContents, Encoding.UTF8);
+        }
+        #endregion Basic
 
         #region Guid
         public static Guid StringToGuid(string id)

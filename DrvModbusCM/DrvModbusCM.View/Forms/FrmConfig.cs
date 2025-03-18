@@ -1,143 +1,109 @@
-﻿using CommunicationMethods;
-using Scada.Comm.Config;
-using Scada.Comm.Devices;
-using Scada.Data.Entities;
+﻿using Scada.Comm.Config;
 using Scada.Forms;
 using Scada.Lang;
-using System.Data;
-using System.Diagnostics;
+using System.ComponentModel;
 using System.Reflection;
-using System.Threading.Channels;
-using System.Xml;
-using System.Xml.Linq;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
-using MethodInvoker = System.Windows.Forms.MethodInvoker;
 
 
 namespace Scada.Comm.Drivers.DrvModbusCM.View
 {
     public partial class FrmConfig : Form
     {
-        #region Variables
-        private readonly AppDirs appDirs;                           // the application directories
-        private readonly LineConfig lineConfig;                     // the communication line configuration
-        private readonly DeviceConfig deviceConfig;                 // the device configuration
-        private readonly int deviceNum;                             // the device number
-        private readonly string driverCode;                         // the driver code
-
-        DriverClient driverClient;                                  // the driver client
-        string errMsg;                                              // error message
-        string driverConfigPath = string.Empty;                     // driver config path
-        Project driverConfig = new Project();                       // driver config
-        string configPath = string.Empty;                           // config path
-
-        System.Windows.Forms.TreeView trvConfig = new System.Windows.Forms.TreeView();  // config treeview
-
-        private Form frmPropertyForm = new Form();                  // child form properties
-        TreeNode selectNodePrevious;                                // node previous
-        ProjectNodeData mtNodeData = new ProjectNodeData();         //
-        ProjectNodeData mtNodeDataPrevious = new ProjectNodeData(); //
-        private bool switchingNewControlLock = false;               //
-        private bool modified = false;                              // modified
-        int indexData = 0;                                          // index data
-
-        bool isRussian;
-
-
-        int currentPort = 0;                                        // current port
-        #endregion Variables
-
-        #region Form
         /// <summary>
         /// Initializes a new instance of the class.
         /// </summary>
         public FrmConfig()
         {
-            DriverPhrases.Init();
-            driverClient = new DriverClient();
-
-            this.Opacity = 0.0;
-            this.Visible = false;
-            this.ShowInTaskbar = false;
-
             InitializeComponent();
-        }
 
+            this.isDll = false;
+
+            this.driverCode = DriverUtils.DriverCode;
+
+            this.appDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            this.languageDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Lang");
+            this.pathProject = AppDomain.CurrentDomain.BaseDirectory;
+            this.project = new Project();
+            this.configFileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, DriverUtils.GetFileName(deviceNum));
+
+            ConfigToControls();
+
+            this.modified = false;
+        }
 
         /// <summary>
         /// Initializes a new instance of the class.
         /// </summary>
-        public FrmConfig(AppDirs appDirs, LineConfig lineConfig, DeviceConfig deviceConfig, int deviceNum, bool languageRussian = false)
+        public FrmConfig(AppDirs appDirs, LineConfig lineConfig, DeviceConfig deviceConfig)
             : this()
         {
+            this.isDll = true;
+
             this.appDirs = appDirs ?? throw new ArgumentNullException(nameof(appDirs));
             this.lineConfig = lineConfig ?? throw new ArgumentNullException(nameof(lineConfig));
             this.deviceConfig = deviceConfig ?? throw new ArgumentNullException(nameof(deviceConfig));
-            this.deviceNum = deviceNum;
 
-            DriverPhrases.Init();
-            driverClient = new DriverClient();
+            this.appDirectory = appDirs.ConfigDir;
+            this.languageDir = appDirs.LangDir;
+            this.pathProject = appDirs.ConfigDir;
+            this.project = new Project();
+            this.configFileName = Path.Combine(appDirs.ConfigDir, DriverUtils.GetFileName(deviceNum));
 
-            this.Opacity = 0.0;
-            this.Visible = false;
-            this.ShowInTaskbar = false;
+            ConfigToControls();
 
-            this.isRussian = languageRussian;
-
-            FormProperties(appDirs.ConfigDir, deviceNum);
+            this.isRussian = Locale.IsRussian;
         }
 
+        #region Variables
+        public FrmStart formParent;                     // parent form
+        public readonly bool isDll;                     // application or dll
+
+        private readonly AppDirs appDirs;               // the application directories
+        private readonly LineConfig lineConfig;         // the communication line configuration
+        private readonly DeviceConfig deviceConfig;     // the device configuration
+        private readonly int deviceNum;                 // the device number
+        private readonly string driverCode;             // the driver code
+
+        private string appDirectory;                    // the applications directory
+        public Project project;                         // the project configuration
+        public string pathProject;                      // path project
+        public string configFileName;                   // the configuration file name
+        
+        public ProjectDriver projectDriver;             // the project driver
+
+        private bool modified;                          // the configuration was modified
+
+        private string languageDir;                     // the language directory
+        private string culture = "en-GB";               // the culture
+        private bool isRussian;							// the language
+
+        System.Windows.Forms.TreeView trvConfig = new System.Windows.Forms.TreeView();  // config treeview
+        ProjectNodeData mtNodeData = new ProjectNodeData();                             // project node type
+        private Form frmPropertyForm = new Form();                                      // child form properties
+        #endregion Variables
+
+        #region Form Load
+        private void FrmConfig_Load(object sender, EventArgs e)
+        {
+            LoadLanguage(languageDir, isRussian);
+            Translate();
+
+            Text = string.Format(Text, deviceNum, DriverUtils.Version);
+        }
+        #endregion Form Load
+
+        #region Form Close
+        private void FrmConfig_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            ControlsToConfig();
+        }
+        #endregion Form Close
+
+        #region Lang
         /// <summary>
-        /// Initializes a new instance of the class.
+        /// Loading from the translation catalog by language.
+        /// <para>Загрузка из каталога перевода по признаку языка</para>
         /// </summary>
-        public FrmConfig(string configDriver, bool languageRussian = false) : this()
-        {
-            DriverPhrases.Init();
-            driverClient = new DriverClient();
-
-            this.Opacity = 0.0;
-            this.Visible = false;
-            this.ShowInTaskbar = false;
-            this.isRussian = languageRussian;
-
-            FormProperties(configDriver, 0);
-        }
-
-        private void FormProperties(string configDir, int deviceNum)
-        {
-            string errMsg = string.Empty;
-            driverConfig = new Project();
-
-            // load configuration
-            //if (deviceNum == 0)
-            //{
-            //    this.driverConfigPath = configDir;
-            //    if (!File.Exists(driverConfigPath))
-            //    {
-            //        ProjectFile.SaveXml(driverConfig, driverConfigPath);
-            //        driverConfig = ProjectFile.LoadXml(typeof(Project), driverConfigPath) as Project;
-            //    }
-            //    else
-            //    {
-            //        driverConfig = ProjectFile.LoadXml(typeof(Project), driverConfigPath) as Project;
-            //    }
-            //}
-            //else
-            //{
-            //    this.driverConfigPath = Path.Combine(configDir, DriverUtils.GetFileName(deviceNum));
-            //    if (!File.Exists(driverConfigPath))
-            //    {
-            //        ProjectFile.SaveXml(driverConfig, driverConfigPath);
-            //        driverConfig = ProjectFile.LoadXml(typeof(Project), driverConfigPath) as Project;
-            //    }
-            //    else
-            //    {
-            //        driverConfig = ProjectFile.LoadXml(typeof(Project), driverConfigPath) as Project;
-            //    }
-            //}
-        }
-
         public void LoadLanguage(string languageDir, bool IsRussian = false)
         {
             // load translate
@@ -180,65 +146,47 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             }
         }
 
-        private void FrmConfig_Shown(object sender, EventArgs e)
-        {
-            ValidateLicense();
-
-            this.Opacity = 100.0;
-            this.Visible = true;
-            this.ShowInTaskbar = true;
-
-            // acrivate form
-            this.Activate();
-        }
-
-        private void ValidateLicense()
-        {
-
-        }
-
-        private void FrmConfig_Load(object sender, EventArgs e)
+        /// <summary>
+        /// Translation of the form.
+        /// <para>Перевод формы.</para>
+        /// </summary>
+        private void Translate()
         {
             // translate the form
             FormTranslator.Translate(this, GetType().FullName);
-
-            // translate menu
-            //FormTranslator.Translate(cmnuGroupCmdRequestNode, GetType().FullName);
-            //FormTranslator.Translate(cmnuGroupSndRequestNode, GetType().FullName);
-            //FormTranslator.Translate(cmnuGroupCmdNode, GetType().FullName);
-            FormTranslator.Translate(cmnuTagAppend, GetType().FullName);
-            FormTranslator.Translate(cmnuDeleteAction, GetType().FullName);
-
-            // phrases
-            DriverPhrases.Init();
-
-            // we give the default project configuration to treeview
-            #region config
-            ProjectLoad(driverConfigPath);
-
-            if (trvProject.Nodes.Count == 0)
-            {
-                ProjectDefaultNew(DialogResult.No);
-            }
-            #endregion config
-
-            ConfigToControls();
+            // tranlaste the menu
+            //FormTranslator.Translate(cmnuMenu, GetType().FullName);
         }
 
-        private void FrmConfig_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            ControlsToConfig();
-        }
-        #endregion Form
+        #endregion Lang
 
-        #region Driver Config
-
+        #region Config
         /// <summary>
-        /// Sets the controls according to the configuration.
+        /// Load data
         /// </summary>
-        private void ConfigToControls()
+        public void ConfigToControls()
         {
+            try
+            {
+                project.Load(configFileName, out string errMsg);
+                if (errMsg != string.Empty)
+                {
+                    MessageBox.Show(errMsg);
+                }
 
+                // language 
+                this.isRussian = project.Driver.Settings.LanguageIsRussian;
+
+                if (project.Driver != null)
+                {
+                    projectDriver = project.Driver;
+                }
+                else
+                {
+                    projectDriver = new ProjectDriver();
+                }
+            }
+            catch { }
         }
 
         /// <summary>
@@ -246,20 +194,29 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
         /// </summary>
         private void ControlsToConfig()
         {
-            if (!File.Exists(driverConfigPath))
+            if (!File.Exists(pathProject))
             {
                 if (this.appDirs != null)
                 {
-                    driverConfigPath = Path.Combine(this.appDirs.ConfigDir, DriverUtils.GetFileName(deviceNum));
+                    pathProject = Path.Combine(this.appDirs.ConfigDir, DriverUtils.GetFileName(deviceNum));
                 }
                 else
                 {
-                    driverConfigPath = DriverUtils.GetFileName(deviceNum);
+                    pathProject = DriverUtils.GetFileName(deviceNum);
                 }
             }
 
-            //ProjectFile.SaveXml(driverConfig, driverConfigPath);
+            //ProjectFile.SaveXml(project, projectPath);
         }
+
+        #endregion Config 
+
+
+        #region Driver Config
+
+
+
+
 
         #endregion Driver Config
 
@@ -283,10 +240,10 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             ValidateTabPage();
 
             // remove the project name and path to it
-            configPath = "";
+            pathProject = "";
 
             // create a new project with default settings
-            driverConfig = new Project();
+            project = new Project();
 
             // cleaning up the trvProject project
             trvProject.Nodes.Clear();
@@ -318,16 +275,18 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
 
         public void GetDefaultTreeNodes()
         {
+
             #region Settings
             ProjectSettings settings = new ProjectSettings();
             settings.Name = DriverPhrases.SettingsName;
             settings.AutoRun = false;
             settings.Debug = false;
+            settings.SaveRegisters = false;
 
             //Добавляем в дерево
             TreeNode settingsNode = NodeProjectSettingsAdd(settings, cmnuDeviceAppend);
             //Добавляем в проект
-            driverConfig.Driver.Settings = settings;
+            project.Driver.Settings = settings;
             #endregion Settings
 
             #region Channel
@@ -353,7 +312,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             //Добавляем в дерево
             TreeNode channelNode = NodeProjectChannelAdd(projectChannel, cmnuDeviceAppend);
             //Добавляем в проект
-            driverConfig.Driver.Channels.Add(projectChannel);
+            project.Driver.Channels.Add(projectChannel);
             #endregion Channel
 
             #region Device
@@ -549,8 +508,8 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
 
             if (OFD.ShowDialog() == DialogResult.OK && OFD.FileName != "")
             {
-                configPath = OFD.FileName;
-                ProjectLoad(configPath);
+                pathProject = OFD.FileName;
+                ProjectLoad(pathProject);
             }
         }
 
@@ -558,30 +517,30 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
         {
             if (File.Exists(fileName))
             {
-                driverConfig = ProjectFile.LoadXml(typeof(Project), fileName) as Project;
-                DeserializeTreeView(trvProject, fileName, driverConfig);
+                project = ProjectFile.LoadXml(typeof(Project), fileName) as Project;
+                DeserializeTreeView(trvProject, fileName, project);
             }
         }
 
-        public void DeserializeTreeView(System.Windows.Forms.TreeView treeView, string fileName, Project driverConfig)
+        public void DeserializeTreeView(System.Windows.Forms.TreeView treeView, string fileName, Project project)
         {
             treeView.Nodes.Clear();
 
             //// add to tree
-            //TreeNode channelNode = NodeProjectChannelAdd(driverConfig.Settings.ProjectChannel, cmnuDeviceAppend);
+            //TreeNode channelNode = NodeProjectChannelAdd(project.Settings.ProjectChannel, cmnuDeviceAppend);
 
-            //for (int d = 0; d < driverConfig.Settings.ProjectDevice.Count; d++)
+            //for (int d = 0; d < project.Settings.ProjectDevice.Count; d++)
             //{
-            //    ProjectDevice projectDevice = driverConfig.Settings.ProjectDevice[d];
+            //    ProjectDevice projectDevice = project.Settings.ProjectDevice[d];
             //    // add to tree
             //    TreeNode deviceNode = NodeProjectDeviceAdd(projectDevice, channelNode, cmnuDeleteAction);
 
             //    #region Group Command
 
             //    List<ProjectGroupCommand> lstGroupCommandSearch = new List<ProjectGroupCommand>();
-            //    if (driverConfig.Settings.ProjectGroupCommand != null && driverConfig.Settings.ProjectGroupCommand.Count > 0)
+            //    if (project.Settings.ProjectGroupCommand != null && project.Settings.ProjectGroupCommand.Count > 0)
             //    {
-            //        lstGroupCommandSearch = driverConfig.Settings.ProjectGroupCommand.Where(r => r.ParentID == projectDevice.ID).ToList();
+            //        lstGroupCommandSearch = project.Settings.ProjectGroupCommand.Where(r => r.ParentID == projectDevice.ID).ToList();
 
             //        for (int gc = 0; gc < lstGroupCommandSearch.Count; gc++)
             //        {
@@ -590,7 +549,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             //            TreeNode groupCommandNode = NodeGroupCommandAdd(groupCommand, deviceNode, cmnuCommandAppend);
 
             //            List<ProjectCommand> lstCommandSearch = new List<ProjectCommand>();
-            //            lstCommandSearch = driverConfig.Settings.ProjectCommand.Where(r => r.ParentID == groupCommand.ID).ToList();
+            //            lstCommandSearch = project.Settings.ProjectCommand.Where(r => r.ParentID == groupCommand.ID).ToList();
 
             //            for (int c = 0; c < lstCommandSearch.Count; c++)
             //            {
@@ -606,9 +565,9 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             //    #region Group Tag
 
             //    List<ProjectGroupTag> lstGroupTagSearch = new List<ProjectGroupTag>();
-            //    if (driverConfig.Settings.ProjectGroupTag != null && driverConfig.Settings.ProjectGroupTag.Count > 0)
+            //    if (project.Settings.ProjectGroupTag != null && project.Settings.ProjectGroupTag.Count > 0)
             //    {
-            //        lstGroupTagSearch = driverConfig.Settings.ProjectGroupTag.Where(r => r.ParentID == projectDevice.ID).ToList();
+            //        lstGroupTagSearch = project.Settings.ProjectGroupTag.Where(r => r.ParentID == projectDevice.ID).ToList();
 
             //        for (int gt = 0; gt < lstGroupCommandSearch.Count; gt++)
             //        {
@@ -643,27 +602,28 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
 
         private void SaveProject()
         {
-            if (String.IsNullOrEmpty(configPath))
+            if (String.IsNullOrEmpty(pathProject))
             {
                 if (appDirs != null)
                 {
-                    configPath = Path.Combine(appDirs.ConfigDir, DriverUtils.GetFileName(deviceNum));
+                    pathProject = Path.Combine(appDirs.ConfigDir, DriverUtils.GetFileName(deviceNum));
                 }
                 else
                 {
-                    configPath = Path.Combine(DriverUtils.GetFileName(deviceNum));
+                    pathProject = Path.Combine(DriverUtils.GetFileName(deviceNum));
                 }
-                SerializeTreeView(trvProject, configPath);
+
+                SerializeTreeView(trvProject, pathProject);
             }
             else
             {
-                SerializeTreeView(trvProject, configPath);
+                SerializeTreeView(trvProject, pathProject);
             }
         }
 
         public void SerializeTreeView(System.Windows.Forms.TreeView treeView, string fileName)
         {
-            driverConfig = new Project();
+            project = new Project();
 
             // save the nodes, recursive method
             foreach (TreeNode tnNode in treeView.Nodes)
@@ -674,13 +634,21 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
                 if (prNode.nodeType == ProjectNodeType.Settings)
                 {
                     ProjectSettings settings = prNode.settings;
-                    driverConfig.Driver.Settings = settings;
+                    project.Driver.Settings = settings;
                 }
                 #endregion Settings
 
+                #region Driver
+
+                //if (prNode.nodeType == ProjectNodeType.Driver)
+                //{
+
+                //}
+
+                #endregion Driver
                 #region Channel
 
-                if (prNode.nodeType == ProjectNodeType.Channel)
+                    if (prNode.nodeType == ProjectNodeType.Channel)
                 {
                     ProjectChannel channel = prNode.channel;
                     List<ProjectDevice> devices = new List<ProjectDevice>();
@@ -738,14 +706,14 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
 
                     devices.Add(device);
                     channel.Devices = devices;
-                    driverConfig.Driver.Channels.Add(channel);
+                    project.Driver.Channels.Add(channel);
                 }
                 #endregion Channel
 
                 
             }
 
-            //ProjectFile.SaveXml(driverConfig, fileName);
+            //ProjectFile.SaveXml(project, fileName);
         }
 
         #endregion Project Save
@@ -768,21 +736,21 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             SFD.Title = DriverPhrases.TitleLoadProject;
             SFD.Filter = DriverPhrases.FilterProject;
 
-            if (String.IsNullOrEmpty(configPath))
+            if (String.IsNullOrEmpty(pathProject))
             {
                 if (appDirs != null)
                 {
-                    configPath = Path.Combine(appDirs.ConfigDir, DriverUtils.GetFileName(deviceNum));
+                    pathProject = Path.Combine(appDirs.ConfigDir, DriverUtils.GetFileName(deviceNum));
                 }
             }
 
-            SFD.InitialDirectory = configPath;
+            SFD.InitialDirectory = pathProject;
 
             if (SFD.ShowDialog() == DialogResult.OK && SFD.FileName != "")
             {
-                configPath = SFD.FileName;
+                pathProject = SFD.FileName;
 
-                SerializeTreeView(trvProject, configPath);
+                SerializeTreeView(trvProject, pathProject);
             }
         }
 
@@ -1528,20 +1496,15 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
                     trvProject.SelectedNode = selectNode;
 
                     // the ban on the transition
-                    if (switchingNewControlLock == true)
-                    {
-                        trvProject.SelectedNode = null;
-                        trvProject.SelectedNode = selectNodePrevious;
-                    }
-                    else
-                    {
+                    
+                    
                         mtNodeData = (ProjectNodeData)selectNode.Tag;
 
                         if (selectNode != null)
                         {
                             LoadWindow(mtNodeData);
                         }
-                    }
+                    
                 }
             }
             catch { }
@@ -1556,11 +1519,6 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
 
             // checking tabs
             ValidateTabPage();
-
-            if (switchingNewControlLock == true)
-            {
-                return;
-            }
 
             // form
             if (mtNodeData.nodeType == ProjectNodeType.Channel && mtNodeData.channel != null)
@@ -1806,26 +1764,22 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
 
         private void trvProject_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            // the ban on the transition
-            if (switchingNewControlLock == true && modified == true)
-            {
-                return;
-            }
+            
 
             TreeNode selectNode = trvProject.SelectedNode;
             mtNodeData = (ProjectNodeData)selectNode.Tag;
 
-            // we load the window on the right and its properties
-            if (switchingNewControlLock == false)
-            {
-                LoadWindow(mtNodeData);
-            }
+            //// we load the window on the right and its properties
+            //if (switchingNewControlLock == false)
+            //{
+            //    LoadWindow(mtNodeData);
+            //}
 
-            if (switchingNewControlLock == true)
-            {
-                trvProject.SelectedNode = selectNodePrevious;
-                switchingNewControlLock = false;
-            }
+            //if (switchingNewControlLock == true)
+            //{
+            //    trvProject.SelectedNode = selectNodePrevious;
+            //    switchingNewControlLock = false;
+            //}
 
         }
 
@@ -1983,13 +1937,13 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
         private void Settings()
         {
             FrmSettings frmSettings = new FrmSettings();
-            frmSettings.settings = driverConfig.Driver.Settings;
+            frmSettings.settings = project.Driver.Settings;
             // showing the form
             DialogResult dialog = frmSettings.ShowDialog();
             // if you have closed the form, click OK
             if (DialogResult.OK == dialog)
             {
-                driverConfig.Driver.Settings = frmSettings.settings;
+                project.Driver.Settings = frmSettings.settings;
                 ControlsToConfig();
                 SaveProject();
 
@@ -2131,14 +2085,14 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
 
             #region Port
 
-            //if (driverConfig.Driver.Settings.ProjectChannel.GatewayTypeProtocol == 0)
+            //if (project.Driver.Settings.ProjectChannel.GatewayTypeProtocol == 0)
             //{
             //    //Если шлюз не указан т.е. выключен, то генерируем порт 
             //    currentPort = TcpServerPortGenerator.New();
             //}
             //else
             //{
-            //    bool checkedPort = TcpServerPortGenerator.CheckAvailableServerPort(Convert.ToInt32(driverConfig.Settings.ProjectChannel.GatewayPort));
+            //    bool checkedPort = TcpServerPortGenerator.CheckAvailableServerPort(Convert.ToInt32(project.Settings.ProjectChannel.GatewayPort));
             //    if (checkedPort == false)
             //    {
             //        //MessageBox.Show("Указанный порт " + project.Settings.ProjectChannel.GatewayPort + " занят! Попробуйте другой!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -2148,9 +2102,9 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
 
             #endregion Port
 
-            DriverClient.OnDebug = new DriverClient.DebugData(DebugerLog);
-            driverClient = new DriverClient(driverConfig);
-            driverClient.InitializingDriver();
+            //DriverClient.OnDebug = new DriverClient.DebugData(DebugerLog);
+            //driverClient = new DriverClient(project);
+            //driverClient.InitializingDriver();
 
             //FrmViewData.ShowSplashScreen();
 
@@ -2286,5 +2240,554 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
 
 
         //}
+
+        #region Sample
+
+        //#region Calcalate
+        //private void CalculateData()
+        //{
+        //    int stream = Convert.ToInt32(nudStream.Value);
+        //    int function = Convert.ToInt32(nudFunction.Value);
+        //    nowMsg.SetSF(stream, function);
+        //    nowMsg.AsPrimaryMessage = true;
+
+        //    string name = txtName.Text.Trim();
+        //    //secsItemNow.Name = name;
+        //    //secsItemNow.IsUsed = ckbUse.Checked;
+        //    bool replyExpected = ckbReplyExpected.Checked;
+        //    //secsItemNow.IsWaitBit = replyExpected;
+        //    //secsItemNow.Description = txtDescription.Text;
+
+        //    TreeViewSave();
+        //    GenerateMessage();
+
+        //    byte[] itemsMsg = SingleLineConverterSECS.ConvertMessage(nowMsg);
+        //    txtDataHex.Text = Hex.StringX16.ToStringFormatDot(itemsMsg);
+
+        //}
+
+        //private void TreeViewLoad(string info)
+        //{
+        //    try
+        //    {
+        //        if (info == string.Empty)
+        //        {
+        //            return;
+        //        }
+
+        //        trvItems.Nodes.Clear();
+        //        trvItems.BeginUpdate();
+
+        //        //Словарь атрибутов объявляем
+        //        Dictionary<string, string> attributes = new Dictionary<string, string>();
+
+        //        XmlDocument xmlDocument = new XmlDocument();
+        //        xmlDocument.LoadXml(info);
+
+        //        XDocument xDocument = xmlDocument.ToXDocument();
+
+        //        TreeNode root = new TreeNode(xDocument.Root.Name.ToString());
+        //        //trvItems.Nodes.Add(root);
+
+        //        ReadNode(xDocument.Root, root);
+
+        //        trvItems.EndUpdate();
+        //    }
+        //    catch { }
+        //}
+
+        //void ReadNode(XElement xElement, TreeNode treeNode)
+        //{
+        //    foreach (XElement element in xElement.Elements())
+        //    {
+        //        Dictionary<string, string> attributes = new Dictionary<string, string>();
+        //        attributes = DictionaryAttributes(element);
+
+        //        SingleLineSECS nodeLine = new SingleLineSECS();
+        //        nodeLine.Type = (FormatIntSECS)Enum.Parse(typeof(FormatIntSECS), attributes["TYPE"]);
+
+        //        #region Value
+        //        switch (nodeLine.Type)
+        //        {
+        //            case FormatIntSECS.Binary:
+        //                nodeLine.Value = nodeLine.AsBinary = Convert.ToByte(attributes["VALUE"]);
+        //                break;
+        //            case FormatIntSECS.Boolean:
+        //                nodeLine.Value = nodeLine.AsBoolean = Convert.ToBoolean(attributes["VALUE"]);
+        //                break;
+        //            case FormatIntSECS.ASCII:
+        //                nodeLine.Value = nodeLine.AsASCII = attributes["VALUE"];
+        //                break;
+        //            case FormatIntSECS.JIS8:
+        //                nodeLine.Value = nodeLine.AsJIS8 = attributes["VALUE"];
+        //                break;
+        //            case FormatIntSECS.List:
+        //                nodeLine.Value = nodeLine.AsList = Convert.ToInt32(attributes["VALUE"]);
+        //                break;
+        //            case FormatIntSECS.I1:
+        //                nodeLine.Value = nodeLine.AsI1 = Convert.ToInt32(attributes["VALUE"]);
+        //                break;
+        //            case FormatIntSECS.I2:
+        //                nodeLine.Value = nodeLine.AsI2 = Convert.ToInt32(attributes["VALUE"]);
+        //                break;
+        //            case FormatIntSECS.I4:
+        //                nodeLine.Value = nodeLine.AsI4 = Convert.ToInt32(attributes["VALUE"]);
+        //                break;
+        //            case FormatIntSECS.I8:
+        //                nodeLine.Value = nodeLine.AsI8 = Convert.ToInt32(attributes["VALUE"]);
+        //                break;
+        //            case FormatIntSECS.F4:
+        //                nodeLine.Value = nodeLine.AsF4 = Convert.ToSingle(attributes["VALUE"]);
+        //                break;
+        //            case FormatIntSECS.F8:
+        //                nodeLine.Value = nodeLine.AsF8 = Convert.ToSingle(attributes["VALUE"]);
+        //                break;
+        //            case FormatIntSECS.U1:
+        //                nodeLine.Value = nodeLine.AsU1 = Convert.ToUInt32(attributes["VALUE"]);
+        //                break;
+        //            case FormatIntSECS.U2:
+        //                nodeLine.Value = nodeLine.AsU2 = Convert.ToUInt32(attributes["VALUE"]);
+        //                break;
+        //            case FormatIntSECS.U4:
+        //                nodeLine.Value = nodeLine.AsU4 = Convert.ToUInt32(attributes["VALUE"]);
+        //                break;
+        //            case FormatIntSECS.U8:
+        //                nodeLine.Value = nodeLine.AsU8 = Convert.ToUInt32(attributes["VALUE"]);
+        //                break;
+        //            case FormatIntSECS.Spare:
+        //                break;
+        //            default:
+        //                break;
+        //        }
+        //        #endregion Value
+
+        //        //TreeNode node = new TreeNode(element.Value.ToString());
+        //        TreeNode node;
+        //        if (treeNode.Text == "CONFIG")
+        //        {
+        //            node = NodeAdd(nodeLine, cmnuMenu, null);
+        //            node.Tag = nodeLine;
+        //        }
+        //        else
+        //        {
+        //            node = NodeAdd(nodeLine, cmnuMenu, treeNode);
+        //            node.Tag = nodeLine;
+        //        }
+
+        //        //TreeNode node = NodeAdd(nodeLine, cmnuMenu, treeNode);
+        //        //node.Tag = nodeLine;
+        //        //treeNode.Nodes.Add(node);
+
+        //        if (element.HasAttributes)
+        //        {
+        //            TreeNode attributesNode = new TreeNode("Attributes");
+        //            ReadAttributes(element, attributesNode);
+        //            //node.Nodes.Add(attributesNode);
+        //        }
+
+        //        ReadNode(element, node);
+        //    }
+        //}
+
+        //void ReadAttributes(XElement element, TreeNode treeNode)
+        //{
+        //    foreach (XAttribute attribute in element.Attributes())
+        //    {
+        //        TreeNode node = new TreeNode(attribute.ToString());
+        //        treeNode.Nodes.Add(node);
+        //    }
+        //}
+
+
+        //public Dictionary<string, string> DictionaryAttributes(XElement element)
+        //{
+        //    try
+        //    {
+        //        Dictionary<string, string> attributes = new Dictionary<string, string>();
+        //        #region Словарь атрибутов                  
+        //        foreach (XAttribute attribute in element.Attributes())
+        //        {
+        //            string name = attribute.Name.LocalName;
+        //            string value = attribute.Value;
+        //            attributes.Add(name, value);
+        //        }
+        //        #endregion Словарь атрибутов
+
+        //        return attributes;
+        //    }
+        //    catch
+        //    {
+        //        return null;
+        //    }
+
+
+        //}
+
+        //public Dictionary<string, string> DictionaryAttributes(XmlNode Node)
+        //{
+        //    try
+        //    {
+        //        Dictionary<string, string> attributes = new Dictionary<string, string>();
+
+        //        #region Словарь атрибутов                  
+        //        //Загрузка атрибутов узла
+
+        //        int attributeCount = Node.Attributes.Count;
+        //        if (attributeCount > 0)
+        //        {
+        //            for (int i = 0; i < attributeCount; i++)
+        //            {
+        //                attributes.Add(Node.Attributes[i].Name, Node.Attributes[i].Value);
+        //            }
+        //        }
+        //        #endregion Словарь атрибутов
+
+        //        return attributes;
+        //    }
+        //    catch
+        //    {
+        //        return null;
+        //    }
+
+
+        //}
+
+        //private void TreeViewSave()
+        //{
+        //    var sb = new StringBuilder();
+        //    using (XmlWriter xmlWriter = XmlWriter.Create(sb))
+        //    {
+        //        // Build Xml with xw.
+        //        xmlWriter.WriteStartDocument();
+        //        xmlWriter.WriteStartElement("CONFIG");
+
+        //        //Cохраняем ноды
+        //        SaveNodes(trvItems.Nodes, xmlWriter);
+
+        //        xmlWriter.WriteEndElement();
+        //        xmlWriter.Close();
+        //    }
+        //    string result = sb.ToString();
+        //    rtbItemsXml.Text = result;
+        //}
+
+        //private void SaveNodes(TreeNodeCollection nodesCollection, XmlWriter xmlWriter)
+        //{
+        //    try
+        //    {
+        //        for (int i = 0; i < nodesCollection.Count; i++)
+        //        {
+        //            TreeNode node = nodesCollection[i];
+
+        //            xmlWriter.WriteStartElement("NODE");
+
+        //            if (node.Tag != null)
+        //            {
+        //                SingleLineSECS nodeLine = (SingleLineSECS)node.Tag;
+
+        //                xmlWriter.WriteAttributeString("NAME", node.Text);
+        //                xmlWriter.WriteAttributeString("TYPE", nodeLine.Type.ToString());
+        //                xmlWriter.WriteAttributeString("VALUE", nodeLine.Value.ToString());
+        //            }
+
+        //            if (node.Nodes.Count > 0)
+        //            {
+        //                SaveNodes(node.Nodes, xmlWriter);
+        //            }
+
+        //            xmlWriter.WriteEndElement();
+        //        }
+        //    }
+        //    catch { }
+        //}
+
+        //private void GenerateMessage()
+        //{
+        //    nowMsg = new MessageSECS();
+        //    GetMessage(trvItems.Nodes);
+        //    rtbItems.Text = nowMsg.ToString();
+        //}
+
+        //private void GetMessage(TreeNodeCollection nodesCollection)
+        //{
+        //    try
+        //    {
+        //        for (int i = 0; i < nodesCollection.Count; i++)
+        //        {
+        //            TreeNode node = nodesCollection[i];
+
+        //            if (node.Tag != null)
+        //            {
+        //                SingleLineSECS nodeLine = (SingleLineSECS)node.Tag;
+
+        //                nowMsg.SetLatestLine(nodeLine);
+        //            }
+
+        //            if (node.Nodes.Count > 0)
+        //            {
+        //                GetMessage(node.Nodes);
+        //            }
+        //        }
+        //    }
+        //    catch { }
+        //}
+
+
+
+        //#endregion  Calcalate
+
+        //#region TreeView
+
+        //#region Menu
+
+        //private void cmnuItemAdd_Click(object sender, EventArgs e)
+        //{
+        //    ItemAdd();
+        //}
+
+        //private void cmnuItemChange_Click(object sender, EventArgs e)
+        //{
+        //    ItemChange();
+        //}
+
+        //private void cmnuItemDelete_Click(object sender, EventArgs e)
+        //{
+        //    ItemDelete();
+        //}
+
+        //#endregion Menu
+
+        //#region TreeView
+
+        //private void trvItems_AfterSelect(object sender, TreeViewEventArgs e)
+        //{
+        //    TreeNode selectNode = trvItems.SelectedNode;
+        //    nowLine = (SingleLineSECS)selectNode.Tag;
+        //}
+
+        //private void trvItems_MouseDown(object sender, MouseEventArgs e)
+        //{
+        //    TreeNode selectNode = trvItems.GetNodeAt(e.X, e.Y);
+        //    if (selectNode == null)
+        //    {
+        //        trvItems.SelectedNode = null;
+        //        trvItems.HideSelection = true;
+        //    }
+        //    else
+        //    {
+        //        trvItems.HideSelection = false;
+        //    }
+        //}
+        //#endregion TreeView
+
+        //#region Find Image
+
+        //private string FingImageType(FormatIntSECS type)
+        //{
+        //    string image = string.Empty;
+        //    switch (type)
+        //    {
+        //        case FormatIntSECS.Binary:
+        //            image = "bin_16.png";
+        //            break;
+        //        case FormatIntSECS.Boolean:
+        //            image = "bool_16.png";
+        //            break;
+        //        case FormatIntSECS.ASCII:
+        //            image = "ascii_16.png";
+        //            break;
+        //        case FormatIntSECS.JIS8:
+        //            image = "jis8_16.png";
+        //            break;
+        //        case FormatIntSECS.List:
+        //            image = "list_16.png";
+        //            break;
+        //        case FormatIntSECS.I1:
+        //            image = "i1_16.png";
+        //            break;
+        //        case FormatIntSECS.I2:
+        //            image = "i2_16.png";
+        //            break;
+        //        case FormatIntSECS.I4:
+        //            image = "i4_16.png";
+        //            break;
+        //        case FormatIntSECS.I8:
+        //            image = "i8_16.png";
+        //            break;
+        //        case FormatIntSECS.F4:
+        //            image = "f4_16.png";
+        //            break;
+        //        case FormatIntSECS.F8:
+        //            image = "f8_16.png";
+        //            break;
+        //        case FormatIntSECS.U1:
+        //            image = "u1_16.png";
+        //            break;
+        //        case FormatIntSECS.U2:
+        //            image = "u2_16.png";
+        //            break;
+        //        case FormatIntSECS.U4:
+        //            image = "u4_16.png";
+        //            break;
+        //        case FormatIntSECS.U8:
+        //            image = "u8_16.png";
+        //            break;
+        //        case FormatIntSECS.Spare:
+        //            image = "default_16.png";
+        //            break;
+        //        default:
+        //            image = "default_16.png";
+        //            break;
+        //    }
+
+        //    return image;
+        //}
+
+        //#endregion Find Image
+
+        //#region Item
+
+        //#region Add
+
+        //private void ItemAdd()
+        //{
+        //    TreeNode selectNode = trvItems.SelectedNode;
+        //    TreeNode parentNode = null;
+        //    SingleLineSECS parentLine = null;
+
+        //    if (selectNode != null)
+        //    {
+        //        parentNode = selectNode;
+        //        nowLine = (SingleLineSECS)selectNode.Tag;
+        //        parentLine = (SingleLineSECS)selectNode.Tag;
+        //    }
+
+        //    if (nowLine != null)
+        //    {
+        //        // create form
+        //        FrmValue frmValue = new FrmValue();
+        //        frmValue.nowState = FormatIntSECS.List;
+
+        //        // showing the form
+        //        DialogResult dialog = frmValue.ShowDialog();
+
+        //        // if you have closed the form, click Save
+        //        if (DialogResult.OK == dialog)
+        //        {
+        //            nowLine = frmValue.nowLine;
+        //            if (parentLine != null && parentLine.Type == FormatIntSECS.List && parentLine.AsList <= parentNode.Nodes.Count)
+        //            {
+        //                return;
+        //            }
+        //            else if (parentNode != null && parentLine.Type != FormatIntSECS.List)
+        //            {
+        //                return;
+        //            }
+        //            else
+        //            {
+        //                NodeAdd(nowLine, cmnuMenu, parentNode);
+        //            }
+
+        //            CalculateData();
+        //        }
+        //    }
+        //}
+
+        //public TreeNode NodeAdd(SingleLineSECS line, ContextMenuStrip cms, TreeNode ptn = null)
+        //{
+        //    if (null == ptn)
+        //    {
+        //        TreeNode tn = new TreeNode(line.Type.ToString() + " [" + line.Value.ToString() + "]");
+        //        tn.ImageKey = tn.SelectedImageKey = FingImageType(line.Type);
+        //        tn.ContextMenuStrip = cms;
+        //        tn.Tag = line;
+        //        trvItems.Nodes.Add(tn);
+        //        tn.Expand();
+        //        return tn;
+        //    }
+        //    else
+        //    {
+        //        TreeNode tn = new TreeNode(line.Type.ToString() + " [" + line.Value.ToString() + "]");
+        //        tn.ImageKey = tn.SelectedImageKey = FingImageType(line.Type);
+        //        tn.ContextMenuStrip = cms;
+        //        tn.Tag = line;
+        //        ptn.Nodes.Add(tn);
+        //        ptn.Expand();
+        //        return tn;
+        //    }
+        //    return null;
+        //}
+
+        //#endregion Add
+
+        //#region Change
+
+        //private void ItemChange()
+        //{
+        //    if (trvItems.SelectedNode != null)
+        //    {
+        //        TreeNode selectNode = trvItems.SelectedNode;
+        //        nowLine = (SingleLineSECS)selectNode.Tag;
+
+        //        if (nowLine != null)
+        //        {
+        //            // create form
+        //            FrmValue frmValue = new FrmValue();
+        //            frmValue.nowLine = nowLine;
+        //            // showing the form
+        //            DialogResult dialog = frmValue.ShowDialog();
+
+        //            // if you have closed the form, click Save
+        //            if (DialogResult.OK == dialog)
+        //            {
+        //                selectNode.Tag = frmValue.nowLine;
+        //                selectNode.Text = frmValue.nowLine.Type.ToString() + " [" + frmValue.nowLine.Value.ToString() + "]";
+        //                selectNode.ImageKey = selectNode.SelectedImageKey = FingImageType(frmValue.nowLine.Type);
+
+        //                CalculateData();
+        //            }
+        //        }
+        //    }
+        //}
+
+        //#endregion Change
+
+        //#region Delete
+
+        //private void ItemDelete()
+        //{
+        //    if (trvItems.SelectedNode != null)
+        //    {
+        //        trvItems.Nodes.Remove(trvItems.SelectedNode);
+
+        //        CalculateData();
+        //    }
+        //}
+
+        //#endregion Delete
+
+        //#region Refresh
+        //private void ItemRefresh()
+        //{
+        //    rtbItems.Clear();
+        //    rtbItems.AppendText(nowMsg.ToString());
+
+        //    if (nowMsg.IsEnd())
+        //    {
+        //        lblItemsStatus.Text = string.Format("Message Complete");
+        //    }
+        //    else
+        //    {
+        //        lblItemsStatus.Text = string.Empty;
+        //    }
+        //}
+
+        //#endregion Refresh
+
+        //#endregion Item
+
+        //#endregion TreeView
+
+        #endregion Sample
     }
 }

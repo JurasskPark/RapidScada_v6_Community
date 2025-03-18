@@ -615,6 +615,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             AutoRun = false;
             Debug = false;
             SaveRegisters = false;
+            LanguageIsRussian = false;
         }
 
         #region Variables
@@ -645,6 +646,13 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             get { return saveRegisters; }
             set { saveRegisters = value; }
         }
+
+        private bool languageIsRussian;
+        public bool LanguageIsRussian 
+        {
+            get { return languageIsRussian; }
+            set { languageIsRussian = value; }
+        }
         #endregion Variables
 
         #region Load
@@ -663,6 +671,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             AutoRun = xmlNode.GetChildAsBool("AutoRun");
             Debug = xmlNode.GetChildAsBool("Debug");
             SaveRegisters = xmlNode.GetChildAsBool("SaveRegisters");
+            LanguageIsRussian = xmlNode.GetChildAsBool("LanguageIsRussian");
         }
         #endregion Load
 
@@ -682,6 +691,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             xmlElem.AppendElem("AutoRun", AutoRun);
             xmlElem.AppendElem("Debug", Debug);
             xmlElem.AppendElem("SaveRegisters", SaveRegisters);
+            xmlElem.AppendElem("LanguageIsRussian", LanguageIsRussian);
         }
         #endregion Save
 

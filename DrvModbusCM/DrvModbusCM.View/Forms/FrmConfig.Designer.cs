@@ -30,15 +30,6 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmConfig));
-            menuMenu = new MenuStrip();
-            mnuProject = new ToolStripMenuItem();
-            mnuNewProject = new ToolStripMenuItem();
-            mnuOpenProject = new ToolStripMenuItem();
-            mnuSaveProject = new ToolStripMenuItem();
-            mnuSaveAsProject = new ToolStripMenuItem();
-            mnuSettings = new ToolStripMenuItem();
-            mnuActivation = new ToolStripMenuItem();
-            mnuAbout = new ToolStripMenuItem();
             trvProject = new TreeView();
             imgList = new ImageList(components);
             tabControl = new TabControl();
@@ -64,7 +55,6 @@
             toolStripSeparator2 = new ToolStripSeparator();
             tlsProjectStartStop = new ToolStripButton();
             toolStripSeparator3 = new ToolStripSeparator();
-            tlsSettings = new ToolStripButton();
             imgListForm = new ImageList(components);
             cmnuDeviceAppend = new ContextMenuStrip(components);
             cmnuDeviceAdd = new ToolStripMenuItem();
@@ -92,7 +82,6 @@
             cmnuCommandDown = new ToolStripMenuItem();
             toolStripSeparator1 = new ToolStripSeparator();
             cmnuCommandDel = new ToolStripMenuItem();
-            menuMenu.SuspendLayout();
             cmnuTagAppend.SuspendLayout();
             cmnuDeleteAction.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splContainer).BeginInit();
@@ -106,76 +95,6 @@
             cmnuCommandDelete.SuspendLayout();
             SuspendLayout();
             // 
-            // menuMenu
-            // 
-            menuMenu.ImageScalingSize = new Size(24, 24);
-            menuMenu.Items.AddRange(new ToolStripItem[] { mnuProject, mnuSettings, mnuActivation, mnuAbout });
-            menuMenu.Location = new Point(0, 0);
-            menuMenu.Name = "menuMenu";
-            menuMenu.Size = new Size(819, 24);
-            menuMenu.TabIndex = 0;
-            menuMenu.Text = "Menu";
-            // 
-            // mnuProject
-            // 
-            mnuProject.DropDownItems.AddRange(new ToolStripItem[] { mnuNewProject, mnuOpenProject, mnuSaveProject, mnuSaveAsProject });
-            mnuProject.Name = "mnuProject";
-            mnuProject.Size = new Size(56, 20);
-            mnuProject.Text = "Project";
-            // 
-            // mnuNewProject
-            // 
-            mnuNewProject.Image = (Image)resources.GetObject("mnuNewProject.Image");
-            mnuNewProject.Name = "mnuNewProject";
-            mnuNewProject.Size = new Size(121, 22);
-            mnuNewProject.Text = "New";
-            mnuNewProject.Click += mnuNewProject_Click;
-            // 
-            // mnuOpenProject
-            // 
-            mnuOpenProject.Image = (Image)resources.GetObject("mnuOpenProject.Image");
-            mnuOpenProject.Name = "mnuOpenProject";
-            mnuOpenProject.Size = new Size(121, 22);
-            mnuOpenProject.Text = "Open";
-            mnuOpenProject.Click += mnuLoadProject_Click;
-            // 
-            // mnuSaveProject
-            // 
-            mnuSaveProject.Image = (Image)resources.GetObject("mnuSaveProject.Image");
-            mnuSaveProject.Name = "mnuSaveProject";
-            mnuSaveProject.Size = new Size(121, 22);
-            mnuSaveProject.Text = "Save";
-            mnuSaveProject.Click += mnuSaveProject_Click;
-            // 
-            // mnuSaveAsProject
-            // 
-            mnuSaveAsProject.Image = (Image)resources.GetObject("mnuSaveAsProject.Image");
-            mnuSaveAsProject.Name = "mnuSaveAsProject";
-            mnuSaveAsProject.Size = new Size(121, 22);
-            mnuSaveAsProject.Text = "Save as...";
-            mnuSaveAsProject.Click += mnuSaveAsProject_Click;
-            // 
-            // mnuSettings
-            // 
-            mnuSettings.Name = "mnuSettings";
-            mnuSettings.Size = new Size(61, 20);
-            mnuSettings.Text = "Settings";
-            mnuSettings.Click += mnuSettings_Click;
-            // 
-            // mnuActivation
-            // 
-            mnuActivation.Name = "mnuActivation";
-            mnuActivation.Size = new Size(73, 20);
-            mnuActivation.Text = "Activation";
-            mnuActivation.Click += mnuActivation_Click;
-            // 
-            // mnuAbout
-            // 
-            mnuAbout.Name = "mnuAbout";
-            mnuAbout.Size = new Size(52, 20);
-            mnuAbout.Text = "About";
-            mnuAbout.Click += mnuAbout_Click;
-            // 
             // trvProject
             // 
             trvProject.AllowDrop = true;
@@ -185,7 +104,7 @@
             trvProject.Location = new Point(0, 0);
             trvProject.Name = "trvProject";
             trvProject.SelectedImageIndex = 0;
-            trvProject.Size = new Size(273, 422);
+            trvProject.Size = new Size(273, 446);
             trvProject.TabIndex = 0;
             trvProject.ItemDrag += trvProject_ItemDrag;
             trvProject.BeforeSelect += trvProject_BeforeSelect;
@@ -229,12 +148,12 @@
             // 
             // tabControl
             // 
-            tabControl.Dock = DockStyle.Fill;
+            tabControl.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             tabControl.ImageList = imgList;
             tabControl.Location = new Point(0, 0);
             tabControl.Name = "tabControl";
             tabControl.SelectedIndex = 0;
-            tabControl.Size = new Size(542, 422);
+            tabControl.Size = new Size(542, 446);
             tabControl.TabIndex = 1;
             // 
             // cmnuTagAppend
@@ -323,7 +242,7 @@
             // splContainer
             // 
             splContainer.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            splContainer.Location = new Point(0, 66);
+            splContainer.Location = new Point(0, 42);
             splContainer.Name = "splContainer";
             // 
             // splContainer.Panel1
@@ -333,15 +252,15 @@
             // splContainer.Panel2
             // 
             splContainer.Panel2.Controls.Add(tabControl);
-            splContainer.Size = new Size(819, 422);
+            splContainer.Size = new Size(819, 446);
             splContainer.SplitterDistance = 273;
             splContainer.TabIndex = 5;
             // 
             // tlsMenu
             // 
             tlsMenu.ImageScalingSize = new Size(32, 32);
-            tlsMenu.Items.AddRange(new ToolStripItem[] { tlsProjectNew, tlsProjectOpen, tlsProjectSave, tlsProjectSaveAs, toolStripSeparator2, tlsProjectStartStop, toolStripSeparator3, tlsSettings });
-            tlsMenu.Location = new Point(0, 24);
+            tlsMenu.Items.AddRange(new ToolStripItem[] { tlsProjectNew, tlsProjectOpen, tlsProjectSave, tlsProjectSaveAs, toolStripSeparator2, tlsProjectStartStop, toolStripSeparator3 });
+            tlsMenu.Location = new Point(0, 0);
             tlsMenu.Name = "tlsMenu";
             tlsMenu.Padding = new Padding(0, 0, 2, 0);
             tlsMenu.Size = new Size(819, 39);
@@ -407,18 +326,6 @@
             // 
             toolStripSeparator3.Name = "toolStripSeparator3";
             toolStripSeparator3.Size = new Size(6, 39);
-            // 
-            // tlsSettings
-            // 
-            tlsSettings.Alignment = ToolStripItemAlignment.Right;
-            tlsSettings.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            tlsSettings.Image = (Image)resources.GetObject("tlsSettings.Image");
-            tlsSettings.ImageTransparentColor = Color.Magenta;
-            tlsSettings.Name = "tlsSettings";
-            tlsSettings.RightToLeft = RightToLeft.No;
-            tlsSettings.Size = new Size(36, 36);
-            tlsSettings.Text = "Settings";
-            tlsSettings.Click += tlsSettings_Click;
             // 
             // imgListForm
             // 
@@ -555,7 +462,7 @@
             // cmnuDeviceOtherCommandAddRead99
             // 
             cmnuDeviceOtherCommandAddRead99.Name = "cmnuDeviceOtherCommandAddRead99";
-            cmnuDeviceOtherCommandAddRead99.Size = new Size(180, 22);
+            cmnuDeviceOtherCommandAddRead99.Size = new Size(143, 22);
             cmnuDeviceOtherCommandAddRead99.Tag = "ARBITRARY";
             cmnuDeviceOtherCommandAddRead99.Text = "Arbitrary (99)";
             // 
@@ -569,13 +476,13 @@
             // cmnuCommandImportSelect
             // 
             cmnuCommandImportSelect.Name = "cmnuCommandImportSelect";
-            cmnuCommandImportSelect.Size = new Size(180, 22);
+            cmnuCommandImportSelect.Size = new Size(140, 22);
             cmnuCommandImportSelect.Text = "Выбранную";
             // 
             // cmnuCommandImportAll
             // 
             cmnuCommandImportAll.Name = "cmnuCommandImportAll";
-            cmnuCommandImportAll.Size = new Size(180, 22);
+            cmnuCommandImportAll.Size = new Size(140, 22);
             cmnuCommandImportAll.Text = "Все";
             // 
             // cmnuCommandGenerate
@@ -622,17 +529,12 @@
             ClientSize = new Size(819, 488);
             Controls.Add(tlsMenu);
             Controls.Add(splContainer);
-            Controls.Add(menuMenu);
             Icon = (Icon)resources.GetObject("$this.Icon");
-            MainMenuStrip = menuMenu;
             Name = "FrmConfig";
             Text = "Config";
             WindowState = FormWindowState.Maximized;
             FormClosing += FrmConfig_FormClosing;
             Load += FrmConfig_Load;
-            Shown += FrmConfig_Shown;
-            menuMenu.ResumeLayout(false);
-            menuMenu.PerformLayout();
             cmnuTagAppend.ResumeLayout(false);
             cmnuDeleteAction.ResumeLayout(false);
             splContainer.Panel1.ResumeLayout(false);
@@ -650,12 +552,7 @@
         }
 
         #endregion
-
-        private MenuStrip menuMenu;
-        private ToolStripMenuItem mnuProject;
-        private ToolStripMenuItem mnuOpenProject;
         private TabControl tabControl;
-        private ToolStripMenuItem mnuSaveProject;
         public TreeView trvProject;
         private ToolStripMenuItem cmnuAddTag;
         private ToolStripSeparator cmnuSeparator1;
@@ -668,9 +565,6 @@
         private ToolStripMenuItem сmnuSelectVariableActionDown;
         private ToolStripMenuItem cmnuDeleteGroup;
         private ToolStripSeparator cmnuSeparator2;
-        private ToolStripMenuItem mnuSettings;
-        private ToolStripMenuItem mnuActivation;
-        private ToolStripMenuItem mnuAbout;
         private System.Windows.Forms.Timer tmrTimer;
         private SplitContainer splContainer;
         private ToolStrip tlsMenu;
@@ -678,8 +572,6 @@
         private ToolStripButton tlsProjectOpen;
         private ToolStripButton tlsProjectSave;
         private ToolStripSeparator toolStripSeparator2;
-        private ToolStripMenuItem mnuNewProject;
-        private ToolStripMenuItem mnuSaveAsProject;
         private ToolStripButton tlsProjectSaveAs;
         public ImageList imgListForm;
         public ImageList imgList;
@@ -712,6 +604,5 @@
         private ToolStripMenuItem cmnuCommandDel;
         private ToolStripButton tlsProjectStartStop;
         private ToolStripSeparator toolStripSeparator3;
-        private ToolStripButton tlsSettings;
     }
 }
