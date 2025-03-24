@@ -188,24 +188,24 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View.Forms
         {
             MTNodeData = ProjectNodeData;
 
-            //DeviceID = ProjectNodeData.command.ID;
-            CommandID = ProjectNodeData.command.ID;
-            GroupCommandID = ProjectNodeData.command.ParentID;
+            //DeviceID = ProjectNodeData.Command.ID;
+            CommandID = ProjectNodeData.Command.ID;
+            GroupCommandID = ProjectNodeData.Command.ParentID;
 
-            KeyImage = ProjectNodeData.command.KeyImage;
-            CommandName = ProjectNodeData.command.CommandName;
-            CommandDescription = ProjectNodeData.command.CommandDescription;
-            CommandEnabled = ProjectNodeData.command.CommandEnabled;
-            CommandFunctionCode = ProjectNodeData.command.CommandFunctionCode;
-            tmpCommandFunctionCode = ProjectNodeData.command.CommandFunctionCode;
-            CommandRegisterStartAddress = ProjectNodeData.command.CommandRegisterStartAddress;
-            CommandRegisterCount = ProjectNodeData.command.CommandRegisterCount;
-            CommandRegisterNameReadData = ProjectNodeData.command.CommandRegisterNameReadData;
-            CommandRegisterReadData = ProjectNodeData.command.CommandRegisterReadData;
-            CommandRegisterNameWriteData = ProjectNodeData.command.CommandRegisterNameWriteData;
-            CommandRegisterWriteData = ProjectNodeData.command.CommandRegisterWriteData;
-            CommandParametr = ProjectNodeData.command.CommandParametr;
-            CommandCurrentValue = ProjectNodeData.command.CommandCurrentValue;
+            KeyImage = ProjectNodeData.Command.KeyImage;
+            CommandName = ProjectNodeData.Command.CommandName;
+            CommandDescription = ProjectNodeData.Command.CommandDescription;
+            CommandEnabled = ProjectNodeData.Command.CommandEnabled;
+            CommandFunctionCode = ProjectNodeData.Command.CommandFunctionCode;
+            tmpCommandFunctionCode = ProjectNodeData.Command.CommandFunctionCode;
+            CommandRegisterStartAddress = ProjectNodeData.Command.CommandRegisterStartAddress;
+            CommandRegisterCount = ProjectNodeData.Command.CommandRegisterCount;
+            CommandRegisterNameReadData = ProjectNodeData.Command.CommandRegisterNameReadData;
+            CommandRegisterReadData = ProjectNodeData.Command.CommandRegisterReadData;
+            CommandRegisterNameWriteData = ProjectNodeData.Command.CommandRegisterNameWriteData;
+            CommandRegisterWriteData = ProjectNodeData.Command.CommandRegisterWriteData;
+            CommandParametr = ProjectNodeData.Command.CommandParametr;
+            CommandCurrentValue = ProjectNodeData.Command.CommandCurrentValue;
 
             InitializeComponent();
             FormatWindow(true);
@@ -278,22 +278,22 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View.Forms
 
             TreeNode stn = ((FrmConfigForm)this.Parent.Parent.Parent.Parent.Parent).trvProject.SelectedNode;
             ProjectNodeData projectNodeData = (ProjectNodeData)stn.Tag;
-            //projectNodeData.command.DeviceID = DeviceID;
-            projectNodeData.command.ParentID = GroupCommandID;
-            projectNodeData.command.ID = CommandID;
-            projectNodeData.command.CommandName = CommandName;
-            projectNodeData.command.CommandDescription = CommandDescription;
-            projectNodeData.command.CommandEnabled = CommandEnabled;
-            projectNodeData.command.CommandFunctionCode = CommandFunctionCode;
-            projectNodeData.command.CommandRegisterStartAddress = CommandRegisterStartAddress;
-            projectNodeData.command.CommandRegisterCount = CommandRegisterCount;
-            projectNodeData.command.CommandRegisterNameReadData = CommandRegisterNameReadData;
-            projectNodeData.command.CommandRegisterReadData = CommandRegisterReadData;
-            projectNodeData.command.CommandRegisterNameWriteData = CommandRegisterNameWriteData;
-            projectNodeData.command.CommandRegisterWriteData = CommandRegisterWriteData;
-            projectNodeData.command.CommandParametr = CommandParametr;
-            projectNodeData.command.CommandCurrentValue = CommandCurrentValue;
-            projectNodeData.command.KeyImage = stn.ImageKey = stn.SelectedImageKey = ProjectCommand.KeyImageName(CommandFunctionCode);
+            //projectNodeData.Command.DeviceID = DeviceID;
+            projectNodeData.Command.ParentID = GroupCommandID;
+            projectNodeData.Command.ID = CommandID;
+            projectNodeData.Command.CommandName = CommandName;
+            projectNodeData.Command.CommandDescription = CommandDescription;
+            projectNodeData.Command.CommandEnabled = CommandEnabled;
+            projectNodeData.Command.CommandFunctionCode = CommandFunctionCode;
+            projectNodeData.Command.CommandRegisterStartAddress = CommandRegisterStartAddress;
+            projectNodeData.Command.CommandRegisterCount = CommandRegisterCount;
+            projectNodeData.Command.CommandRegisterNameReadData = CommandRegisterNameReadData;
+            projectNodeData.Command.CommandRegisterReadData = CommandRegisterReadData;
+            projectNodeData.Command.CommandRegisterNameWriteData = CommandRegisterNameWriteData;
+            projectNodeData.Command.CommandRegisterWriteData = CommandRegisterWriteData;
+            projectNodeData.Command.CommandParametr = CommandParametr;
+            projectNodeData.Command.CommandCurrentValue = CommandCurrentValue;
+            projectNodeData.Command.KeyImage = stn.ImageKey = stn.SelectedImageKey = ProjectCommand.KeyImageName(CommandFunctionCode);
 
             stn.Text = CommandName;
             stn.Tag = projectNodeData;

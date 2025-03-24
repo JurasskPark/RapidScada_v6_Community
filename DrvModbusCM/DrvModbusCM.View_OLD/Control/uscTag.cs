@@ -173,27 +173,27 @@
         {
             MTNodeData = ProjectNodeData;
 
-            DeviceID = MTNodeData.tag.DeviceID;
-            DeviceGroupTagID = MTNodeData.tag.DeviceGroupTagID;
-            DeviceTagID = MTNodeData.tag.DeviceTagID;
-            DeviceTagKeyImage = MTNodeData.tag.KeyImage;
+            DeviceID = MTNodeData.Tag.DeviceID;
+            DeviceGroupTagID = MTNodeData.Tag.DeviceGroupTagID;
+            DeviceTagID = MTNodeData.Tag.DeviceTagID;
+            DeviceTagKeyImage = MTNodeData.Tag.KeyImage;
 
-            DeviceTagname = MTNodeData.tag.DeviceTagName;
-            DeviceTagCode = MTNodeData.tag.DeviceTagCode;
-            DeviceTagAddress = MTNodeData.tag.DeviceTagAddress;
-            DeviceTagDescription = MTNodeData.tag.DeviceTagDescription;
-            DeviceTagEnabled = MTNodeData.tag.DeviceTagEnabled;
-            DeviceTagType = MTNodeData.tag.DeviceTagType;
-            DeviceTagSorting = MTNodeData.tag.DeviceTagSorting;
+            DeviceTagname = MTNodeData.Tag.DeviceTagName;
+            DeviceTagCode = MTNodeData.Tag.DeviceTagCode;
+            DeviceTagAddress = MTNodeData.Tag.DeviceTagAddress;
+            DeviceTagDescription = MTNodeData.Tag.DeviceTagDescription;
+            DeviceTagEnabled = MTNodeData.Tag.DeviceTagEnabled;
+            DeviceTagType = MTNodeData.Tag.DeviceTagType;
+            DeviceTagSorting = MTNodeData.Tag.DeviceTagSorting;
 
-            DeviceTagDataValue = MTNodeData.tag.DeviceTagDataValue;
-            DeviceTagQuality = MTNodeData.tag.DeviceTagQuality;
-            DeviceTagCoefficient = MTNodeData.tag.DeviceTagCoefficient;
-            DeviceTagScaled = MTNodeData.tag.DeviceTagScaled;
-            DeviceTagScaledHigh = MTNodeData.tag.DeviceTagScaledHigh;
-            DeviceTagScaledLow = MTNodeData.tag.DeviceTagScaledLow;
-            DeviceTagRowHigh = MTNodeData.tag.DeviceTagRowHigh;
-            DeviceTagRowLow = MTNodeData.tag.DeviceTagRowLow;
+            DeviceTagDataValue = MTNodeData.Tag.DeviceTagDataValue;
+            DeviceTagQuality = MTNodeData.Tag.DeviceTagQuality;
+            DeviceTagCoefficient = MTNodeData.Tag.DeviceTagCoefficient;
+            DeviceTagScaled = MTNodeData.Tag.DeviceTagScaled;
+            DeviceTagScaledHigh = MTNodeData.Tag.DeviceTagScaledHigh;
+            DeviceTagScaledLow = MTNodeData.Tag.DeviceTagScaledLow;
+            DeviceTagRowHigh = MTNodeData.Tag.DeviceTagRowHigh;
+            DeviceTagRowLow = MTNodeData.Tag.DeviceTagRowLow;
 
             InitializeComponent();
             FormatWindow(true);
@@ -263,26 +263,26 @@
             TreeNode stn = ((FrmConfigForm)this.Parent.Parent.Parent.Parent.Parent).trvProject.SelectedNode;
             ProjectNodeData projectNodeData = (ProjectNodeData)stn.Tag;
 
-            projectNodeData.tag.DeviceID = DeviceID;
-            projectNodeData.tag.DeviceGroupTagID = DeviceGroupTagID;
-            projectNodeData.tag.DeviceTagID = DeviceTagID;
-            projectNodeData.tag.DeviceTagName = DeviceTagname;
-            projectNodeData.tag.DeviceTagCode = DeviceTagCode;
-            projectNodeData.tag.DeviceTagCode = DeviceTagCode;
-            projectNodeData.tag.DeviceTagAddress = DeviceTagAddress;
-            projectNodeData.tag.DeviceTagDescription = DeviceTagDescription;
-            projectNodeData.tag.DeviceTagEnabled = DeviceTagEnabled;
-            projectNodeData.tag.DeviceTagType = DeviceTagType;
-            projectNodeData.tag.DeviceTagSorting = DeviceTagSorting;
+            projectNodeData.Tag.DeviceID = DeviceID;
+            projectNodeData.Tag.DeviceGroupTagID = DeviceGroupTagID;
+            projectNodeData.Tag.DeviceTagID = DeviceTagID;
+            projectNodeData.Tag.DeviceTagName = DeviceTagname;
+            projectNodeData.Tag.DeviceTagCode = DeviceTagCode;
+            projectNodeData.Tag.DeviceTagCode = DeviceTagCode;
+            projectNodeData.Tag.DeviceTagAddress = DeviceTagAddress;
+            projectNodeData.Tag.DeviceTagDescription = DeviceTagDescription;
+            projectNodeData.Tag.DeviceTagEnabled = DeviceTagEnabled;
+            projectNodeData.Tag.DeviceTagType = DeviceTagType;
+            projectNodeData.Tag.DeviceTagSorting = DeviceTagSorting;
 
-            projectNodeData.tag.DeviceTagCoefficient = DeviceTagCoefficient;
-            projectNodeData.tag.DeviceTagScaled = DeviceTagScaled;
-            projectNodeData.tag.DeviceTagScaledHigh = DeviceTagScaledHigh;
-            projectNodeData.tag.DeviceTagScaledLow = DeviceTagScaledLow;
-            projectNodeData.tag.DeviceTagRowHigh = DeviceTagRowHigh;
-            projectNodeData.tag.DeviceTagRowLow = DeviceTagRowLow;
+            projectNodeData.Tag.DeviceTagCoefficient = DeviceTagCoefficient;
+            projectNodeData.Tag.DeviceTagScaled = DeviceTagScaled;
+            projectNodeData.Tag.DeviceTagScaledHigh = DeviceTagScaledHigh;
+            projectNodeData.Tag.DeviceTagScaledLow = DeviceTagScaledLow;
+            projectNodeData.Tag.DeviceTagRowHigh = DeviceTagRowHigh;
+            projectNodeData.Tag.DeviceTagRowLow = DeviceTagRowLow;
 
-            projectNodeData.tag.KeyImage = stn.ImageKey = stn.SelectedImageKey = "tag_16.png";
+            projectNodeData.Tag.KeyImage = stn.ImageKey = stn.SelectedImageKey = "tag_16.png";
 
             stn.Text = DeviceTagname;
             stn.Tag = projectNodeData;

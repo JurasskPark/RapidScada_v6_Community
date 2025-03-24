@@ -6,33 +6,21 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
 {
     public partial class FrmStart : Form
     {
+        /// <summary>
+        /// Initializes a new instance of the class.
+        /// </summary>
         public FrmStart()
         {
             InitializeComponent();
 
             InitializeWindows();
-
-            ProjectOpen();
-
-
-           
+            ProjectOpen();         
         }
 
         #region Variables
         public Project project;                                        // the project configuration
         private string configFileName;                                 // the configuration file name
-
-        private int childFormCount = 0;
         #endregion Variables
-
-        private void InitializeWindows()
-        {
-            this.tolHorizontal.Tag = MdiLayout.TileHorizontal;
-            this.tolVertical.Tag = MdiLayout.TileVertical;
-            this.tolCascade.Tag = MdiLayout.Cascade;           
-        }
-
-
 
         #region Start App
         public void ProjectOpen()
@@ -173,6 +161,13 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
         #endregion Tools
 
         #region Windows
+        private void InitializeWindows()
+        {
+            this.tolHorizontal.Tag = MdiLayout.TileHorizontal;
+            this.tolVertical.Tag = MdiLayout.TileVertical;
+            this.tolCascade.Tag = MdiLayout.Cascade;
+        }
+
         private void Child_AddForm(Form child)
         {
             // Capture the event when the child form is closed.
@@ -267,12 +262,6 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
        
 
         #endregion Windows
-
-
-
-
-
-
 
     }
 }

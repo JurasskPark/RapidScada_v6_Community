@@ -54,14 +54,14 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
 
         public FrmCommand5_6_15_16(ProjectNodeData ProjectNodeData)
         {
-            currentCommand = ProjectNodeData.command;
+            currentCommand = ProjectNodeData.Command;
             InitializeComponent();
             FormatWindow(true);
         }
 
         public FrmCommand5_6_15_16(ref ProjectNodeData ProjectNodeData, bool hasParent = true)
         {
-            currentCommand = ProjectNodeData.command;
+            currentCommand = ProjectNodeData.Command;
             InitializeComponent();
             FormatWindow(hasParent);
         }
@@ -134,7 +134,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             frmParentGloabal.trvProject.SelectedNode.BeginEdit();
             TreeNode stn = frmParentGloabal.trvProject.SelectedNode;
             ProjectNodeData projectNodeData = (ProjectNodeData)stn.Tag;
-            projectNodeData.command = currentCommand;
+            projectNodeData.Command = currentCommand;
             stn.Tag = projectNodeData;
             stn.Text = currentCommand.Name;
 

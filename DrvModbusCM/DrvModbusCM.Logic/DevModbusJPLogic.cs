@@ -80,7 +80,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.Logic
             CanSendCommands = false;
             ConnectionRequired = false;
 
-            this.deviceNum = deviceConfig.DeviceNum;
+            this.DeviceNum = deviceConfig.DeviceNum;
             this.driverCode = DriverUtils.DriverCode;
             this.shortFileName = DriverUtils.GetFileName(deviceNum);
             this.projectFileName = Path.Combine(CommContext.AppDirs.ConfigDir, shortFileName);

@@ -51,7 +51,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
 
         public FrmDevice(ProjectNodeData ProjectNodeData)
         {
-            currentDevice = ProjectNodeData.device;
+            currentDevice = ProjectNodeData.Device;
 
             InitializeComponent();
             FormatWindow(true);
@@ -60,7 +60,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
 
         public FrmDevice(ref ProjectNodeData ProjectNodeData, bool hasParent = true)
         {
-            currentDevice = ProjectNodeData.device;
+            currentDevice = ProjectNodeData.Device;
 
             InitializeComponent();
             FormatWindow(hasParent);
@@ -135,9 +135,9 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             frmParentGloabal.trvProject.SelectedNode.BeginEdit();
             TreeNode stn = frmParentGloabal.trvProject.SelectedNode;
             ProjectNodeData projectNodeData = (ProjectNodeData)stn.Tag;
-            projectNodeData.device = currentDevice;
+            projectNodeData.Device = currentDevice;
             stn.Tag = projectNodeData;
-            stn.Text = projectNodeData.device.Name;
+            stn.Text = projectNodeData.Device.Name;
 
             string imageKey = stn.ImageKey;
             int imageIndex = stn.ImageIndex;

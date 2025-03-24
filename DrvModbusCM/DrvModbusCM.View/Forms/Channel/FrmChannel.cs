@@ -29,7 +29,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
 
         public FrmChannel(ProjectNodeData ProjectNodeData)
         {
-            currentChannel = ProjectNodeData.channel;
+            currentChannel = ProjectNodeData.Channel;
 
             InitializeComponent();
             FormatWindow(true);
@@ -37,7 +37,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
 
         public FrmChannel(ref ProjectNodeData ProjectNodeData, bool hasParent = true)
         {
-            currentChannel = ProjectNodeData.channel;
+            currentChannel = ProjectNodeData.Channel;
             boolParent = hasParent;
             InitializeComponent();
             FormatWindow(boolParent);
@@ -143,7 +143,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             frmParentGloabal.trvProject.SelectedNode.BeginEdit();
             TreeNode stn = frmParentGloabal.trvProject.SelectedNode;
             ProjectNodeData projectNodeData = (ProjectNodeData)stn.Tag;
-            projectNodeData.channel = currentChannel;
+            projectNodeData.Channel = currentChannel;
             stn.Tag = projectNodeData;
             stn.Text = currentChannel.Name;
 

@@ -805,7 +805,7 @@
 //            //                            try { projectChannel.Debug = Convert.ToBoolean(attributes["DEBUG"]); } catch { }
 
 //            //                            projectNodeData.channel = projectChannel;
-//            //                            projectNodeData.nodeType = ProjectNodeType.Channel;
+//            //                            projectNodeData.NodeType = ProjectNodeType.Channel;
 
 //            //                            newNode.Tag = projectNodeData;
 //            //                            #endregion Channel
@@ -898,8 +898,8 @@
 //            //                                }
 //            //                            }
 
-//            //                            projectNodeData.device = projectDevice;
-//            //                            projectNodeData.nodeType = ProjectNodeType.Device;
+//            //                            projectNodeData.Device = projectDevice;
+//            //                            projectNodeData.NodeType = ProjectNodeType.Device;
 
 //            //                            newNode.Tag = projectNodeData;
 //            //                            #endregion Device
@@ -916,8 +916,8 @@
 //            //                            try { projectGroupCommand.GroupCommandDescription = attributes["DESCRIPTION"]; } catch { }
 //            //                            try { projectGroupCommand.GroupCommandEnabled = Convert.ToBoolean(attributes["ENABLED"]); } catch { }
 
-//            //                            projectNodeData.groupCommand = projectGroupCommand;
-//            //                            projectNodeData.nodeType = ProjectNodeType.GroupCommand;
+//            //                            projectNodeData.GroupCommand = projectGroupCommand;
+//            //                            projectNodeData.NodeType = ProjectNodeType.GroupCommand;
 
 //            //                            newNode.Tag = projectNodeData;
 //            //                            #endregion Device Group Command
@@ -945,8 +945,8 @@
 //            //                            try { projectCommand.CommandRegisterNameWriteData = attributes["REGISTERNAMEWRITEDATA"].Split(' '); } catch { }
 //            //                            try { projectCommand.CommandRegisterWriteData = Array.ConvertAll(attributes["REGISTERWRITEDATA"].Split(' '), x => { ulong res = Convert.ToUInt64(x); return res; }); } catch { }
 
-//            //                            projectNodeData.command = projectCommand;
-//            //                            projectNodeData.nodeType = ProjectNodeType.Command;
+//            //                            projectNodeData.Command = projectCommand;
+//            //                            projectNodeData.NodeType = ProjectNodeType.Command;
 
 //            //                            newNode.Tag = projectNodeData;
 
@@ -964,8 +964,8 @@
 //            //                            try { projectGroupTag.DeviceGroupTagDescription = attributes["DESCRIPTION"]; } catch { }
 //            //                            try { projectGroupTag.DeviceGroupTagEnabled = Convert.ToBoolean(attributes["ENABLED"]); } catch { }
 
-//            //                            projectNodeData.groupTag = projectGroupTag;
-//            //                            projectNodeData.nodeType = ProjectNodeType.DeviceGroupTag;
+//            //                            projectNodeData.GroupTag = projectGroupTag;
+//            //                            projectNodeData.NodeType = ProjectNodeType.DeviceGroupTag;
 
 //            //                            newNode.Tag = projectNodeData;
 
@@ -1001,8 +1001,8 @@
 //            //                            }
 //            //                            catch { }
 
-//            //                            projectNodeData.tag = projectTag;
-//            //                            projectNodeData.nodeType = ProjectNodeType.DeviceTag;
+//            //                            projectNodeData.Tag = projectTag;
+//            //                            projectNodeData.NodeType = ProjectNodeType.DeviceTag;
 
 //            //                            newNode.Tag = projectNodeData;
 //            //                            #endregion Device Tag
@@ -1137,7 +1137,7 @@
 //        //        {
 //        //            #region Channel
 //        //            // channel
-//        //            if (prNodeData.nodeType == ProjectNodeType.Channel)
+//        //            if (prNodeData.NodeType == ProjectNodeType.Channel)
 //        //            {
 //        //                try { textWriter.WriteAttributeString(XmlNodeTagAtt, "CHANNEL"); } catch { }
 
@@ -1185,34 +1185,34 @@
 
 //        //            #region Device
 //        //            // device
-//        //            if (prNodeData.nodeType == ProjectNodeType.Device)
+//        //            if (prNodeData.NodeType == ProjectNodeType.Device)
 //        //            {
 //        //                try { textWriter.WriteAttributeString(XmlNodeTagAtt, "DEVICE"); } catch { }
 
-//        //                try { textWriter.WriteAttributeString("IDPARENT", prNodeData.device.ID.ToString()); } catch { }
-//        //                try { textWriter.WriteAttributeString("ID", prNodeData.device.ID.ToString()); } catch { }
-//        //                try { textWriter.WriteAttributeString("ADDRESS", prNodeData.device.Address.ToString()); } catch { }
-//        //                try { textWriter.WriteAttributeString("NAME", prNodeData.device.Name); } catch { }
-//        //                try { textWriter.WriteAttributeString("DESCRIPTION", prNodeData.device.Description); } catch { }
-//        //                try { textWriter.WriteAttributeString("ENABLED", prNodeData.device.Enabled.ToString()); } catch { }
-//        //                try { textWriter.WriteAttributeString("REGISTERSBYTES", prNodeData.device.DeviceRegistersBytes.ToString()); } catch { }
-//        //                try { textWriter.WriteAttributeString("GATEWAYREGISTERSBYTES", prNodeData.device.DeviceGatewayRegistersBytes.ToString()); } catch { }
+//        //                try { textWriter.WriteAttributeString("IDPARENT", prNodeData.Device.ID.ToString()); } catch { }
+//        //                try { textWriter.WriteAttributeString("ID", prNodeData.Device.ID.ToString()); } catch { }
+//        //                try { textWriter.WriteAttributeString("ADDRESS", prNodeData.Device.Address.ToString()); } catch { }
+//        //                try { textWriter.WriteAttributeString("NAME", prNodeData.Device.Name); } catch { }
+//        //                try { textWriter.WriteAttributeString("DESCRIPTION", prNodeData.Device.Description); } catch { }
+//        //                try { textWriter.WriteAttributeString("ENABLED", prNodeData.Device.Enabled.ToString()); } catch { }
+//        //                try { textWriter.WriteAttributeString("REGISTERSBYTES", prNodeData.Device.DeviceRegistersBytes.ToString()); } catch { }
+//        //                try { textWriter.WriteAttributeString("GATEWAYREGISTERSBYTES", prNodeData.Device.DeviceGatewayRegistersBytes.ToString()); } catch { }
 
-//        //                try { textWriter.WriteAttributeString("STATUS", prNodeData.device.Status.ToString()); } catch { }
-//        //                try { textWriter.WriteAttributeString("POLLINGONSCHEDULESTATUS", prNodeData.device.PollingOnScheduleStatus.ToString()); } catch { }
-//        //                try { textWriter.WriteAttributeString("INTERVALPOOL", prNodeData.device.IntervalPool.ToString()); } catch { }
-//        //                try { textWriter.WriteAttributeString("TYPEPROTOCOL", prNodeData.device.TypeProtocol.ToString()); } catch { }
+//        //                try { textWriter.WriteAttributeString("STATUS", prNodeData.Device.Status.ToString()); } catch { }
+//        //                try { textWriter.WriteAttributeString("POLLINGONSCHEDULESTATUS", prNodeData.Device.PollingOnScheduleStatus.ToString()); } catch { }
+//        //                try { textWriter.WriteAttributeString("INTERVALPOOL", prNodeData.Device.IntervalPool.ToString()); } catch { }
+//        //                try { textWriter.WriteAttributeString("TYPEPROTOCOL", prNodeData.Device.TypeProtocol.ToString()); } catch { }
 
-//        //                try { textWriter.WriteAttributeString("DATETIMELASTSUCCESSFULLY", prNodeData.device.DateTimeLastSuccessfully.ToString()); } catch { }
+//        //                try { textWriter.WriteAttributeString("DATETIMELASTSUCCESSFULLY", prNodeData.Device.DateTimeLastSuccessfully.ToString()); } catch { }
 
 //        //                #region Buffer
 //        //                for (int index = 0; index < 65535; ++index)
 //        //                {
 //        //                    //Coils
-//        //                    if (prNodeData.device.CoilsExists(Convert.ToUInt16(index)))
+//        //                    if (prNodeData.Device.CoilsExists(Convert.ToUInt16(index)))
 //        //                    {
 //        //                        string TextCoilsID = (index).ToString();
-//        //                        string TextCoilsWord = prNodeData.device.GetBooleanCoil(Convert.ToUInt64(index)).ToString();
+//        //                        string TextCoilsWord = prNodeData.Device.GetBooleanCoil(Convert.ToUInt64(index)).ToString();
 
 //        //                        if (TextCoilsWord != "False")
 //        //                        {
@@ -1221,10 +1221,10 @@
 //        //                    }
 
 //        //                    //DiscreteInputs
-//        //                    if (prNodeData.device.DiscreteInputsExists(Convert.ToUInt16(index)))
+//        //                    if (prNodeData.Device.DiscreteInputsExists(Convert.ToUInt16(index)))
 //        //                    {
 //        //                        string TextDiscreteInputsID = (index).ToString();
-//        //                        string TextDiscreteInputsWord = prNodeData.device.GetBooleanDiscreteInput(Convert.ToUInt64(index)).ToString();
+//        //                        string TextDiscreteInputsWord = prNodeData.Device.GetBooleanDiscreteInput(Convert.ToUInt64(index)).ToString();
 
 //        //                        if (TextDiscreteInputsWord != "False")
 //        //                        {
@@ -1233,10 +1233,10 @@
 //        //                    }
 
 //        //                    //HoldingRegisters
-//        //                    if (prNodeData.device.HoldingRegistersExists(Convert.ToUInt16(index)))
+//        //                    if (prNodeData.Device.HoldingRegistersExists(Convert.ToUInt16(index)))
 //        //                    {
 //        //                        string TextHoldingID = (index).ToString();
-//        //                        string TextHoldingWord = prNodeData.device.GetUlongHoldingRegister(Convert.ToUInt64(index)).ToString();
+//        //                        string TextHoldingWord = prNodeData.Device.GetUlongHoldingRegister(Convert.ToUInt64(index)).ToString();
 
 //        //                        if (TextHoldingWord != "0")
 //        //                        {
@@ -1245,10 +1245,10 @@
 //        //                    }
 
 //        //                    //InputRegisters
-//        //                    if (prNodeData.device.InputRegistersExists(Convert.ToUInt16(index)))
+//        //                    if (prNodeData.Device.InputRegistersExists(Convert.ToUInt16(index)))
 //        //                    {
 //        //                        string TextInputID = (index).ToString();
-//        //                        string TextInputWord = prNodeData.device.GetUlongInputRegister(Convert.ToUInt64(index)).ToString();
+//        //                        string TextInputWord = prNodeData.Device.GetUlongInputRegister(Convert.ToUInt64(index)).ToString();
 
 //        //                        if (TextInputWord != "0")
 //        //                        {
@@ -1263,49 +1263,49 @@
 
 //        //            #region Device Group Command
 
-//        //            if (prNodeData.nodeType == ProjectNodeType.GroupCommand)
+//        //            if (prNodeData.NodeType == ProjectNodeType.GroupCommand)
 //        //            {
 //        //                try { textWriter.WriteAttributeString(XmlNodeTagAtt, "GROUPCOMMAND"); } catch { }
 
-//        //                try { textWriter.WriteAttributeString("IDPARENT", prNodeData.groupCommand.ParentID.ToString()); } catch { }
-//        //                try { textWriter.WriteAttributeString("ID", prNodeData.groupCommand.ID.ToString()); } catch { }
-//        //                try { textWriter.WriteAttributeString("NAME", prNodeData.groupCommand.GroupCommandName); } catch { }
-//        //                try { textWriter.WriteAttributeString("DESCRIPTION", prNodeData.groupCommand.GroupCommandDescription); } catch { }
-//        //                try { textWriter.WriteAttributeString("ENABLED", prNodeData.groupCommand.GroupCommandEnabled.ToString()); } catch { }
+//        //                try { textWriter.WriteAttributeString("IDPARENT", prNodeData.GroupCommand.ParentID.ToString()); } catch { }
+//        //                try { textWriter.WriteAttributeString("ID", prNodeData.GroupCommand.ID.ToString()); } catch { }
+//        //                try { textWriter.WriteAttributeString("NAME", prNodeData.GroupCommand.GroupCommandName); } catch { }
+//        //                try { textWriter.WriteAttributeString("DESCRIPTION", prNodeData.GroupCommand.GroupCommandDescription); } catch { }
+//        //                try { textWriter.WriteAttributeString("ENABLED", prNodeData.GroupCommand.GroupCommandEnabled.ToString()); } catch { }
 //        //            }
 
 //        //            #endregion Device Group Command
 
 //        //            #region Device Command
 
-//        //            if (prNodeData.nodeType == ProjectNodeType.Command)
+//        //            if (prNodeData.NodeType == ProjectNodeType.Command)
 //        //            {
 //        //                try { textWriter.WriteAttributeString(XmlNodeTagAtt, "COMMAND"); } catch { }
 
-//        //                //try { textWriter.WriteAttributeString("IDDEVICE", prNodeData.command.DeviceID.ToString()); } catch { }
-//        //                try { textWriter.WriteAttributeString("IDPARENT", prNodeData.command.ParentID.ToString()); } catch { }
-//        //                try { textWriter.WriteAttributeString("ID", prNodeData.command.ID.ToString()); } catch { }
+//        //                //try { textWriter.WriteAttributeString("IDDEVICE", prNodeData.Command.DeviceID.ToString()); } catch { }
+//        //                try { textWriter.WriteAttributeString("IDPARENT", prNodeData.Command.ParentID.ToString()); } catch { }
+//        //                try { textWriter.WriteAttributeString("ID", prNodeData.Command.ID.ToString()); } catch { }
 
-//        //                try { textWriter.WriteAttributeString("NAME", prNodeData.command.CommandName); } catch { }
-//        //                try { textWriter.WriteAttributeString("DESCRIPTION", prNodeData.command.CommandDescription); } catch { }
-//        //                try { textWriter.WriteAttributeString("ENABLED", prNodeData.command.CommandEnabled.ToString()); } catch { }
+//        //                try { textWriter.WriteAttributeString("NAME", prNodeData.Command.CommandName); } catch { }
+//        //                try { textWriter.WriteAttributeString("DESCRIPTION", prNodeData.Command.CommandDescription); } catch { }
+//        //                try { textWriter.WriteAttributeString("ENABLED", prNodeData.Command.CommandEnabled.ToString()); } catch { }
 
-//        //                try { textWriter.WriteAttributeString("FUNCTION", prNodeData.command.CommandFunctionCode.ToString()); } catch { }
-//        //                try { textWriter.WriteAttributeString("REGISTERSTARTADDRESS", prNodeData.command.CommandRegisterStartAddress.ToString()); } catch { }
-//        //                try { textWriter.WriteAttributeString("REGISTERCOUNT", prNodeData.command.CommandRegisterCount.ToString()); } catch { }
-//        //                try { textWriter.WriteAttributeString("REGISTERPARAMETR", prNodeData.command.CommandParametr.ToString()); } catch { }
-//        //                try { textWriter.WriteAttributeString("CURRENTVALUE", prNodeData.command.CommandCurrentValue.ToString()); } catch { }
+//        //                try { textWriter.WriteAttributeString("FUNCTION", prNodeData.Command.CommandFunctionCode.ToString()); } catch { }
+//        //                try { textWriter.WriteAttributeString("REGISTERSTARTADDRESS", prNodeData.Command.CommandRegisterStartAddress.ToString()); } catch { }
+//        //                try { textWriter.WriteAttributeString("REGISTERCOUNT", prNodeData.Command.CommandRegisterCount.ToString()); } catch { }
+//        //                try { textWriter.WriteAttributeString("REGISTERPARAMETR", prNodeData.Command.CommandParametr.ToString()); } catch { }
+//        //                try { textWriter.WriteAttributeString("CURRENTVALUE", prNodeData.Command.CommandCurrentValue.ToString()); } catch { }
 
 //        //                try
 //        //                {
-//        //                    string[] commandRegisterReadName = prNodeData.command.CommandRegisterNameReadData;
+//        //                    string[] commandRegisterReadName = prNodeData.Command.CommandRegisterNameReadData;
 //        //                    textWriter.WriteAttributeString("REGISTERNAMEREADDATA", String.Join(" ", commandRegisterReadName));
 //        //                }
 //        //                catch { }
 
 //        //                try
 //        //                {
-//        //                    ulong[] commandRegisterReadData = prNodeData.command.CommandRegisterReadData;
+//        //                    ulong[] commandRegisterReadData = prNodeData.Command.CommandRegisterReadData;
 //        //                    string[] strCommandRegisterReadData = Array.ConvertAll(commandRegisterReadData, x => { string res = x.ToString(); return res; });
 //        //                    textWriter.WriteAttributeString("REGISTERREADDATA", String.Join(" ", strCommandRegisterReadData));
 //        //                }
@@ -1313,14 +1313,14 @@
 
 //        //                try
 //        //                {
-//        //                    string[] CommandRegisterWriteName = prNodeData.command.CommandRegisterNameWriteData;
+//        //                    string[] CommandRegisterWriteName = prNodeData.Command.CommandRegisterNameWriteData;
 //        //                    textWriter.WriteAttributeString("REGISTERNAMEWRITEDATA", String.Join(" ", CommandRegisterWriteName));
 //        //                }
 //        //                catch { }
 
 //        //                try
 //        //                {
-//        //                    ulong[] CommandRegisterWriteData = prNodeData.command.CommandRegisterWriteData;
+//        //                    ulong[] CommandRegisterWriteData = prNodeData.Command.CommandRegisterWriteData;
 //        //                    string[] str_tmp_CommandRegisterWriteData = Array.ConvertAll(CommandRegisterWriteData, x => { string res = x.ToString(); return res; });
 //        //                    textWriter.WriteAttributeString("REGISTERWRITEDATA", String.Join(" ", str_tmp_CommandRegisterWriteData));
 //        //                }
@@ -1331,44 +1331,44 @@
 
 //        //            #region Device Group Tag
 
-//        //            if (prNodeData.nodeType == ProjectNodeType.DeviceGroupTag)
+//        //            if (prNodeData.NodeType == ProjectNodeType.DeviceGroupTag)
 //        //            {
 //        //                try { textWriter.WriteAttributeString(XmlNodeTagAtt, "GROUPTAG"); } catch { }
 
-//        //                try { textWriter.WriteAttributeString("IDPARENT", prNodeData.groupTag.ParentID.ToString()); } catch { }
-//        //                try { textWriter.WriteAttributeString("ID", prNodeData.groupTag.ID.ToString()); } catch { }
-//        //                try { textWriter.WriteAttributeString("NAME", prNodeData.groupTag.GroupTagName); } catch { }
-//        //                try { textWriter.WriteAttributeString("DESCRIPTION", prNodeData.groupTag.DeviceGroupTagDescription); } catch { }
-//        //                try { textWriter.WriteAttributeString("ENABLED", prNodeData.groupTag.DeviceGroupTagEnabled.ToString()); } catch { }
+//        //                try { textWriter.WriteAttributeString("IDPARENT", prNodeData.GroupTag.ParentID.ToString()); } catch { }
+//        //                try { textWriter.WriteAttributeString("ID", prNodeData.GroupTag.ID.ToString()); } catch { }
+//        //                try { textWriter.WriteAttributeString("NAME", prNodeData.GroupTag.GroupTagName); } catch { }
+//        //                try { textWriter.WriteAttributeString("DESCRIPTION", prNodeData.GroupTag.DeviceGroupTagDescription); } catch { }
+//        //                try { textWriter.WriteAttributeString("ENABLED", prNodeData.GroupTag.DeviceGroupTagEnabled.ToString()); } catch { }
 
 //        //            }
 
 //        //            #endregion Device Group Tag
 
 //        //            #region Device Tag
-//        //            if (prNodeData.nodeType == ProjectNodeType.DeviceTag)
+//        //            if (prNodeData.NodeType == ProjectNodeType.DeviceTag)
 //        //            {
 //        //                try { textWriter.WriteAttributeString(XmlNodeTagAtt, "TAG"); } catch { }
 
-//        //                try { textWriter.WriteAttributeString("DEVICEID", prNodeData.tag.DeviceID.ToString()); } catch { }
-//        //                try { textWriter.WriteAttributeString("IDPARENT", prNodeData.tag.DeviceGroupTagID.ToString()); } catch { }
-//        //                try { textWriter.WriteAttributeString("ID", prNodeData.tag.DeviceTagID.ToString()); } catch { }
-//        //                try { textWriter.WriteAttributeString("COMMANDID", prNodeData.tag.DeviceTagCommandID.ToString()); } catch { }
+//        //                try { textWriter.WriteAttributeString("DEVICEID", prNodeData.Tag.DeviceID.ToString()); } catch { }
+//        //                try { textWriter.WriteAttributeString("IDPARENT", prNodeData.Tag.DeviceGroupTagID.ToString()); } catch { }
+//        //                try { textWriter.WriteAttributeString("ID", prNodeData.Tag.DeviceTagID.ToString()); } catch { }
+//        //                try { textWriter.WriteAttributeString("COMMANDID", prNodeData.Tag.DeviceTagCommandID.ToString()); } catch { }
 
-//        //                try { textWriter.WriteAttributeString("ENABLED", prNodeData.tag.DeviceTagEnabled.ToString()); } catch { }
-//        //                try { textWriter.WriteAttributeString("ADDRESS", prNodeData.tag.DeviceTagAddress.ToString()); } catch { }
-//        //                try { textWriter.WriteAttributeString("NAME", prNodeData.tag.DeviceTagName.ToString()); } catch { }
-//        //                try { textWriter.WriteAttributeString("CODE", prNodeData.tag.DeviceTagCode.ToString()); } catch { }
-//        //                try { textWriter.WriteAttributeString("TYPE", DriverUtils.NullToString(prNodeData.tag.DeviceTagType)); } catch { }
-//        //                try { textWriter.WriteAttributeString("SORTING", prNodeData.tag.DeviceTagSorting.ToString()); } catch { }
-//        //                try { textWriter.WriteAttributeString("COEFFICIENT", prNodeData.tag.DeviceTagCoefficient.ToString()); } catch { }
-//        //                try { textWriter.WriteAttributeString("DESCRIPTION", prNodeData.tag.DeviceTagDescription.ToString()); } catch { }
+//        //                try { textWriter.WriteAttributeString("ENABLED", prNodeData.Tag.DeviceTagEnabled.ToString()); } catch { }
+//        //                try { textWriter.WriteAttributeString("ADDRESS", prNodeData.Tag.DeviceTagAddress.ToString()); } catch { }
+//        //                try { textWriter.WriteAttributeString("NAME", prNodeData.Tag.DeviceTagName.ToString()); } catch { }
+//        //                try { textWriter.WriteAttributeString("CODE", prNodeData.Tag.DeviceTagCode.ToString()); } catch { }
+//        //                try { textWriter.WriteAttributeString("TYPE", DriverUtils.NullToString(prNodeData.Tag.DeviceTagType)); } catch { }
+//        //                try { textWriter.WriteAttributeString("SORTING", prNodeData.Tag.DeviceTagSorting.ToString()); } catch { }
+//        //                try { textWriter.WriteAttributeString("COEFFICIENT", prNodeData.Tag.DeviceTagCoefficient.ToString()); } catch { }
+//        //                try { textWriter.WriteAttributeString("DESCRIPTION", prNodeData.Tag.DeviceTagDescription.ToString()); } catch { }
 
-//        //                try { textWriter.WriteAttributeString("SCALED", prNodeData.tag.DeviceTagScaled.ToString()); } catch { }
-//        //                try { textWriter.WriteAttributeString("SCALEDHIGH", prNodeData.tag.DeviceTagScaledHigh.ToString()); } catch { }
-//        //                try { textWriter.WriteAttributeString("SCALEDLOW", prNodeData.tag.DeviceTagScaledLow.ToString()); } catch { }
-//        //                try { textWriter.WriteAttributeString("ROWHIGH", prNodeData.tag.DeviceTagRowHigh.ToString()); } catch { }
-//        //                try { textWriter.WriteAttributeString("ROWLOW", prNodeData.tag.DeviceTagRowLow.ToString()); } catch { }
+//        //                try { textWriter.WriteAttributeString("SCALED", prNodeData.Tag.DeviceTagScaled.ToString()); } catch { }
+//        //                try { textWriter.WriteAttributeString("SCALEDHIGH", prNodeData.Tag.DeviceTagScaledHigh.ToString()); } catch { }
+//        //                try { textWriter.WriteAttributeString("SCALEDLOW", prNodeData.Tag.DeviceTagScaledLow.ToString()); } catch { }
+//        //                try { textWriter.WriteAttributeString("ROWHIGH", prNodeData.Tag.DeviceTagRowHigh.ToString()); } catch { }
+//        //                try { textWriter.WriteAttributeString("ROWLOW", prNodeData.Tag.DeviceTagRowLow.ToString()); } catch { }
 //        //            }
 //        //            #endregion Device Tag
 
@@ -1569,7 +1569,7 @@
 
 //                //    ProjectNodeData ProjectNodeData = new ProjectNodeData();
 //                //    ProjectNodeData.channel = cnl;
-//                //    ProjectNodeData.nodeType = ProjectNodeType.Channel;
+//                //    ProjectNodeData.NodeType = ProjectNodeType.Channel;
 
 //                //    tn.ContextMenuStrip = cms;
 //                //    tn.Tag = ProjectNodeData;
@@ -1663,9 +1663,9 @@
 //                ptn.Nodes.Add(tn);
 //                tn.ContextMenuStrip = cms;
 //                ProjectNodeData ProjectNodeData = new ProjectNodeData();
-//                ProjectNodeData.device = ((ProjectNodeData)ptn.Tag).device;
-//                ProjectNodeData.nodeType = ProjectNodeType.Device;
-//                ProjectNodeData.device = dev;
+//                ProjectNodeData.Device = ((ProjectNodeData)ptn.Tag).Device;
+//                ProjectNodeData.NodeType = ProjectNodeType.Device;
+//                ProjectNodeData.Device = dev;
 //                tn.Tag = ProjectNodeData;
 //                ptn.Expand();
 //                return tn;
@@ -1678,7 +1678,7 @@
 //        {
 //            TreeNode selectNode = trvProject.SelectedNode;
 //            ProjectChannel projectChannel = ((ProjectNodeData)selectNode.Parent.Tag).channel;
-//            ProjectDevice projectDevice = ((ProjectNodeData)selectNode.Tag).device;
+//            ProjectDevice projectDevice = ((ProjectNodeData)selectNode.Tag).Device;
 //            string text = selectNode.Text;
 //            DialogResult dr = MessageBox.Show(DriverPhrases.DeleteQuestion + text + " ?", DriverPhrases.Delete, MessageBoxButtons.YesNo);
 //            if (DialogResult.Yes == dr)
@@ -1708,9 +1708,9 @@
 //                //ptn.Nodes.Add(tn);
 //                //tn.ContextMenuStrip = cms;
 //                //ProjectNodeData ProjectNodeData = new ProjectNodeData();
-//                //ProjectNodeData.groupCommand = ((ProjectNodeData)ptn.Tag).groupCommand;
-//                //ProjectNodeData.nodeType = ProjectNodeType.GroupCommand;
-//                //ProjectNodeData.groupCommand = grpCmd;
+//                //ProjectNodeData.GroupCommand = ((ProjectNodeData)ptn.Tag).GroupCommand;
+//                //ProjectNodeData.NodeType = ProjectNodeType.GroupCommand;
+//                //ProjectNodeData.GroupCommand = grpCmd;
 //                //tn.Tag = ProjectNodeData;
 //                //ptn.Expand();
 //                return tn;
@@ -1727,7 +1727,7 @@
 //            ////В дереве выбран объект
 //            //TreeNode selectNode = trvProject.SelectedNode;
 
-//            //ProjectGroupCommand projectGroupCommand = ((ProjectNodeData)selectNode.Tag).groupCommand;
+//            //ProjectGroupCommand projectGroupCommand = ((ProjectNodeData)selectNode.Tag).GroupCommand;
 //            //Guid ParentID = projectGroupCommand.ID;
 //            ////Guid DeviceID = projectGroupCommand.DeviceID;
 
@@ -1762,9 +1762,9 @@
 //                //    ptn.Nodes.Add(tn);
 //                //    tn.ContextMenuStrip = cms;
 //                //    ProjectNodeData ProjectNodeData = new ProjectNodeData();
-//                //    ProjectNodeData.command = ((ProjectNodeData)ptn.Tag).command;
-//                //    ProjectNodeData.nodeType = ProjectNodeType.Command;
-//                //    ProjectNodeData.command = devCmd;
+//                //    ProjectNodeData.Command = ((ProjectNodeData)ptn.Tag).Command;
+//                //    ProjectNodeData.NodeType = ProjectNodeType.Command;
+//                //    ProjectNodeData.Command = devCmd;
 //                //    tn.Tag = ProjectNodeData;
 //                //    ptn.Expand();
 //                return tn;
@@ -1775,8 +1775,8 @@
 //        private void ProjectCommandDelete()
 //        {
 //            //TreeNode selectNode = trvProject.SelectedNode;
-//            //ProjectGroupCommand projectGroupCommand = ((ProjectNodeData)selectNode.Parent.Tag).groupCommand;
-//            //ProjectCommand projectCommand = ((ProjectNodeData)selectNode.Tag).command;
+//            //ProjectGroupCommand projectGroupCommand = ((ProjectNodeData)selectNode.Parent.Tag).GroupCommand;
+//            //ProjectCommand projectCommand = ((ProjectNodeData)selectNode.Tag).Command;
 //            //string text = selectNode.Text;
 //            //DialogResult dr = MessageBox.Show(DriverPhrases.DeleteQuestion + text + " ?", DriverPhrases.Delete, MessageBoxButtons.YesNo);
 //            //if (DialogResult.Yes == dr)
@@ -1805,9 +1805,9 @@
 //                //ptn.Nodes.Add(tn);
 //                //tn.ContextMenuStrip = cms;
 //                //ProjectNodeData ProjectNodeData = new ProjectNodeData();
-//                //ProjectNodeData.groupTag = ((ProjectNodeData)ptn.Tag).groupTag;
-//                //ProjectNodeData.nodeType = ProjectNodeType.DeviceGroupTag;
-//                //ProjectNodeData.groupTag = grpTgs;
+//                //ProjectNodeData.GroupTag = ((ProjectNodeData)ptn.Tag).GroupTag;
+//                //ProjectNodeData.NodeType = ProjectNodeType.DeviceGroupTag;
+//                //ProjectNodeData.GroupTag = grpTgs;
 //                //tn.Tag = ProjectNodeData;
 //                //ptn.Expand();
 //                return tn;
@@ -1825,7 +1825,7 @@
 //            ////В дереве выбран объект
 //            //TreeNode selectNode = trvProject.SelectedNode;
 
-//            //ProjectGroupTag projectGroupTag = ((ProjectNodeData)selectNode.Tag).groupTag;
+//            //ProjectGroupTag projectGroupTag = ((ProjectNodeData)selectNode.Tag).GroupTag;
 //            //Guid ParentID = projectGroupTag.ParentID;
 //            //Guid DeviceID = projectGroupTag.ID;
 
@@ -1862,9 +1862,9 @@
 //                //ptn.Nodes.Add(tn);
 //                //tn.ContextMenuStrip = cms;
 //                //ProjectNodeData ProjectNodeData = new ProjectNodeData();
-//                //ProjectNodeData.tag = ((ProjectNodeData)ptn.Tag).tag;
-//                //ProjectNodeData.nodeType = ProjectNodeType.DeviceTag;
-//                //ProjectNodeData.tag = devTag;
+//                //ProjectNodeData.Tag = ((ProjectNodeData)ptn.Tag).Tag;
+//                //ProjectNodeData.NodeType = ProjectNodeType.DeviceTag;
+//                //ProjectNodeData.Tag = devTag;
 //                //tn.Tag = ProjectNodeData;
 //                //ptn.Expand();
 //                return tn;
@@ -1875,8 +1875,8 @@
 //        private void ProjectTagDelete()
 //        {
 //            //TreeNode selectNode = trvProject.SelectedNode;
-//            //ProjectGroupTag projectGroupTag = ((ProjectNodeData)selectNode.Parent.Tag).groupTag;
-//            //ProjectTag projectTag = ((ProjectNodeData)selectNode.Tag).tag;
+//            //ProjectGroupTag projectGroupTag = ((ProjectNodeData)selectNode.Parent.Tag).GroupTag;
+//            //ProjectTag projectTag = ((ProjectNodeData)selectNode.Tag).Tag;
 //            //string text = selectNode.Text;
 //            //DialogResult dr = MessageBox.Show(DriverPhrases.DeleteQuestion + text + " ?", DriverPhrases.Delete, MessageBoxButtons.YesNo);
 //            //if (DialogResult.Yes == dr)
@@ -1978,29 +1978,29 @@
 //            //}
 //            //else
 //            //{
-//            //    if (ProjectNodeType.Channel == mtNodeData.nodeType && mtNodeData.channel != null)
+//            //    if (ProjectNodeType.Channel == mtNodeData.NodeType && mtNodeData.channel != null)
 //            //    {
 //            //        modified = status = ((uscChannel)uscPropertyControl).modified;
 //            //    }
 
-//            //    if (ProjectNodeType.Device == mtNodeData.nodeType && mtNodeData.device != null)
+//            //    if (ProjectNodeType.Device == mtNodeData.NodeType && mtNodeData.Device != null)
 //            //    {
 //            //        modified = status = ((uscDevice)uscPropertyControl).modified;
 //            //    }
 
-//            //    if (ProjectNodeType.Command == mtNodeData.nodeType && mtNodeData.command != null)
+//            //    if (ProjectNodeType.Command == mtNodeData.NodeType && mtNodeData.Command != null)
 //            //    {
 //            //        modified = status = ((uscCommandParametr)uscPropertyControl).modified;
 //            //        modified = status = ((uscCommandRead)uscPropertyControl).modified;
 //            //        modified = status = ((uscCommandWrite)uscPropertyControl).modified;
 //            //    }
 
-//            //    if (ProjectNodeType.DeviceGroupTag == mtNodeData.nodeType && mtNodeData.groupTag != null)
+//            //    if (ProjectNodeType.DeviceGroupTag == mtNodeData.NodeType && mtNodeData.GroupTag != null)
 //            //    {
 //            //        modified = status = ((uscGroupTag)uscPropertyControl).modified;
 //            //    }
 
-//            //    if (ProjectNodeType.DeviceTag == mtNodeData.nodeType && mtNodeData.tag != null)
+//            //    if (ProjectNodeType.DeviceTag == mtNodeData.NodeType && mtNodeData.Tag != null)
 //            //    {
 //            //        modified = status = ((FrmTag)frmPropertyForm).modified;
 //            //    }
@@ -2055,27 +2055,27 @@
 
 //            //mtNodeData = (ProjectNodeData)selectNode.Tag;
 
-//            //if (ProjectNodeType.Channel == mtNodeData.nodeType && mtNodeData.channel != null)
+//            //if (ProjectNodeType.Channel == mtNodeData.NodeType && mtNodeData.channel != null)
 //            //{
 //            //    trvProject.ContextMenuStrip = cmnuDeviceAppend;
 //            //}
-//            //else if (ProjectNodeType.Device == mtNodeData.nodeType && mtNodeData.device != null)
+//            //else if (ProjectNodeType.Device == mtNodeData.NodeType && mtNodeData.Device != null)
 //            //{
 //            //    trvProject.ContextMenuStrip = cmnuDeviceDelete;
 //            //}
-//            //else if (ProjectNodeType.GroupCommand == mtNodeData.nodeType && mtNodeData.groupCommand != null)
+//            //else if (ProjectNodeType.GroupCommand == mtNodeData.NodeType && mtNodeData.GroupCommand != null)
 //            //{
 //            //    trvProject.ContextMenuStrip = cmnuCommandAppend;
 //            //}
-//            //else if (ProjectNodeType.Command == mtNodeData.nodeType && mtNodeData.command != null)
+//            //else if (ProjectNodeType.Command == mtNodeData.NodeType && mtNodeData.Command != null)
 //            //{
 //            //    trvProject.ContextMenuStrip = cmnuCommandDelete;
 //            //}
-//            //else if (ProjectNodeType.DeviceGroupTag == mtNodeData.nodeType && mtNodeData.groupTag != null)
+//            //else if (ProjectNodeType.DeviceGroupTag == mtNodeData.NodeType && mtNodeData.GroupTag != null)
 //            //{
 //            //    trvProject.ContextMenuStrip = cmnuDeviceTagAppend;
 //            //}
-//            //else if (ProjectNodeType.DeviceTag == mtNodeData.nodeType && mtNodeData.tag != null)
+//            //else if (ProjectNodeType.DeviceTag == mtNodeData.NodeType && mtNodeData.Tag != null)
 //            //{
 //            //    trvProject.ContextMenuStrip = cmnuDeviceTagDelete;
 //            //}
@@ -2116,7 +2116,7 @@
 //        //    string keyImage = string.Empty;
 //        //    int indexImage = 0;
 
-//        //    if (ProjectNodeType.Channel == mtNodeData.nodeType && mtNodeData.channel != null)
+//        //    if (ProjectNodeType.Channel == mtNodeData.NodeType && mtNodeData.channel != null)
 //        //    {
 //        //        keyImage = mtNodeData.channel.KeyImage;
 //        //        indexImage = imgList.Images.IndexOfKey(keyImage);
@@ -2125,47 +2125,47 @@
 //        //        uscChannelControl.frmParentGloabal = this;
 //        //        uscPropertyControl = uscChannelControl;
 //        //    }
-//        //    else if (ProjectNodeType.Device == mtNodeData.nodeType && mtNodeData.device != null)
+//        //    else if (ProjectNodeType.Device == mtNodeData.NodeType && mtNodeData.Device != null)
 //        //    {
-//        //        keyImage = mtNodeData.device.KeyImage;
+//        //        keyImage = mtNodeData.Device.KeyImage;
 //        //        indexImage = imgList.Images.IndexOfKey(keyImage);
 
 //        //        uscDevice uscDeviceControl = new uscDevice(mtNodeData);
 //        //        uscDeviceControl.frmParentGloabal = this;
 //        //        uscPropertyControl = uscDeviceControl;
 //        //    }
-//        //    else if (ProjectNodeType.GroupCommand == mtNodeData.nodeType && mtNodeData.groupCommand != null)
+//        //    else if (ProjectNodeType.GroupCommand == mtNodeData.NodeType && mtNodeData.GroupCommand != null)
 //        //    {
-//        //        keyImage = mtNodeData.groupCommand.KeyImage;
+//        //        keyImage = mtNodeData.GroupCommand.KeyImage;
 //        //        indexImage = imgList.Images.IndexOfKey(keyImage);
 
 //        //        uscEmpty uscEmptyControl = new uscEmpty();
 //        //        uscPropertyControl = uscEmptyControl;
 //        //    }
-//        //    else if (ProjectNodeType.Command == mtNodeData.nodeType && mtNodeData.command != null)
+//        //    else if (ProjectNodeType.Command == mtNodeData.NodeType && mtNodeData.Command != null)
 //        //    {
-//        //        if (mtNodeData.command.CommandFunctionCode <= 4)
+//        //        if (mtNodeData.Command.CommandFunctionCode <= 4)
 //        //        {
 //        //            uscPropertyControl = new uscCommandRead(mtNodeData);
-//        //            keyImage = mtNodeData.command.KeyImage;
+//        //            keyImage = mtNodeData.Command.KeyImage;
 //        //        }
-//        //        else if (mtNodeData.command.CommandFunctionCode >= 80 && mtNodeData.command.CommandFunctionCode <= 96)
+//        //        else if (mtNodeData.Command.CommandFunctionCode >= 80 && mtNodeData.Command.CommandFunctionCode <= 96)
 //        //        {
 //        //            uscPropertyControl = new uscCommandParametr(mtNodeData);
-//        //            keyImage = mtNodeData.command.KeyImage;
+//        //            keyImage = mtNodeData.Command.KeyImage;
 //        //        }
 //        //        else
 //        //        {
 
 //        //        }
 //        //    }
-//        //    else if (ProjectNodeType.DeviceGroupTag == mtNodeData.nodeType && mtNodeData.groupTag != null)
+//        //    else if (ProjectNodeType.DeviceGroupTag == mtNodeData.NodeType && mtNodeData.GroupTag != null)
 //        //    {
-//        //        keyImage = mtNodeData.groupTag.KeyImage;
+//        //        keyImage = mtNodeData.GroupTag.KeyImage;
 //        //        indexImage = imgList.Images.IndexOfKey(keyImage);
 
 //        //        TreeNode selectNode = trvProject.SelectedNode;
-//        //        ProjectGroupTag projectGroupTag = mtNodeData.groupTag;
+//        //        ProjectGroupTag projectGroupTag = mtNodeData.GroupTag;
 
 //        //        if (projectGroupTag.DeviceTags == null)
 //        //        {
@@ -2176,7 +2176,7 @@
 //        //        foreach (TreeNode tagNode in selectNode.Nodes)
 //        //        {
 //        //            ProjectNodeData mtTagNodeData = (ProjectNodeData)tagNode.Tag;
-//        //            ProjectTag projectTag = mtTagNodeData.tag;
+//        //            ProjectTag projectTag = mtTagNodeData.Tag;
 //        //            projectGroupTag.DeviceTags.Add(projectTag);
 //        //        }
 
@@ -2185,10 +2185,10 @@
 //        //        uscPropertyControl = uscGroupTag;
 
 //        //    }
-//        //    else if (ProjectNodeType.DeviceTag == mtNodeData.nodeType && mtNodeData.tag != null)
+//        //    else if (ProjectNodeType.DeviceTag == mtNodeData.NodeType && mtNodeData.Tag != null)
 //        //    {
 
-//        //        keyImage = mtNodeData.tag.KeyImage;
+//        //        keyImage = mtNodeData.Tag.KeyImage;
 //        //        indexImage = imgList.Images.IndexOfKey(keyImage);
 
 //        //        showForm = true;
@@ -2287,7 +2287,7 @@
 //                {
 //                    #region Channel
 //                    // channel
-//                    if (prNodeData.nodeType == ProjectNodeType.Channel)
+//                    if (prNodeData.NodeType == ProjectNodeType.Channel)
 //                    {
 //                        projectChannelSettings = prNodeData.channel;
 //                    }
@@ -2296,13 +2296,13 @@
 //            }
 
 //            FrmSettings frmSettings = new FrmSettings();
-//            frmSettings.settings = projectChannelSettings;
+//            frmSettings.Settings = projectChannelSettings;
 //            // showing the form
 //            DialogResult dialog = frmSettings.ShowDialog();
 //            // if you have closed the form, click OK
 //            if (DialogResult.OK == dialog)
 //            {
-//                projectChannelSettings = frmSettings.settings;
+//                projectChannelSettings = frmSettings.Settings;
 //                ProjectSave();
 //            }
 //        }

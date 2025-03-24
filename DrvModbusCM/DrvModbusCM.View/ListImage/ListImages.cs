@@ -47,7 +47,11 @@
         /// </summary>
         public static class ImageKey
         {
+            public const string Driver = "driver_16.png";
+
             public const string Settings = "setting_tools_16.png";
+
+            public const string ListChannels = "list_channels_16.png";
 
             public const string ChannelEmpty = "channel_empty_16.png";
             public const string ChannelSerialPort = "channel_serialport_16.png";
@@ -114,8 +118,10 @@
             FrmConfig frmConfig = new FrmConfig();
             return new Dictionary<string, Image>
             {
-                {ImageKey.Settings, frmConfig.imgList.Images[ImageKey.Settings] },
+                { ImageKey.Driver, frmConfig.imgList.Images[ImageKey.Driver] },
+                { ImageKey.Settings, frmConfig.imgList.Images[ImageKey.Settings] },
 
+                { ImageKey.ListChannels, frmConfig.imgList.Images[ImageKey.ListChannels] },
                 { ImageKey.ChannelEmpty, frmConfig.imgList.Images[ImageKey.ChannelEmpty] },
                 { ImageKey.ChannelEthernet, frmConfig.imgList.Images[ImageKey.ChannelEthernet] },
                 { ImageKey.ChannelSerialPort, frmConfig.imgList.Images[ImageKey.ChannelSerialPort] },

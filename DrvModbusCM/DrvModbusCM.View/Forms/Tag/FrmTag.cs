@@ -46,7 +46,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
         {
             boolParent = false;
 
-            currentTag = ProjectNodeData.tag;
+            currentTag = ProjectNodeData.Tag;
           
             InitializeComponent();
 
@@ -57,7 +57,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
         {
             boolParent = true;
 
-            currentTag = ProjectNodeData.tag;
+            currentTag = ProjectNodeData.Tag;
 
             InitializeComponent();
 
@@ -170,9 +170,9 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
                 {
                     #region Device Command
 
-                    if (prNodeData.nodeType == ProjectNodeType.Command)
+                    if (prNodeData.NodeType == ProjectNodeType.Command)
                     {
-                        projectCommands.Add((ProjectCommand)prNodeData.command);
+                        projectCommands.Add((ProjectCommand)prNodeData.Command);
                     }
 
                     #endregion Device Command
@@ -206,28 +206,28 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
 
             //if (boolParent == true)
             //{
-            //    MTNodeData.tag.DeviceID = DeviceID;
-            //    MTNodeData.tag.DeviceGroupTagID = DeviceGroupTagID;
-            //    MTNodeData.tag.currentTag.ID = currentTag.ID;
-            //    MTNodeData.tag.currentTag.CommandID = currentTag.CommandID;
+            //    MTNodeData.Tag.DeviceID = DeviceID;
+            //    MTNodeData.Tag.DeviceGroupTagID = DeviceGroupTagID;
+            //    MTNodeData.Tag.currentTag.ID = currentTag.ID;
+            //    MTNodeData.Tag.currentTag.CommandID = currentTag.CommandID;
 
-            //    MTNodeData.tag.currentTag.Name = currentTag.name;
-            //    MTNodeData.tag.currentTag.Code = currentTag.Code;
-            //    MTNodeData.tag.currentTag.Code = currentTag.Code;
-            //    MTNodeData.tag.currentTag.Address = currentTag.Address;
-            //    MTNodeData.tag.currentTag.Description = currentTag.Description;
-            //    MTNodeData.tag.currentTag.Enabled = currentTag.Enabled;
-            //    MTNodeData.tag.currentTag.Type = currentTag.Type;
-            //    MTNodeData.tag.currentTag.Sorting = currentTag.Sorting;
+            //    MTNodeData.Tag.currentTag.Name = currentTag.name;
+            //    MTNodeData.Tag.currentTag.Code = currentTag.Code;
+            //    MTNodeData.Tag.currentTag.Code = currentTag.Code;
+            //    MTNodeData.Tag.currentTag.Address = currentTag.Address;
+            //    MTNodeData.Tag.currentTag.Description = currentTag.Description;
+            //    MTNodeData.Tag.currentTag.Enabled = currentTag.Enabled;
+            //    MTNodeData.Tag.currentTag.Type = currentTag.Type;
+            //    MTNodeData.Tag.currentTag.Sorting = currentTag.Sorting;
 
-            //    MTNodeData.tag.currentTag.Coefficient = currentTag.Coefficient;
-            //    MTNodeData.tag.currentTag.Scaled = currentTag.Scaled;
-            //    MTNodeData.tag.currentTag.ScaledHigh = currentTag.ScaledHigh;
-            //    MTNodeData.tag.currentTag.ScaledLow = currentTag.ScaledLow;
-            //    MTNodeData.tag.currentTag.RowHigh = currentTag.RowHigh;
-            //    MTNodeData.tag.currentTag.RowLow = currentTag.RowLow;
+            //    MTNodeData.Tag.currentTag.Coefficient = currentTag.Coefficient;
+            //    MTNodeData.Tag.currentTag.Scaled = currentTag.Scaled;
+            //    MTNodeData.Tag.currentTag.ScaledHigh = currentTag.ScaledHigh;
+            //    MTNodeData.Tag.currentTag.ScaledLow = currentTag.ScaledLow;
+            //    MTNodeData.Tag.currentTag.RowHigh = currentTag.RowHigh;
+            //    MTNodeData.Tag.currentTag.RowLow = currentTag.RowLow;
 
-            //    MTNodeData.tag.KeyImage = "tag_16.png";
+            //    MTNodeData.Tag.KeyImage = "tag_16.png";
 
             //    this.DialogResult = DialogResult.OK;
             //    this.Close();
@@ -238,28 +238,28 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             //    TreeNode stn = ((FrmConfigForm)this.Parent.Parent.Parent.Parent.Parent).trvProject.SelectedNode;
             //    ProjectNodeData projectNodeData = (ProjectNodeData)stn.Tag;
 
-            //    projectNodeData.tag.DeviceID = DeviceID;
-            //    projectNodeData.tag.DeviceGroupTagID = DeviceGroupTagID;
-            //    projectNodeData.tag.currentTag.ID = currentTag.ID;
-            //    projectNodeData.tag.currentTag.CommandID = currentTag.CommandID;
+            //    projectNodeData.Tag.DeviceID = DeviceID;
+            //    projectNodeData.Tag.DeviceGroupTagID = DeviceGroupTagID;
+            //    projectNodeData.Tag.currentTag.ID = currentTag.ID;
+            //    projectNodeData.Tag.currentTag.CommandID = currentTag.CommandID;
 
-            //    projectNodeData.tag.currentTag.Name = currentTag.name;
-            //    projectNodeData.tag.currentTag.Code = currentTag.Code;
-            //    projectNodeData.tag.currentTag.Code = currentTag.Code;
-            //    projectNodeData.tag.currentTag.Address = currentTag.Address;
-            //    projectNodeData.tag.currentTag.Description = currentTag.Description;
-            //    projectNodeData.tag.currentTag.Enabled = currentTag.Enabled;
-            //    projectNodeData.tag.currentTag.Type = currentTag.Type;
-            //    projectNodeData.tag.currentTag.Sorting = currentTag.Sorting;
+            //    projectNodeData.Tag.currentTag.Name = currentTag.name;
+            //    projectNodeData.Tag.currentTag.Code = currentTag.Code;
+            //    projectNodeData.Tag.currentTag.Code = currentTag.Code;
+            //    projectNodeData.Tag.currentTag.Address = currentTag.Address;
+            //    projectNodeData.Tag.currentTag.Description = currentTag.Description;
+            //    projectNodeData.Tag.currentTag.Enabled = currentTag.Enabled;
+            //    projectNodeData.Tag.currentTag.Type = currentTag.Type;
+            //    projectNodeData.Tag.currentTag.Sorting = currentTag.Sorting;
 
-            //    projectNodeData.tag.currentTag.Coefficient = currentTag.Coefficient;
-            //    projectNodeData.tag.currentTag.Scaled = currentTag.Scaled;
-            //    projectNodeData.tag.currentTag.ScaledHigh = currentTag.ScaledHigh;
-            //    projectNodeData.tag.currentTag.ScaledLow = currentTag.ScaledLow;
-            //    projectNodeData.tag.currentTag.RowHigh = currentTag.RowHigh;
-            //    projectNodeData.tag.currentTag.RowLow = currentTag.RowLow;
+            //    projectNodeData.Tag.currentTag.Coefficient = currentTag.Coefficient;
+            //    projectNodeData.Tag.currentTag.Scaled = currentTag.Scaled;
+            //    projectNodeData.Tag.currentTag.ScaledHigh = currentTag.ScaledHigh;
+            //    projectNodeData.Tag.currentTag.ScaledLow = currentTag.ScaledLow;
+            //    projectNodeData.Tag.currentTag.RowHigh = currentTag.RowHigh;
+            //    projectNodeData.Tag.currentTag.RowLow = currentTag.RowLow;
 
-            //    projectNodeData.tag.KeyImage = stn.ImageKey = stn.SelectedImageKey = "tag_16.png";
+            //    projectNodeData.Tag.KeyImage = stn.ImageKey = stn.SelectedImageKey = "tag_16.png";
 
             //    stn.Text = currentTag.name;
             //    stn.Tag = projectNodeData;

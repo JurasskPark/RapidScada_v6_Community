@@ -168,20 +168,20 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View.Forms
         {
             MTNodeData = ProjectNodeData;
 
-            //DeviceID = MTNodeData.groupTag.DeviceID;
-            //DeviceGroupTagID = MTNodeData.groupTag.DeviceGroupTagID;
+            //DeviceID = MTNodeData.GroupTag.DeviceID;
+            //DeviceGroupTagID = MTNodeData.GroupTag.DeviceGroupTagID;
 
-            GroupTagName = MTNodeData.groupTag.GroupTagName;
-            DeviceGroupTagDescription = MTNodeData.groupTag.DeviceGroupTagDescription;
-            DeviceGroupTagEnabled = MTNodeData.groupTag.DeviceGroupTagEnabled;
+            GroupTagName = MTNodeData.GroupTag.GroupTagName;
+            DeviceGroupTagDescription = MTNodeData.GroupTag.DeviceGroupTagDescription;
+            DeviceGroupTagEnabled = MTNodeData.GroupTag.DeviceGroupTagEnabled;
 
-            if (MTNodeData.groupTag.DeviceTags == null)
+            if (MTNodeData.GroupTag.DeviceTags == null)
             {
                 DefaultSortTags = DeviceTags = new List<ProjectTag>();
             }
             else
             {
-                DefaultSortTags = DeviceTags = MTNodeData.groupTag.DeviceTags;
+                DefaultSortTags = DeviceTags = MTNodeData.GroupTag.DeviceTags;
             }
 
             InitializeComponent();
@@ -342,11 +342,11 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View.Forms
             //Такая партянка из Parent:  TabPage, TabControl, SplitterPanel, SplitConteiner, Form
             TreeNode stn = ((FrmConfigForm)this.Parent.Parent.Parent.Parent.Parent).trvProject.SelectedNode;
             ProjectNodeData projectNodeData = (ProjectNodeData)stn.Tag;
-            //projectNodeData.groupTag.DeviceGroupTagID = DeviceGroupTagID;
-            //projectNodeData.groupTag.GroupTagName = GroupTagName;
-            //projectNodeData.groupTag.DeviceGroupTagDescription = DeviceGroupTagDescription;
-            //projectNodeData.groupTag.DeviceGroupTagEnabled = DeviceGroupTagEnabled;
-            //projectNodeData.groupTag.DeviceTags = DeviceTags;
+            //projectNodeData.GroupTag.DeviceGroupTagID = DeviceGroupTagID;
+            //projectNodeData.GroupTag.GroupTagName = GroupTagName;
+            //projectNodeData.GroupTag.DeviceGroupTagDescription = DeviceGroupTagDescription;
+            //projectNodeData.GroupTag.DeviceGroupTagEnabled = DeviceGroupTagEnabled;
+            //projectNodeData.GroupTag.DeviceTags = DeviceTags;
 
             stn.Text = GroupTagName;
             stn.Tag = projectNodeData;
@@ -471,8 +471,8 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View.Forms
 
                 // create
                 ProjectNodeData ProjectNodeDataTag = new ProjectNodeData();
-                ProjectNodeDataTag.tag = newTag;
-                ProjectNodeDataTag.nodeType = ProjectNodeType.DeviceTag;
+                ProjectNodeDataTag.Tag = newTag;
+                ProjectNodeDataTag.NodeType = ProjectNodeType.DeviceTag;
                 // created a form
                 FrmTag frmTag = new FrmTag(ref ProjectNodeDataTag, false);
                 frmTag.frmParentGloabal = frmParentGloabal;
@@ -481,7 +481,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View.Forms
                 // if you have closed the form, click OK
                 if (DialogResult.OK == dialog)
                 {
-                    DeviceTags.Add(ProjectNodeDataTag.tag);
+                    DeviceTags.Add(ProjectNodeDataTag.Tag);
 
                     Modified = true;
 
@@ -524,8 +524,8 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View.Forms
 
                     // create
                     ProjectNodeData ProjectNodeDataTag = new ProjectNodeData();
-                    ProjectNodeDataTag.tag = changeTag;
-                    ProjectNodeDataTag.nodeType = ProjectNodeType.DeviceTag;
+                    ProjectNodeDataTag.Tag = changeTag;
+                    ProjectNodeDataTag.NodeType = ProjectNodeType.DeviceTag;
                     // created a form
                     FrmTag frmTag = new FrmTag(ref ProjectNodeDataTag, false);
                     frmTag.frmParentGloabal = frmParentGloabal;
@@ -534,7 +534,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View.Forms
                     // if you have closed the form, click OK
                     if (DialogResult.OK == dialog)
                     {
-                        changeTag = ProjectNodeDataTag.tag;
+                        changeTag = ProjectNodeDataTag.Tag;
 
                         Modified = true;
 
@@ -1065,7 +1065,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View.Forms
                     //    DriverClient.OnOPCData = new DriverClient.OPCData(ShowDataOPC);
                     //    DriverClient.OnDebug = new DriverClient.DebugData(LogGet);
 
-                    //    client.DeviceGroupTags = (ProjectGroupTag)MTNodeData.groupTag;
+                    //    client.DeviceGroupTags = (ProjectGroupTag)MTNodeData.GroupTag;
                     //    client.GroupTypSubscription = DeviceGroupTagTypSubscription;
                     //    client.UserLogin = device.UserLogin;
                     //    client.UserPassword = device.UserPassword;
@@ -1244,7 +1244,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View.Forms
         //            DriverClient.OnOPCData = new DriverClient.OPCData(ShowDataOPC);
         //            DriverClient.OnDebug = new DriverClient.DebugData(LogGet);
 
-        //            client.DeviceGroupTags = (ProjectGroupTag)MTNodeData.groupTag;
+        //            client.DeviceGroupTags = (ProjectGroupTag)MTNodeData.GroupTag;
         //            client.DeviceTags = DeviceTags;
         //            client.GroupTypSubscription = DeviceGroupTagTypSubscription;
         //            client.UserLogin = device.UserLogin;

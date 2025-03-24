@@ -247,7 +247,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
         //                            try { projectChannel.Debug = Convert.ToBoolean(attributes["DEBUG"]); } catch { }
 
         //                            projectNodeData.channel = projectChannel;
-        //                            projectNodeData.nodeType = ProjectNodeType.Channel;
+        //                            projectNodeData.NodeType = ProjectNodeType.Channel;
 
         //                            tmpProjectChannel = projectChannel;
         //                            #endregion Channel
@@ -340,8 +340,8 @@ namespace Scada.Comm.Drivers.DrvModbusCM
         //                                }
         //                            }
 
-        //                            projectNodeData.device = projectDevice;
-        //                            projectNodeData.nodeType = ProjectNodeType.Device;
+        //                            projectNodeData.Device = projectDevice;
+        //                            projectNodeData.NodeType = ProjectNodeType.Device;
 
         //                            tmpProjectDevice.Add(projectDevice);
         //                            #endregion Device
@@ -356,8 +356,8 @@ namespace Scada.Comm.Drivers.DrvModbusCM
         //                            try { projectGroupCommand.Description = attributes["DESCRIPTION"]; } catch { }
         //                            try { projectGroupCommand.Enabled = Convert.ToBoolean(attributes["ENABLED"]); } catch { }
 
-        //                            projectNodeData.groupCommand = projectGroupCommand;
-        //                            projectNodeData.nodeType = ProjectNodeType.GroupCommand;
+        //                            projectNodeData.GroupCommand = projectGroupCommand;
+        //                            projectNodeData.NodeType = ProjectNodeType.GroupCommand;
 
         //                            tmpProjectGroupCommand.Add(projectGroupCommand);
         //                            #endregion Device Group Command
@@ -383,8 +383,8 @@ namespace Scada.Comm.Drivers.DrvModbusCM
         //                            try { projectCommand.RegisterNameWriteData = attributes["REGISTERNAMEWRITEDATA"].Split(' '); } catch { }
         //                            try { projectCommand.RegisterWriteData = Array.ConvertAll(attributes["REGISTERWRITEDATA"].Split(' '), x => { ulong res = Convert.ToUInt64(x); return res; }); } catch { }
 
-        //                            projectNodeData.command = projectCommand;
-        //                            projectNodeData.nodeType = ProjectNodeType.Command;
+        //                            projectNodeData.Command = projectCommand;
+        //                            projectNodeData.NodeType = ProjectNodeType.Command;
 
         //                            tmpProjectCommand.Add(projectCommand);
 
@@ -400,8 +400,8 @@ namespace Scada.Comm.Drivers.DrvModbusCM
         //                            try { projectGroupTag.Description = attributes["DESCRIPTION"]; } catch { }
         //                            try { projectGroupTag.Enabled = Convert.ToBoolean(attributes["ENABLED"]); } catch { }
 
-        //                            projectNodeData.groupTag = projectGroupTag;
-        //                            projectNodeData.nodeType = ProjectNodeType.GroupTag;
+        //                            projectNodeData.GroupTag = projectGroupTag;
+        //                            projectNodeData.NodeType = ProjectNodeType.GroupTag;
 
         //                            tmpProjectGroupTag.Add(projectGroupTag);
 
@@ -435,8 +435,8 @@ namespace Scada.Comm.Drivers.DrvModbusCM
         //                            }
         //                            catch { }
 
-        //                            projectNodeData.tag = projectTag;
-        //                            projectNodeData.nodeType = ProjectNodeType.Tag;
+        //                            projectNodeData.Tag = projectTag;
+        //                            projectNodeData.NodeType = ProjectNodeType.Tag;
 
         //                            tmpProjectTag.Add(projectTag);
         //                            #endregion Device Tag
@@ -488,15 +488,16 @@ namespace Scada.Comm.Drivers.DrvModbusCM
     #region ProjectNodeData
     public struct ProjectNodeData
     {
-        public ProjectNodeType nodeType;
-        public ProjectDriver driver;
-        public ProjectSettings settings;
-        public ProjectChannel channel;
-        public ProjectDevice device;
-        public ProjectGroupCommand groupCommand;
-        public ProjectCommand command;
-        public ProjectGroupTag groupTag;
-        public ProjectTag tag;
+        public ProjectNodeType NodeType;
+        public ProjectDriver Driver;
+        public ProjectSettings Settings;
+        public List<ProjectChannel> ListChannels;
+        public ProjectChannel Channel;
+        public ProjectDevice Device;
+        public ProjectGroupCommand GroupCommand;
+        public ProjectCommand Command;
+        public ProjectGroupTag GroupTag;
+        public ProjectTag Tag;
     }
 
     #endregion ProjectNodeData
@@ -504,7 +505,9 @@ namespace Scada.Comm.Drivers.DrvModbusCM
     #region ProjectNodeType
     public enum ProjectNodeType
     {
+        Driver,
         Settings,
+        ListChannels,
         Channel,
         Device,
         GroupCommand,
@@ -526,6 +529,15 @@ namespace Scada.Comm.Drivers.DrvModbusCM
         }
 
         #region Variables
+        // 
+        // название драйвера
+        private string name;
+        public string Name
+        {
+            get { return name; }
+            set { name = value; }
+        }
+
         // driver settings
         // настройки драйвера
         private ProjectSettings settings;
@@ -557,6 +569,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
                 throw new ArgumentNullException("xmlNode");
             }
 
+            Name = xmlNode.GetChildAsString("Name");
             Settings.LoadFromXml(xmlNode.SelectSingleNode("Settings"));
 
             try
@@ -588,6 +601,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
                 throw new ArgumentNullException("xmlElem");
             }
 
+            xmlElem.AppendElem("Name", Name);
             Settings.SaveToXml(xmlElem.AppendElem("Settings"));
 
             try

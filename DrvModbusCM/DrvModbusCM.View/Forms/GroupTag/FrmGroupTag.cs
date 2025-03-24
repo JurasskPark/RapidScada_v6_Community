@@ -68,7 +68,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
 
         public FrmGroupTag(ProjectNodeData ProjectNodeData)
         {
-            currentGroupTag = ProjectNodeData.groupTag;
+            currentGroupTag = ProjectNodeData.GroupTag;
 
             InitializeComponent();
             FormatWindow(true);
@@ -77,7 +77,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
 
         public FrmGroupTag(ref ProjectNodeData ProjectNodeData, bool hasParent = true)
         {
-            currentGroupTag = ProjectNodeData.groupTag;
+            currentGroupTag = ProjectNodeData.GroupTag;
 
             InitializeComponent();
             FormatWindow(hasParent);
@@ -245,9 +245,9 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             frmParentGloabal.trvProject.SelectedNode.BeginEdit();
             TreeNode stn = frmParentGloabal.trvProject.SelectedNode;
             ProjectNodeData projectNodeData = (ProjectNodeData)stn.Tag;
-            projectNodeData.groupTag = currentGroupTag;
+            projectNodeData.GroupTag = currentGroupTag;
             stn.Tag = projectNodeData;
-            stn.Text = projectNodeData.device.Name;
+            stn.Text = projectNodeData.Device.Name;
 
             string imageKey = stn.ImageKey;
             int imageIndex = stn.ImageIndex;
@@ -400,8 +400,8 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
 
                 // create
                 ProjectNodeData ProjectNodeDataTag = new ProjectNodeData();
-                ProjectNodeDataTag.tag = newTag;
-                ProjectNodeDataTag.nodeType = ProjectNodeType.Tag;
+                ProjectNodeDataTag.Tag = newTag;
+                ProjectNodeDataTag.NodeType = ProjectNodeType.Tag;
                 // created a form
                 FrmTag frmTag = new FrmTag(ref ProjectNodeDataTag, false);
                 frmTag.frmParentGloabal = frmParentGloabal;
@@ -410,7 +410,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
                 // if you have closed the form, click OK
                 if (DialogResult.OK == dialog)
                 {
-                    ListTags.Add(ProjectNodeDataTag.tag);
+                    ListTags.Add(ProjectNodeDataTag.Tag);
 
                     Modified = true;
 
@@ -453,8 +453,8 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
 
                     // create
                     ProjectNodeData ProjectNodeDataTag = new ProjectNodeData();
-                    ProjectNodeDataTag.tag = changeTag;
-                    ProjectNodeDataTag.nodeType = ProjectNodeType.Tag;
+                    ProjectNodeDataTag.Tag = changeTag;
+                    ProjectNodeDataTag.NodeType = ProjectNodeType.Tag;
                     // created a form
                     FrmTag frmTag = new FrmTag(ref ProjectNodeDataTag, false);
                     frmTag.frmParentGloabal = frmParentGloabal;
@@ -463,7 +463,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
                     // if you have closed the form, click OK
                     if (DialogResult.OK == dialog)
                     {
-                        changeTag = ProjectNodeDataTag.tag;
+                        changeTag = ProjectNodeDataTag.Tag;
 
                         Modified = true;
 

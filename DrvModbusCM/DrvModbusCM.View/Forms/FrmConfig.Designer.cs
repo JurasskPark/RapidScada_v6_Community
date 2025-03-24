@@ -82,6 +82,8 @@
             cmnuCommandDown = new ToolStripMenuItem();
             toolStripSeparator1 = new ToolStripSeparator();
             cmnuCommandDel = new ToolStripMenuItem();
+            cmnuChannelAppend = new ContextMenuStrip(components);
+            cmnuChannelAdd = new ToolStripMenuItem();
             cmnuTagAppend.SuspendLayout();
             cmnuDeleteAction.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splContainer).BeginInit();
@@ -93,6 +95,7 @@
             cmnuDeviceDelete.SuspendLayout();
             cmnuCommandAppend.SuspendLayout();
             cmnuCommandDelete.SuspendLayout();
+            cmnuChannelAppend.SuspendLayout();
             SuspendLayout();
             // 
             // trvProject
@@ -121,30 +124,32 @@
             imgList.ImageStream = (ImageListStreamer)resources.GetObject("imgList.ImageStream");
             imgList.TransparentColor = Color.Transparent;
             imgList.Images.SetKeyName(0, "default_16.png");
-            imgList.Images.SetKeyName(1, "setting_tools_16.png");
-            imgList.Images.SetKeyName(2, "channel_empty_16.png");
-            imgList.Images.SetKeyName(3, "channel_ethernet_16.png");
-            imgList.Images.SetKeyName(4, "channel_serialport_16.png");
-            imgList.Images.SetKeyName(5, "device_16.png");
-            imgList.Images.SetKeyName(6, "device_off_16.png");
-            imgList.Images.SetKeyName(7, "cmd_group_16.png");
-            imgList.Images.SetKeyName(8, "cmd_group_off_16.png");
-            imgList.Images.SetKeyName(9, "cmd_00_16.png");
-            imgList.Images.SetKeyName(10, "cmd_00_off_16.png");
-            imgList.Images.SetKeyName(11, "cmd_01_16.png");
-            imgList.Images.SetKeyName(12, "cmd_01_off_16.png");
-            imgList.Images.SetKeyName(13, "cmd_02_16.png");
-            imgList.Images.SetKeyName(14, "cmd_02_off_16.png");
-            imgList.Images.SetKeyName(15, "cmd_03_16.png");
-            imgList.Images.SetKeyName(16, "cmd_03_off_16.png");
-            imgList.Images.SetKeyName(17, "cmd_04_16.png");
-            imgList.Images.SetKeyName(18, "cmd_04_off_16.png");
-            imgList.Images.SetKeyName(19, "tag_group_16.png");
-            imgList.Images.SetKeyName(20, "tag_group_off_16.png");
-            imgList.Images.SetKeyName(21, "tag_16.png");
-            imgList.Images.SetKeyName(22, "tag_add_16.png");
-            imgList.Images.SetKeyName(23, "tag_edit_16.png");
-            imgList.Images.SetKeyName(24, "tag_delete_16.png");
+            imgList.Images.SetKeyName(1, "driver_16.png");
+            imgList.Images.SetKeyName(2, "setting_tools_16.png");
+            imgList.Images.SetKeyName(3, "list_channels_16.png");
+            imgList.Images.SetKeyName(4, "channel_empty_16.png");
+            imgList.Images.SetKeyName(5, "channel_ethernet_16.png");
+            imgList.Images.SetKeyName(6, "channel_serialport_16.png");
+            imgList.Images.SetKeyName(7, "device_16.png");
+            imgList.Images.SetKeyName(8, "device_off_16.png");
+            imgList.Images.SetKeyName(9, "cmd_group_16.png");
+            imgList.Images.SetKeyName(10, "cmd_group_off_16.png");
+            imgList.Images.SetKeyName(11, "cmd_00_16.png");
+            imgList.Images.SetKeyName(12, "cmd_00_off_16.png");
+            imgList.Images.SetKeyName(13, "cmd_01_16.png");
+            imgList.Images.SetKeyName(14, "cmd_01_off_16.png");
+            imgList.Images.SetKeyName(15, "cmd_02_16.png");
+            imgList.Images.SetKeyName(16, "cmd_02_off_16.png");
+            imgList.Images.SetKeyName(17, "cmd_03_16.png");
+            imgList.Images.SetKeyName(18, "cmd_03_off_16.png");
+            imgList.Images.SetKeyName(19, "cmd_04_16.png");
+            imgList.Images.SetKeyName(20, "cmd_04_off_16.png");
+            imgList.Images.SetKeyName(21, "tag_group_16.png");
+            imgList.Images.SetKeyName(22, "tag_group_off_16.png");
+            imgList.Images.SetKeyName(23, "tag_16.png");
+            imgList.Images.SetKeyName(24, "tag_add_16.png");
+            imgList.Images.SetKeyName(25, "tag_edit_16.png");
+            imgList.Images.SetKeyName(26, "tag_delete_16.png");
             // 
             // tabControl
             // 
@@ -522,6 +527,19 @@
             cmnuCommandDel.Text = "Delete";
             cmnuCommandDel.ToolTipText = "Удалить группу";
             // 
+            // cmnuChannelAppend
+            // 
+            cmnuChannelAppend.ImageScalingSize = new Size(24, 24);
+            cmnuChannelAppend.Items.AddRange(new ToolStripItem[] { cmnuChannelAdd });
+            cmnuChannelAppend.Name = "HMI_contextMenu";
+            cmnuChannelAppend.Size = new Size(142, 26);
+            // 
+            // cmnuChannelAdd
+            // 
+            cmnuChannelAdd.Name = "cmnuChannelAdd";
+            cmnuChannelAdd.Size = new Size(141, 22);
+            cmnuChannelAdd.Text = "Add channel";
+            // 
             // FrmConfig
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -546,6 +564,7 @@
             cmnuDeviceDelete.ResumeLayout(false);
             cmnuCommandAppend.ResumeLayout(false);
             cmnuCommandDelete.ResumeLayout(false);
+            cmnuChannelAppend.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -603,5 +622,7 @@
         private ToolStripMenuItem cmnuCommandDel;
         private ToolStripButton tlsProjectStartStop;
         private ToolStripSeparator toolStripSeparator3;
+        public ContextMenuStrip cmnuChannelAppend;
+        private ToolStripMenuItem cmnuChannelAdd;
     }
 }

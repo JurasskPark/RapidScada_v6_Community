@@ -179,20 +179,20 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View.Forms
         {
             MTNodeData = ProjectNodeData;
 
-            //DeviceID = ProjectNodeData.command.DeviceID;
-            //CommandID = ProjectNodeData.command.CommandID;
-            CommandName = ProjectNodeData.command.CommandName;
-            CommandDescription = ProjectNodeData.command.CommandDescription;
-            CommandEnabled = ProjectNodeData.command.CommandEnabled;
-            CommandFunctionCode = ProjectNodeData.command.CommandFunctionCode;
-            tmp_commandFunctionCode = ProjectNodeData.command.CommandFunctionCode;
-            CommandRegisterStartAddress = ProjectNodeData.command.CommandRegisterStartAddress;
-            CommandRegisterCount = ProjectNodeData.command.CommandRegisterCount;
-            CommandRegisterNameReadData = ProjectNodeData.command.CommandRegisterNameReadData;
-            CommandRegisterReadData = ProjectNodeData.command.CommandRegisterReadData;
-            CommandRegisterNameWriteData = ProjectNodeData.command.CommandRegisterNameWriteData;
-            CommandRegisterWriteData = ProjectNodeData.command.CommandRegisterWriteData;
-            CommandParametr = ProjectNodeData.command.CommandParametr;
+            //DeviceID = ProjectNodeData.Command.DeviceID;
+            //CommandID = ProjectNodeData.Command.CommandID;
+            CommandName = ProjectNodeData.Command.CommandName;
+            CommandDescription = ProjectNodeData.Command.CommandDescription;
+            CommandEnabled = ProjectNodeData.Command.CommandEnabled;
+            CommandFunctionCode = ProjectNodeData.Command.CommandFunctionCode;
+            tmp_commandFunctionCode = ProjectNodeData.Command.CommandFunctionCode;
+            CommandRegisterStartAddress = ProjectNodeData.Command.CommandRegisterStartAddress;
+            CommandRegisterCount = ProjectNodeData.Command.CommandRegisterCount;
+            CommandRegisterNameReadData = ProjectNodeData.Command.CommandRegisterNameReadData;
+            CommandRegisterReadData = ProjectNodeData.Command.CommandRegisterReadData;
+            CommandRegisterNameWriteData = ProjectNodeData.Command.CommandRegisterNameWriteData;
+            CommandRegisterWriteData = ProjectNodeData.Command.CommandRegisterWriteData;
+            CommandParametr = ProjectNodeData.Command.CommandParametr;
 
             InitializeComponent();
             FormatWindow(true);
@@ -312,85 +312,85 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View.Forms
 
             TreeNode stn = ((FrmConfigForm)this.Parent.Parent.Parent.Parent.Parent).trvProject.SelectedNode;
             ProjectNodeData projectNodeData = (ProjectNodeData)stn.Tag;
-            //projectNodeData.command.DeviceID = DeviceID;
-            //projectNodeData.command.CommandID = CommandID;
-            projectNodeData.command.CommandName = CommandName;
-            projectNodeData.command.CommandDescription = CommandDescription;
-            projectNodeData.command.CommandEnabled = CommandEnabled;
-            projectNodeData.command.CommandFunctionCode = CommandFunctionCode;
-            projectNodeData.command.CommandRegisterStartAddress = CommandRegisterStartAddress;
-            projectNodeData.command.CommandRegisterCount = CommandRegisterCount;
-            projectNodeData.command.CommandRegisterNameReadData = CommandRegisterNameReadData;
-            projectNodeData.command.CommandRegisterReadData = CommandRegisterReadData;
-            projectNodeData.command.CommandRegisterNameWriteData = CommandRegisterNameWriteData;
-            projectNodeData.command.CommandRegisterWriteData = CommandRegisterWriteData;
-            projectNodeData.command.CommandParametr = CommandParametr;
+            //projectNodeData.Command.DeviceID = DeviceID;
+            //projectNodeData.Command.CommandID = CommandID;
+            projectNodeData.Command.CommandName = CommandName;
+            projectNodeData.Command.CommandDescription = CommandDescription;
+            projectNodeData.Command.CommandEnabled = CommandEnabled;
+            projectNodeData.Command.CommandFunctionCode = CommandFunctionCode;
+            projectNodeData.Command.CommandRegisterStartAddress = CommandRegisterStartAddress;
+            projectNodeData.Command.CommandRegisterCount = CommandRegisterCount;
+            projectNodeData.Command.CommandRegisterNameReadData = CommandRegisterNameReadData;
+            projectNodeData.Command.CommandRegisterReadData = CommandRegisterReadData;
+            projectNodeData.Command.CommandRegisterNameWriteData = CommandRegisterNameWriteData;
+            projectNodeData.Command.CommandRegisterWriteData = CommandRegisterWriteData;
+            projectNodeData.Command.CommandParametr = CommandParametr;
 
             //Условия иконки 
             switch (CommandFunctionCode)
             {
                 case 0:
-                    projectNodeData.command.KeyImage = stn.ImageKey = stn.SelectedImageKey = "modbus_command_00_16.png";
+                    projectNodeData.Command.KeyImage = stn.ImageKey = stn.SelectedImageKey = "modbus_command_00_16.png";
                     break;
                 case 1:
-                    projectNodeData.command.KeyImage = stn.ImageKey = stn.SelectedImageKey = "modbus_command_01_16.png";
+                    projectNodeData.Command.KeyImage = stn.ImageKey = stn.SelectedImageKey = "modbus_command_01_16.png";
                     break;
                 case 2:
-                    projectNodeData.command.KeyImage = stn.ImageKey = stn.SelectedImageKey = "modbus_command_02_16.png";
+                    projectNodeData.Command.KeyImage = stn.ImageKey = stn.SelectedImageKey = "modbus_command_02_16.png";
                     break;
                 case 3:
-                    projectNodeData.command.KeyImage = stn.ImageKey = stn.SelectedImageKey = "modbus_command_03_16.png";
+                    projectNodeData.Command.KeyImage = stn.ImageKey = stn.SelectedImageKey = "modbus_command_03_16.png";
                     break;
                 case 4:
-                    projectNodeData.command.KeyImage = stn.ImageKey = stn.SelectedImageKey = "modbus_command_04_16.png";
+                    projectNodeData.Command.KeyImage = stn.ImageKey = stn.SelectedImageKey = "modbus_command_04_16.png";
                     break;
                 case 5:
-                    projectNodeData.command.KeyImage = stn.ImageKey = stn.SelectedImageKey = "modbus_command_05_16.png";
+                    projectNodeData.Command.KeyImage = stn.ImageKey = stn.SelectedImageKey = "modbus_command_05_16.png";
                     break;
                 case 6:
-                    projectNodeData.command.KeyImage = stn.ImageKey = stn.SelectedImageKey = "modbus_command_06_16.png";
+                    projectNodeData.Command.KeyImage = stn.ImageKey = stn.SelectedImageKey = "modbus_command_06_16.png";
                     break;
                 case 7:
-                    projectNodeData.command.KeyImage = stn.ImageKey = stn.SelectedImageKey = "modbus_command_07_16.png";
+                    projectNodeData.Command.KeyImage = stn.ImageKey = stn.SelectedImageKey = "modbus_command_07_16.png";
                     break;
                 case 8:
-                    projectNodeData.command.KeyImage = stn.ImageKey = stn.SelectedImageKey = "modbus_command_08_16.png";
+                    projectNodeData.Command.KeyImage = stn.ImageKey = stn.SelectedImageKey = "modbus_command_08_16.png";
                     break;
                 case 11:
-                    projectNodeData.command.KeyImage = stn.ImageKey = stn.SelectedImageKey = "modbus_command_11_16.png";
+                    projectNodeData.Command.KeyImage = stn.ImageKey = stn.SelectedImageKey = "modbus_command_11_16.png";
                     break;
                 case 12:
-                    projectNodeData.command.KeyImage = stn.ImageKey = stn.SelectedImageKey = "modbus_command_12_16.png";
+                    projectNodeData.Command.KeyImage = stn.ImageKey = stn.SelectedImageKey = "modbus_command_12_16.png";
                     break;
                 case 15:
-                    projectNodeData.command.KeyImage = stn.ImageKey = stn.SelectedImageKey = "modbus_command_15_16.png";
+                    projectNodeData.Command.KeyImage = stn.ImageKey = stn.SelectedImageKey = "modbus_command_15_16.png";
                     break;
                 case 16:
-                    projectNodeData.command.KeyImage = stn.ImageKey = stn.SelectedImageKey = "modbus_command_16_16.png";
+                    projectNodeData.Command.KeyImage = stn.ImageKey = stn.SelectedImageKey = "modbus_command_16_16.png";
                     break;
                 case 17:
-                    projectNodeData.command.KeyImage = stn.ImageKey = stn.SelectedImageKey = "modbus_command_17_16.png";
+                    projectNodeData.Command.KeyImage = stn.ImageKey = stn.SelectedImageKey = "modbus_command_17_16.png";
                     break;
                 case 20:
-                    projectNodeData.command.KeyImage = stn.ImageKey = stn.SelectedImageKey = "modbus_command_20_16.png";
+                    projectNodeData.Command.KeyImage = stn.ImageKey = stn.SelectedImageKey = "modbus_command_20_16.png";
                     break;
                 case 21:
-                    projectNodeData.command.KeyImage = stn.ImageKey = stn.SelectedImageKey = "modbus_command_21_16.png";
+                    projectNodeData.Command.KeyImage = stn.ImageKey = stn.SelectedImageKey = "modbus_command_21_16.png";
                     break;
                 case 22:
-                    projectNodeData.command.KeyImage = stn.ImageKey = stn.SelectedImageKey = "modbus_command_22_16.png";
+                    projectNodeData.Command.KeyImage = stn.ImageKey = stn.SelectedImageKey = "modbus_command_22_16.png";
                     break;
                 case 24:
-                    projectNodeData.command.KeyImage = stn.ImageKey = stn.SelectedImageKey = "modbus_command_24_16.png";
+                    projectNodeData.Command.KeyImage = stn.ImageKey = stn.SelectedImageKey = "modbus_command_24_16.png";
                     break;
                 case 43:
-                    projectNodeData.command.KeyImage = stn.ImageKey = stn.SelectedImageKey = "modbus_command_43_16.png";
+                    projectNodeData.Command.KeyImage = stn.ImageKey = stn.SelectedImageKey = "modbus_command_43_16.png";
                     break;
                 case 99:
-                    projectNodeData.command.KeyImage = stn.ImageKey = stn.SelectedImageKey = "modbus_command_99_16.png";
+                    projectNodeData.Command.KeyImage = stn.ImageKey = stn.SelectedImageKey = "modbus_command_99_16.png";
                     break;
                 default:
-                    projectNodeData.command.KeyImage = stn.ImageKey = stn.SelectedImageKey = "modbus_command_00_16.png";
+                    projectNodeData.Command.KeyImage = stn.ImageKey = stn.SelectedImageKey = "modbus_command_00_16.png";
                     break;
             }
 
