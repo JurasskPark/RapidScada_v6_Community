@@ -47,12 +47,15 @@
             toolsToolStripMenuItem = new ToolStripMenuItem();
             tolConverter = new ToolStripMenuItem();
             tolSettings = new ToolStripMenuItem();
-            tolWindow = new ToolStripMenuItem();
+            tolWindows = new ToolStripMenuItem();
             tolCascade = new ToolStripMenuItem();
             tolHorizontal = new ToolStripMenuItem();
             tolVertical = new ToolStripMenuItem();
+            tolCloseAll = new ToolStripMenuItem();
+            tolSeparator1 = new ToolStripSeparator();
             tolDebug = new ToolStripMenuItem();
             imgListMenu = new ImageList(components);
+            tolSeparator2 = new ToolStripSeparator();
             mnuMenu.SuspendLayout();
             SuspendLayout();
             // 
@@ -66,7 +69,7 @@
             // 
             // mnuMenu
             // 
-            mnuMenu.Items.AddRange(new ToolStripItem[] { tolProject, tolAdministration, toolsToolStripMenuItem, tolSettings, tolWindow, tolDebug });
+            mnuMenu.Items.AddRange(new ToolStripItem[] { tolProject, tolAdministration, toolsToolStripMenuItem, tolSettings, tolWindows, tolDebug });
             mnuMenu.Location = new Point(0, 0);
             mnuMenu.Name = "mnuMenu";
             mnuMenu.Size = new Size(800, 24);
@@ -124,7 +127,7 @@
             // tolConfiguration
             // 
             tolConfiguration.Name = "tolConfiguration";
-            tolConfiguration.Size = new Size(180, 22);
+            tolConfiguration.Size = new Size(148, 22);
             tolConfiguration.Text = "Configuration";
             tolConfiguration.Click += tolConfiguration_Click;
             // 
@@ -133,40 +136,36 @@
             tolTables.DropDownItems.AddRange(new ToolStripItem[] { tolServers, tolDevices, tolCommands, tolTemplates });
             tolTables.Image = (Image)resources.GetObject("tolTables.Image");
             tolTables.Name = "tolTables";
-            tolTables.Size = new Size(180, 22);
+            tolTables.Size = new Size(148, 22);
             tolTables.Text = "Tables";
             // 
             // tolServers
             // 
             tolServers.Image = (Image)resources.GetObject("tolServers.Image");
             tolServers.Name = "tolServers";
-            tolServers.Size = new Size(180, 22);
+            tolServers.Size = new Size(136, 22);
             tolServers.Text = "Servers";
-            
             // 
             // tolDevices
             // 
             tolDevices.Image = (Image)resources.GetObject("tolDevices.Image");
             tolDevices.Name = "tolDevices";
-            tolDevices.Size = new Size(180, 22);
+            tolDevices.Size = new Size(136, 22);
             tolDevices.Text = "Devices";
-
             // 
             // tolCommands
             // 
             tolCommands.Image = (Image)resources.GetObject("tolCommands.Image");
             tolCommands.Name = "tolCommands";
-            tolCommands.Size = new Size(180, 22);
+            tolCommands.Size = new Size(136, 22);
             tolCommands.Text = "Commands";
-  
             // 
             // tolTemplates
             // 
             tolTemplates.Image = (Image)resources.GetObject("tolTemplates.Image");
             tolTemplates.Name = "tolTemplates";
-            tolTemplates.Size = new Size(180, 22);
+            tolTemplates.Size = new Size(136, 22);
             tolTemplates.Text = "Templates";
-
             // 
             // toolsToolStripMenuItem
             // 
@@ -192,19 +191,19 @@
             tolSettings.Text = "Settings";
             tolSettings.Click += tolSettings_Click;
             // 
-            // tolWindow
+            // tolWindows
             // 
-            tolWindow.DropDownItems.AddRange(new ToolStripItem[] { tolCascade, tolHorizontal, tolVertical });
-            tolWindow.Image = (Image)resources.GetObject("tolWindow.Image");
-            tolWindow.Name = "tolWindow";
-            tolWindow.Size = new Size(84, 20);
-            tolWindow.Text = "Windows";
+            tolWindows.DropDownItems.AddRange(new ToolStripItem[] { tolSeparator1, tolCascade, tolHorizontal, tolVertical, tolSeparator2, tolCloseAll });
+            tolWindows.Image = (Image)resources.GetObject("tolWindows.Image");
+            tolWindows.Name = "tolWindows";
+            tolWindows.Size = new Size(84, 20);
+            tolWindows.Text = "Windows";
             // 
             // tolCascade
             // 
             tolCascade.Image = (Image)resources.GetObject("tolCascade.Image");
             tolCascade.Name = "tolCascade";
-            tolCascade.Size = new Size(129, 22);
+            tolCascade.Size = new Size(180, 22);
             tolCascade.Text = "Cascade";
             tolCascade.Click += tolCascade_Click;
             // 
@@ -212,7 +211,7 @@
             // 
             tolHorizontal.Image = (Image)resources.GetObject("tolHorizontal.Image");
             tolHorizontal.Name = "tolHorizontal";
-            tolHorizontal.Size = new Size(129, 22);
+            tolHorizontal.Size = new Size(180, 22);
             tolHorizontal.Text = "Horizontal";
             tolHorizontal.Click += tolHorizontal_Click;
             // 
@@ -220,9 +219,21 @@
             // 
             tolVertical.Image = (Image)resources.GetObject("tolVertical.Image");
             tolVertical.Name = "tolVertical";
-            tolVertical.Size = new Size(129, 22);
+            tolVertical.Size = new Size(180, 22);
             tolVertical.Text = "Vertical";
             tolVertical.Click += tolVertical_Click;
+            // 
+            // tolCloseAll
+            // 
+            tolCloseAll.Name = "tolCloseAll";
+            tolCloseAll.Size = new Size(180, 22);
+            tolCloseAll.Text = "Close All";
+            tolCloseAll.Click += tolCloseAll_Click;
+            // 
+            // tolSeparator1
+            // 
+            tolSeparator1.Name = "tolSeparator1";
+            tolSeparator1.Size = new Size(177, 6);
             // 
             // tolDebug
             // 
@@ -236,6 +247,11 @@
             imgListMenu.ColorDepth = ColorDepth.Depth32Bit;
             imgListMenu.ImageSize = new Size(16, 16);
             imgListMenu.TransparentColor = Color.Transparent;
+            // 
+            // tolSeparator2
+            // 
+            tolSeparator2.Name = "tolSeparator2";
+            tolSeparator2.Size = new Size(177, 6);
             // 
             // FrmStart
             // 
@@ -266,7 +282,7 @@
         private ToolStripMenuItem tolAdministration;
         private ToolStripMenuItem tolTables;
         private ToolStripMenuItem tolDevices;
-        private ToolStripMenuItem tolWindow;
+        private ToolStripMenuItem tolWindows;
         private ToolStripMenuItem tolCascade;
         private ToolStripMenuItem tolHorizontal;
         private ToolStripMenuItem tolVertical;
@@ -283,5 +299,8 @@
         private ToolStripMenuItem tolProjectNew;
         private ToolStripMenuItem tolProjectSaveAs;
         private ToolStripMenuItem tolConfiguration;
+        private ToolStripMenuItem tolCloseAll;
+        private ToolStripSeparator tolSeparator1;
+        private ToolStripSeparator tolSeparator2;
     }
 }

@@ -532,7 +532,6 @@
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "FrmConfig";
             Text = "Config";
-            WindowState = FormWindowState.Maximized;
             FormClosing += FrmConfig_FormClosing;
             Load += FrmConfig_Load;
             cmnuTagAppend.ResumeLayout(false);
