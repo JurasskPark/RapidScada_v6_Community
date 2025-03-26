@@ -78,5 +78,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Lang\DriverPhrases.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Project\Project.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Project\ProjectFile.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Xml\DocumentExtensions.cs" />
   </ItemGroup>
 </Project>

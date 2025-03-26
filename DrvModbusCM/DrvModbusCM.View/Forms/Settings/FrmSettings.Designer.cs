@@ -43,7 +43,7 @@
             gpbSettings.Controls.Add(ckbDebug);
             gpbSettings.Location = new Point(12, 12);
             gpbSettings.Name = "gpbSettings";
-            gpbSettings.Size = new Size(776, 118);
+            gpbSettings.Size = new Size(661, 154);
             gpbSettings.TabIndex = 0;
             gpbSettings.TabStop = false;
             gpbSettings.Text = "Settings";
@@ -72,11 +72,11 @@
             // 
             // btnCancel
             // 
-            btnCancel.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            btnCancel.Location = new Point(657, 138);
+            btnCancel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnCancel.Location = new Point(680, 51);
             btnCancel.Margin = new Padding(4, 5, 4, 5);
             btnCancel.Name = "btnCancel";
-            btnCancel.Size = new Size(130, 26);
+            btnCancel.Size = new Size(107, 27);
             btnCancel.TabIndex = 44;
             btnCancel.Text = "Cancel";
             btnCancel.UseVisualStyleBackColor = true;
@@ -84,12 +84,12 @@
             // 
             // btnSave
             // 
-            btnSave.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            btnSave.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnSave.Enabled = false;
-            btnSave.Location = new Point(519, 138);
+            btnSave.Location = new Point(680, 19);
             btnSave.Margin = new Padding(4, 5, 4, 5);
             btnSave.Name = "btnSave";
-            btnSave.Size = new Size(130, 26);
+            btnSave.Size = new Size(107, 27);
             btnSave.TabIndex = 43;
             btnSave.Text = "Save";
             btnSave.UseVisualStyleBackColor = true;

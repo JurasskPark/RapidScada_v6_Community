@@ -41,6 +41,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             {
                 this.FormBorderStyle = FormBorderStyle.None;
                 btnSave.Visible = true;
+                btnCancel.Enabled = false;
                 Dock = DockStyle.Left | DockStyle.Top;
                 TopLevel = false;
             }
@@ -128,7 +129,11 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
         {
             ControlsToConfig();
             formParent.ProjectSave();
-            Close();
+            Modified = false;
+            if (boolParent == false)
+            {
+                Close();
+            }
         }
 
         /// <summary>

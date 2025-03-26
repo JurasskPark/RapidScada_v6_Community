@@ -609,7 +609,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
                 XmlElement listChannelesElem = xmlElem.AppendElem("ListChannels");
                 foreach (ProjectChannel channel in Channels)
                 {
-                    listChannelesElem.AppendElem("Channel", channel);
+                    channel.SaveToXml(xmlElem.AppendElem("Channel"));
                 }
             }
             catch { }
@@ -1036,7 +1036,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
                 XmlElement listDevicesElem = xmlElem.AppendElem("ListDevices");
                 foreach (ProjectDevice device in Devices)
                 {
-                    listDevicesElem.AppendElem("Device", device);
+                    device.SaveToXml(xmlElem.AppendElem("Device"));
                 }
             }
             catch { }
@@ -1399,8 +1399,8 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             }
             catch { }
 
-            GroupCommands = new List<ProjectGroupCommand>();
-            GroupTags = new List<ProjectGroupTag>();
+            GroupCommands = new ProjectGroupCommand();
+            GroupTags = new ProjectGroupTag();
         }
 
         #region Variables
@@ -1594,8 +1594,8 @@ namespace Scada.Comm.Drivers.DrvModbusCM
         #endregion Gateway        
 
         #region Group Commands
-        private List<ProjectGroupCommand> groupCommands;
-        public List<ProjectGroupCommand> GroupCommands
+        private ProjectGroupCommand groupCommands;
+        public ProjectGroupCommand GroupCommands
         {
             get { return groupCommands; }
             set { groupCommands = value; }
@@ -1603,8 +1603,8 @@ namespace Scada.Comm.Drivers.DrvModbusCM
         #endregion Group Commands
 
         #region Group Tags
-        private List<ProjectGroupTag> groupTags;
-        public List<ProjectGroupTag> GroupTags
+        private ProjectGroupTag groupTags;
+        public ProjectGroupTag GroupTags
         {
             get { return groupTags; }
             set { groupTags = value; }
@@ -2264,10 +2264,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             }
             #endregion Save Registers
 
-            
-            //TcpServerSettings.SaveToXml(xmlElem.AppendElem("TcpServerSettings"));
-            //SerialPortSettings.SaveToXml(xmlElem.AppendElem("SerialPortSettings"));
-            //EthernetClientSettings.SaveToXml(xmlElem.AppendElem("EthernetClientSettings"));
+            GroupCommands.SaveToXml(xmlElem.AppendElem("GroupCommands"));
 
         }
         #endregion Save
@@ -2482,10 +2479,11 @@ namespace Scada.Comm.Drivers.DrvModbusCM
                 XmlElement listCommandsElem = xmlElem.AppendElem("ListCommands");
                 foreach (ProjectCommand command in ListCommands)
                 {
-                    listCommandsElem.AppendElem("Command", command);
+                    command.SaveToXml(xmlElem.AppendElem("Command", Enabled));
                 }
             }
             catch { }
+
         }
         #endregion Save
     }
