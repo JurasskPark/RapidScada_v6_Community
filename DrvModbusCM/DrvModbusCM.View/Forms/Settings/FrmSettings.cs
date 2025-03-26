@@ -21,14 +21,43 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Initializes a new instance of the class.
+        /// </summary>
+        public FrmSettings(ref ProjectNodeData ProjectNodeData, bool hasParent = true)
+        {
+            settings = ProjectNodeData.Settings;
+            boolParent = hasParent;
+            InitializeComponent();
+            FormatWindow(boolParent);
+        }
+
+        /// <summary>
+        /// The format of the window to display on the TabControl.
+        /// </summary>
+        private void FormatWindow(bool hasParent)
+        {
+            if (hasParent)
+            {
+                this.FormBorderStyle = FormBorderStyle.None;
+                btnSave.Visible = true;
+                Dock = DockStyle.Left | DockStyle.Top;
+                TopLevel = false;
+            }
+        }
+
         #region Variables
         public FrmStart formParent;                     // parent form
         public Project project;                         // the project configuration
         public ProjectSettings settings;                // settings project
+        public bool boolParent = false;                 // сhild startup flag
         private bool modified;                          // the configuration was modified
         #endregion Variables
 
         #region Form Load
+        /// <summary>
+        /// 
+        /// </summary>
         private void FrmSettings_Load(object sender, EventArgs e)
         {
             ConfigToControls();

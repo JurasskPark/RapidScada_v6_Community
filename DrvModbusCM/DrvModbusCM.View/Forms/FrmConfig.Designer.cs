@@ -58,6 +58,9 @@
             imgListForm = new ImageList(components);
             cmnuDeviceAppend = new ContextMenuStrip(components);
             cmnuDeviceAdd = new ToolStripMenuItem();
+            toolStripSeparator5 = new ToolStripSeparator();
+            upToolStripMenuItem1 = new ToolStripMenuItem();
+            downToolStripMenuItem1 = new ToolStripMenuItem();
             cmnuDeviceDelete = new ContextMenuStrip(components);
             cmnuDeviceDel = new ToolStripMenuItem();
             cmnuCommandAppend = new ContextMenuStrip(components);
@@ -84,6 +87,12 @@
             cmnuCommandDel = new ToolStripMenuItem();
             cmnuChannelAppend = new ContextMenuStrip(components);
             cmnuChannelAdd = new ToolStripMenuItem();
+            toolStripSeparator4 = new ToolStripSeparator();
+            upToolStripMenuItem = new ToolStripMenuItem();
+            downToolStripMenuItem = new ToolStripMenuItem();
+            toolStripSeparator6 = new ToolStripSeparator();
+            upToolStripMenuItem2 = new ToolStripMenuItem();
+            downToolStripMenuItem2 = new ToolStripMenuItem();
             cmnuTagAppend.SuspendLayout();
             cmnuDeleteAction.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splContainer).BeginInit();
@@ -348,9 +357,9 @@
             // cmnuDeviceAppend
             // 
             cmnuDeviceAppend.ImageScalingSize = new Size(24, 24);
-            cmnuDeviceAppend.Items.AddRange(new ToolStripItem[] { cmnuDeviceAdd });
+            cmnuDeviceAppend.Items.AddRange(new ToolStripItem[] { cmnuDeviceAdd, toolStripSeparator5, upToolStripMenuItem1, downToolStripMenuItem1 });
             cmnuDeviceAppend.Name = "HMI_contextMenu";
-            cmnuDeviceAppend.Size = new Size(134, 26);
+            cmnuDeviceAppend.Size = new Size(134, 76);
             // 
             // cmnuDeviceAdd
             // 
@@ -359,25 +368,42 @@
             cmnuDeviceAdd.Text = "Add device";
             cmnuDeviceAdd.Click += cmnuDeviceAdd_Click;
             // 
+            // toolStripSeparator5
+            // 
+            toolStripSeparator5.Name = "toolStripSeparator5";
+            toolStripSeparator5.Size = new Size(130, 6);
+            // 
+            // upToolStripMenuItem1
+            // 
+            upToolStripMenuItem1.Name = "upToolStripMenuItem1";
+            upToolStripMenuItem1.Size = new Size(133, 22);
+            upToolStripMenuItem1.Text = "Up";
+            // 
+            // downToolStripMenuItem1
+            // 
+            downToolStripMenuItem1.Name = "downToolStripMenuItem1";
+            downToolStripMenuItem1.Size = new Size(133, 22);
+            downToolStripMenuItem1.Text = "Down";
+            // 
             // cmnuDeviceDelete
             // 
             cmnuDeviceDelete.ImageScalingSize = new Size(24, 24);
             cmnuDeviceDelete.Items.AddRange(new ToolStripItem[] { cmnuDeviceDel });
             cmnuDeviceDelete.Name = "HMI_contextMenu";
-            cmnuDeviceDelete.Size = new Size(119, 26);
+            cmnuDeviceDelete.Size = new Size(108, 26);
             // 
             // cmnuDeviceDel
             // 
             cmnuDeviceDel.Name = "cmnuDeviceDel";
-            cmnuDeviceDel.Size = new Size(118, 22);
-            cmnuDeviceDel.Text = "Удалить";
+            cmnuDeviceDel.Size = new Size(107, 22);
+            cmnuDeviceDel.Text = "Delete";
             // 
             // cmnuCommandAppend
             // 
             cmnuCommandAppend.ImageScalingSize = new Size(24, 24);
-            cmnuCommandAppend.Items.AddRange(new ToolStripItem[] { cmnuCommandAdd, cmnuCommandImport, cmnuCommandGenerate });
+            cmnuCommandAppend.Items.AddRange(new ToolStripItem[] { cmnuCommandAdd, cmnuCommandImport, cmnuCommandGenerate, toolStripSeparator6, upToolStripMenuItem2, downToolStripMenuItem2 });
             cmnuCommandAppend.Name = "HMI_contextMenu";
-            cmnuCommandAppend.Size = new Size(185, 70);
+            cmnuCommandAppend.Size = new Size(185, 120);
             // 
             // cmnuCommandAdd
             // 
@@ -530,15 +556,50 @@
             // cmnuChannelAppend
             // 
             cmnuChannelAppend.ImageScalingSize = new Size(24, 24);
-            cmnuChannelAppend.Items.AddRange(new ToolStripItem[] { cmnuChannelAdd });
+            cmnuChannelAppend.Items.AddRange(new ToolStripItem[] { cmnuChannelAdd, toolStripSeparator4, upToolStripMenuItem, downToolStripMenuItem });
             cmnuChannelAppend.Name = "HMI_contextMenu";
-            cmnuChannelAppend.Size = new Size(142, 26);
+            cmnuChannelAppend.Size = new Size(181, 98);
             // 
             // cmnuChannelAdd
             // 
             cmnuChannelAdd.Name = "cmnuChannelAdd";
-            cmnuChannelAdd.Size = new Size(141, 22);
+            cmnuChannelAdd.Size = new Size(180, 22);
             cmnuChannelAdd.Text = "Add channel";
+            //cmnuChannelAdd.Click += cmnuChannelAdd_Click;
+            // 
+            // toolStripSeparator4
+            // 
+            toolStripSeparator4.Name = "toolStripSeparator4";
+            toolStripSeparator4.Size = new Size(138, 6);
+            // 
+            // upToolStripMenuItem
+            // 
+            upToolStripMenuItem.Name = "upToolStripMenuItem";
+            upToolStripMenuItem.Size = new Size(141, 22);
+            upToolStripMenuItem.Text = "Up";
+            // 
+            // downToolStripMenuItem
+            // 
+            downToolStripMenuItem.Name = "downToolStripMenuItem";
+            downToolStripMenuItem.Size = new Size(141, 22);
+            downToolStripMenuItem.Text = "Down";
+            // 
+            // toolStripSeparator6
+            // 
+            toolStripSeparator6.Name = "toolStripSeparator6";
+            toolStripSeparator6.Size = new Size(181, 6);
+            // 
+            // upToolStripMenuItem2
+            // 
+            upToolStripMenuItem2.Name = "upToolStripMenuItem2";
+            upToolStripMenuItem2.Size = new Size(184, 22);
+            upToolStripMenuItem2.Text = "Up";
+            // 
+            // downToolStripMenuItem2
+            // 
+            downToolStripMenuItem2.Name = "downToolStripMenuItem2";
+            downToolStripMenuItem2.Size = new Size(184, 22);
+            downToolStripMenuItem2.Text = "Down";
             // 
             // FrmConfig
             // 
@@ -624,5 +685,14 @@
         private ToolStripSeparator toolStripSeparator3;
         public ContextMenuStrip cmnuChannelAppend;
         private ToolStripMenuItem cmnuChannelAdd;
+        private ToolStripSeparator toolStripSeparator5;
+        private ToolStripMenuItem upToolStripMenuItem1;
+        private ToolStripMenuItem downToolStripMenuItem1;
+        private ToolStripSeparator toolStripSeparator4;
+        private ToolStripMenuItem upToolStripMenuItem;
+        private ToolStripMenuItem downToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator6;
+        private ToolStripMenuItem upToolStripMenuItem2;
+        private ToolStripMenuItem downToolStripMenuItem2;
     }
 }
