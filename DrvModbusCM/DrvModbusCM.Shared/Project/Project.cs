@@ -13,6 +13,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
@@ -491,7 +492,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
         public ProjectNodeType NodeType;
         public ProjectDriver Driver;
         public ProjectSettings Settings;
-        public List<ProjectChannel> ListChannels;
+        public ProjectGroupChannel GroupChannel;
         public ProjectChannel Channel;
         public ProjectDevice Device;
         public ProjectGroupCommand GroupCommand;
@@ -507,7 +508,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
     {
         Driver,
         Settings,
-        ListChannels,
+        GroupChannel,
         Channel,
         Device,
         GroupCommand,
@@ -525,7 +526,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
         public ProjectDriver()
         {
             Settings = new ProjectSettings();
-            Channels = new List<ProjectChannel>();
+            GroupChannel= new ProjectGroupChannel();
         }
 
         #region Variables
@@ -549,11 +550,11 @@ namespace Scada.Comm.Drivers.DrvModbusCM
 
         // driver channels
         // каналы драйвера
-        private List<ProjectChannel> channels;
-        public List<ProjectChannel> Channels
+        private ProjectGroupChannel groupChannel;
+        public ProjectGroupChannel GroupChannel
         {
-            get { return channels; }
-            set { channels = value; }
+            get { return groupChannel; }
+            set { groupChannel = value; }
         }
         #endregion Variables
 
@@ -571,21 +572,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
 
             Name = xmlNode.GetChildAsString("Name");
             Settings.LoadFromXml(xmlNode.SelectSingleNode("Settings"));
-
-            try
-            {
-                if (xmlNode.SelectSingleNode("ListChannels") is XmlNode listChannelsNode)
-                {
-                    Channels = new List<ProjectChannel>();
-                    foreach (XmlNode channelNode in listChannelsNode.SelectNodes("Channel"))
-                    {
-                        ProjectChannel channel = new ProjectChannel();
-                        channel.LoadFromXml(channelNode);
-                        Channels.Add(channel);
-                    }
-                }
-            }
-            catch { Channels = new List<ProjectChannel>(); }
+            GroupChannel.LoadFromXml(xmlNode.SelectSingleNode("GroupChannel"));
         }
         #endregion Load
 
@@ -603,16 +590,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
 
             xmlElem.AppendElem("Name", Name);
             Settings.SaveToXml(xmlElem.AppendElem("Settings"));
-
-            try
-            {
-                XmlElement listChannelesElem = xmlElem.AppendElem("ListChannels");
-                foreach (ProjectChannel channel in Channels)
-                {
-                    channel.SaveToXml(xmlElem.AppendElem("Channel"));
-                }
-            }
-            catch { }
+            GroupChannel.SaveToXml(xmlElem.AppendElem("GroupChannel"));
         }
         #endregion Save
     }
@@ -712,6 +690,129 @@ namespace Scada.Comm.Drivers.DrvModbusCM
     }
 
     #endregion ProjectSettings
+
+    #region ProjectGroupChannel
+
+    [Serializable]
+    public class ProjectGroupChannel
+    {
+        public ProjectGroupChannel()
+        {
+            ID = new Guid();
+            KeyImage = string.Empty;
+
+            Name = string.Empty;
+
+            Group = new List<ProjectChannel>();
+        }
+
+        #region Variables
+
+        #region Group
+        // id
+        private Guid id;
+        [XmlAttribute]
+        public Guid ID
+        {
+            get { return id; }
+            set { id = value; }
+        }
+
+        // иконка
+        private string keyImage;
+        [XmlAttribute]
+        public string KeyImage
+        {
+            get { return keyImage; }
+            set { keyImage = value; }
+        }
+
+        // название группы каналов
+        private string name;
+        [XmlAttribute]
+        public string Name
+        {
+            get { return name; }
+            set { name = value; }
+        }
+
+        #endregion Group
+
+        #region Group Command
+        private List<ProjectChannel> group;
+        public List<ProjectChannel> Group
+        {
+            get { return group; }
+            set { group = value; }
+        }
+        #endregion Group Command
+
+        #endregion Variables
+
+        #region Load
+        /// <summary>
+        /// Loads the settings from the XML node.
+        /// <para>Загружает настройки из узла XML.</para>
+        /// </summary>
+        public void LoadFromXml(XmlNode xmlNode)
+        {
+            if (xmlNode == null)
+            {
+                throw new ArgumentNullException("xmlNode");
+            }
+
+            ID = DriverUtils.StringToGuid(xmlNode.GetChildAsString("ID"));
+            Name = xmlNode.GetChildAsString("Name");
+            KeyImage = xmlNode.GetChildAsString("KeyImage");
+          
+            try
+            {
+                if (xmlNode.SelectSingleNode("ListChannels") is XmlNode groupChannelNode)
+                {
+                    Group = new List<ProjectChannel>();
+                    foreach (XmlNode channelNode in groupChannelNode.SelectNodes("Channel"))
+                    {
+                        ProjectChannel channel = new ProjectChannel();
+                        channel.LoadFromXml(channelNode);
+                        Group.Add(channel);
+                    }
+                }
+            }
+            catch { Group = new List<ProjectChannel>(); }
+        }
+        #endregion Load
+
+        #region Save
+        /// <summary>
+        /// Saves the settings into the XML node.
+        /// <para>Сохраняет настройки в узле XML.</para>
+        /// </summary>
+        public void SaveToXml(XmlElement xmlElem)
+        {
+            if (xmlElem == null)
+            {
+                throw new ArgumentNullException("xmlElem");
+            }
+
+            xmlElem.AppendElem("ID", ID.ToString());
+            xmlElem.AppendElem("Name", Name);
+            xmlElem.AppendElem("KeyImage", KeyImage);
+
+            try
+            {
+                XmlElement groupChannelElem = xmlElem.AppendElem("ListChannel");
+                foreach (ProjectChannel channel in Group)
+                {
+                    channel.SaveToXml(groupChannelElem.AppendElem("Channel"));
+                }
+            }
+            catch { }
+
+        }
+        #endregion Save
+    }
+
+    #endregion ProjectGroupChannel
 
     #region ProjectChannel
     [Serializable]
@@ -1036,10 +1137,11 @@ namespace Scada.Comm.Drivers.DrvModbusCM
                 XmlElement listDevicesElem = xmlElem.AppendElem("ListDevices");
                 foreach (ProjectDevice device in Devices)
                 {
-                    device.SaveToXml(xmlElem.AppendElem("Device"));
+                    device.SaveToXml(listDevicesElem.AppendElem("Device"));
                 }
             }
             catch { }
+
         }
         #endregion Save
 
@@ -2479,7 +2581,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
                 XmlElement listCommandsElem = xmlElem.AppendElem("ListCommands");
                 foreach (ProjectCommand command in ListCommands)
                 {
-                    command.SaveToXml(xmlElem.AppendElem("Command", Enabled));
+                    command.SaveToXml(listCommandsElem.AppendElem("Command"));
                 }
             }
             catch { }
@@ -2919,7 +3021,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
                         projectRegisterWriteData.RegAddr = i;
                         projectRegisterWriteData.RegName = RegisterNameWriteData[i];
                         projectRegisterWriteData.RegValue = RegisterWriteData[i];
-                        listRegistersWriteDataElem.AppendElem("RegisterWriteData", listRegistersWriteDataElem);
+                        projectRegisterWriteData.SaveToXml(listRegistersWriteDataElem.AppendElem("RegisterWriteData"));
                     }
                 }
             }

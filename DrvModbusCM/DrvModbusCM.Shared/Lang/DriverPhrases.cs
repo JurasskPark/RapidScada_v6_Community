@@ -19,7 +19,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
 
         public static string DriverName { get; private set; } = "Driver";
         public static string SettingsName { get; private set; } = "Settings";
-        public static string ListChannelsName { get; private set; } = "Channels";
+        public static string GroupChannelName { get; private set; } = "Channels";
         public static string ChannelName { get; private set; } = "Channel";
         public static string DeviceName { get; private set; } = "Device";
         public static string GroupCommandName { get; private set; } = "Commands";

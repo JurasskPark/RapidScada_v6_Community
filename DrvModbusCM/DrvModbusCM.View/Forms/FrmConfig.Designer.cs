@@ -80,6 +80,9 @@
             cmnuCommandImportSelect = new ToolStripMenuItem();
             cmnuCommandImportAll = new ToolStripMenuItem();
             cmnuCommandGenerate = new ToolStripMenuItem();
+            toolStripSeparator6 = new ToolStripSeparator();
+            upToolStripMenuItem2 = new ToolStripMenuItem();
+            downToolStripMenuItem2 = new ToolStripMenuItem();
             cmnuCommandDelete = new ContextMenuStrip(components);
             cmnuCommandUp = new ToolStripMenuItem();
             cmnuCommandDown = new ToolStripMenuItem();
@@ -90,9 +93,6 @@
             toolStripSeparator4 = new ToolStripSeparator();
             upToolStripMenuItem = new ToolStripMenuItem();
             downToolStripMenuItem = new ToolStripMenuItem();
-            toolStripSeparator6 = new ToolStripSeparator();
-            upToolStripMenuItem2 = new ToolStripMenuItem();
-            downToolStripMenuItem2 = new ToolStripMenuItem();
             cmnuTagAppend.SuspendLayout();
             cmnuDeleteAction.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splContainer).BeginInit();
@@ -135,7 +135,7 @@
             imgList.Images.SetKeyName(0, "default_16.png");
             imgList.Images.SetKeyName(1, "driver_16.png");
             imgList.Images.SetKeyName(2, "setting_tools_16.png");
-            imgList.Images.SetKeyName(3, "list_channels_16.png");
+            imgList.Images.SetKeyName(3, "group_channel_16.png");
             imgList.Images.SetKeyName(4, "channel_empty_16.png");
             imgList.Images.SetKeyName(5, "channel_ethernet_16.png");
             imgList.Images.SetKeyName(6, "channel_serialport_16.png");
@@ -522,6 +522,23 @@
             cmnuCommandGenerate.Size = new Size(184, 22);
             cmnuCommandGenerate.Text = "Generate commands";
             // 
+            // toolStripSeparator6
+            // 
+            toolStripSeparator6.Name = "toolStripSeparator6";
+            toolStripSeparator6.Size = new Size(181, 6);
+            // 
+            // upToolStripMenuItem2
+            // 
+            upToolStripMenuItem2.Name = "upToolStripMenuItem2";
+            upToolStripMenuItem2.Size = new Size(184, 22);
+            upToolStripMenuItem2.Text = "Up";
+            // 
+            // downToolStripMenuItem2
+            // 
+            downToolStripMenuItem2.Name = "downToolStripMenuItem2";
+            downToolStripMenuItem2.Size = new Size(184, 22);
+            downToolStripMenuItem2.Text = "Down";
+            // 
             // cmnuCommandDelete
             // 
             cmnuCommandDelete.ImageScalingSize = new Size(24, 24);
@@ -558,14 +575,14 @@
             cmnuChannelAppend.ImageScalingSize = new Size(24, 24);
             cmnuChannelAppend.Items.AddRange(new ToolStripItem[] { cmnuChannelAdd, toolStripSeparator4, upToolStripMenuItem, downToolStripMenuItem });
             cmnuChannelAppend.Name = "HMI_contextMenu";
-            cmnuChannelAppend.Size = new Size(181, 98);
+            cmnuChannelAppend.Size = new Size(142, 76);
             // 
             // cmnuChannelAdd
             // 
             cmnuChannelAdd.Name = "cmnuChannelAdd";
-            cmnuChannelAdd.Size = new Size(180, 22);
+            cmnuChannelAdd.Size = new Size(141, 22);
             cmnuChannelAdd.Text = "Add channel";
-            //cmnuChannelAdd.Click += cmnuChannelAdd_Click;
+            cmnuChannelAdd.Click += cmnuChannelAdd_Click;
             // 
             // toolStripSeparator4
             // 
@@ -583,23 +600,6 @@
             downToolStripMenuItem.Name = "downToolStripMenuItem";
             downToolStripMenuItem.Size = new Size(141, 22);
             downToolStripMenuItem.Text = "Down";
-            // 
-            // toolStripSeparator6
-            // 
-            toolStripSeparator6.Name = "toolStripSeparator6";
-            toolStripSeparator6.Size = new Size(181, 6);
-            // 
-            // upToolStripMenuItem2
-            // 
-            upToolStripMenuItem2.Name = "upToolStripMenuItem2";
-            upToolStripMenuItem2.Size = new Size(184, 22);
-            upToolStripMenuItem2.Text = "Up";
-            // 
-            // downToolStripMenuItem2
-            // 
-            downToolStripMenuItem2.Name = "downToolStripMenuItem2";
-            downToolStripMenuItem2.Size = new Size(184, 22);
-            downToolStripMenuItem2.Text = "Down";
             // 
             // FrmConfig
             // 

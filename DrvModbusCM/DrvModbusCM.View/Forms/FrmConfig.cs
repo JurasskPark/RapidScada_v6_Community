@@ -408,9 +408,9 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
                     pathProject = Path.Combine(DriverUtils.GetFileName(deviceNum));
                 }
 
-                //SerializeTreeView(trvProject, pathProject);
+                project = SerializeTreeView(trvProject);
                 project.Save(pathProject, out string errMsg);
-                if(!String.IsNullOrEmpty(errMsg))
+                if (!String.IsNullOrEmpty(errMsg))
                 {
                     MessageBox.Show(errMsg);
                 }
@@ -421,106 +421,111 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             }
         }
 
-        public void SerializeTreeView(System.Windows.Forms.TreeView treeView, string fileName)
+        public Project SerializeTreeView(System.Windows.Forms.TreeView treeView)
         {
-            //project = new Project();
+            project = new Project();
 
-            //// save the nodes, recursive method
-            //foreach (TreeNode tnNode in treeView.Nodes)
-            //{
-            //    ProjectNodeData prNode = (ProjectNodeData)tnNode.Tag;
-
-            //    #region Settings
-
-            //    if (prNode.NodeType == ProjectNodeType.Settings)
-            //    {
-            //        ProjectSettings settings = prNode.Settings;
-            //        project.Driver.Settings = settings;
-            //    }
-            //    #endregion Settings
-
-            //    #region Driver
-
-            //    //if (prNode.NodeType == ProjectNodeType.Driver)
-            //    //{
-
-            //    //}
-
-            //    #endregion Driver
-
-            //    #region Channel
-
-            //    if (prNode.NodeType == ProjectNodeType.Channel)
-            //    {
-            //        ProjectChannel channel = prNode.Channel;
-            //        List<ProjectDevice> devices = new List<ProjectDevice>();
-
-            //        #region Device
-            //        ProjectDevice device = new ProjectDevice();
-            //        foreach (TreeNode tnDevice in tnNode.Nodes)
-            //        {
-            //            device = ((ProjectNodeData)tnDevice.Tag).Device;
-            //            List<ProjectGroupCommand> GroupCommands = new List<ProjectGroupCommand>();
-            //            List<ProjectGroupTag> GroupTags = new List<ProjectGroupTag>();
-
-            //            foreach (TreeNode tnGrp in tnDevice.Nodes)
-            //            {
-            //                ProjectNodeData prGrp = (ProjectNodeData)tnGrp.Tag;
-
-            //                #region Group Command
-
-            //                if (prGrp.NodeType == ProjectNodeType.GroupCommand)
-            //                {
-            //                    ProjectGroupCommand groupCommands = ((ProjectNodeData)tnGrp.Tag).GroupCommand;
-            //                    foreach (TreeNode tnCommand in tnGrp.Nodes)
-            //                    {
-            //                        ProjectCommand command = ((ProjectNodeData)tnCommand.Tag).Command;
-            //                        groupCommands.ListCommands.Add(command);
-            //                    }
-            //                    GroupCommands.Add(groupCommands);
-            //                }
-
-            //                #endregion Group Command
-
-            //                #region Group Tag
-
-            //                if (prGrp.NodeType == ProjectNodeType.GroupTag)
-            //                {
-            //                    ProjectGroupTag groupTag = ((ProjectNodeData)tnGrp.Tag).GroupTag;
-            //                    foreach (TreeNode tnTag in tnGrp.Nodes)
-            //                    {
-            //                        ProjectTag tag = ((ProjectNodeData)tnTag.Tag).Tag;
-            //                        groupTag.ListTags.Add(tag);
-            //                    }
-            //                    GroupTags.Add(groupTag);
-            //                }
-
-            //                #endregion Group Tag
-
-            //            }
-
-            //            device.GroupCommands = GroupCommands;
-            //            device.GroupTags = GroupTags;
-
-            //        }
-
-            //        #endregion Device
-
-            //        devices.Add(device);
-            //        channel.Devices = devices;
-            //        project.Driver.Channels.Add(channel);
-            //    }
-            //    #endregion Channel
-
-
-            //}
-
-            project.Save(fileName, out string errMsg);
-            if (String.IsNullOrEmpty(errMsg))
+            // save the nodes, recursive method
+            foreach (TreeNode tnLevel00 in treeView.Nodes)
             {
-                MessageBox.Show(errMsg.ToString());
+                ProjectNodeData prLevel00Node = (ProjectNodeData)tnLevel00.Tag;
+
+                #region Driver
+                if (prLevel00Node.NodeType == ProjectNodeType.Driver)
+                {
+                    ProjectDriver projectDriver = (ProjectDriver)prLevel00Node.Driver;
+                    project.Driver = projectDriver;
+
+                    foreach (TreeNode tnLevel01 in tnLevel00.Nodes)
+                    {
+                        ProjectNodeData prLevel01Node = (ProjectNodeData)tnLevel01.Tag;
+
+                        #region Settings
+                        if (prLevel01Node.NodeType == ProjectNodeType.Settings)
+                        {
+                            ProjectSettings settings = (ProjectSettings)prLevel01Node.Settings;
+                            project.Driver.Settings = settings;
+                        }
+                        #endregion Settings
+
+                        #region Group Channel
+                        if (prLevel01Node.NodeType == ProjectNodeType.GroupChannel)
+                        {
+                            ProjectGroupChannel groupChannel = (ProjectGroupChannel)prLevel01Node.GroupChannel;
+                            
+                            #region Channel
+                            foreach (TreeNode tnLevel02 in tnLevel01.Nodes)
+                            {
+                                ProjectNodeData prLevel02Node = (ProjectNodeData)tnLevel02.Tag;
+                                
+                                if (prLevel02Node.NodeType == ProjectNodeType.Channel)
+                                {
+                                    ProjectChannel channel = (ProjectChannel)prLevel02Node.Channel;
+                                    List<ProjectDevice> listDevices = new List<ProjectDevice>();
+                                    foreach(TreeNode tnLevel03 in tnLevel02.Nodes)
+                                    {
+                                        ProjectNodeData prLevel03Node = (ProjectNodeData)tnLevel03.Tag;
+
+                                        if (prLevel03Node.NodeType == ProjectNodeType.Device)
+                                        {
+                                            ProjectDevice device = (ProjectDevice)prLevel03Node.Device;
+
+                                            foreach (TreeNode tnLevel04 in tnLevel03.Nodes)
+                                            {
+                                                ProjectNodeData prLevel04Node = (ProjectNodeData)tnLevel04.Tag;
+
+                                                if (prLevel04Node.NodeType == ProjectNodeType.GroupCommand)
+                                                {
+                                                    ProjectGroupCommand groupCommand = (ProjectGroupCommand)prLevel04Node.GroupCommand;
+
+                                                    foreach (TreeNode tnLevel05 in tnLevel04.Nodes)
+                                                    {
+                                                        ProjectNodeData prLevel05Node = (ProjectNodeData)tnLevel05.Tag;
+
+                                                        if (prLevel05Node.NodeType == ProjectNodeType.Command)
+                                                        {
+                                                            ProjectCommand command = (ProjectCommand)prLevel05Node.Command;
+                                                            groupCommand.ListCommands.Add(command);
+                                                        }
+                                                    }
+
+                                                    device.GroupCommands = groupCommand;
+                                                }
+
+                                                if (prLevel04Node.NodeType == ProjectNodeType.GroupTag)
+                                                {
+                                                    ProjectGroupTag groupTag = (ProjectGroupTag)prLevel04Node.GroupTag;
+
+                                                    device.GroupTags = groupTag;
+                                                }
+                                            }
+                                            listDevices.Add(device);
+                                            
+                                        }
+                                        channel.Devices = listDevices;
+                                    }
+
+                                    groupChannel.Group.Add(channel);
+                                }
+                            }
+                            #endregion Channel
+
+                            project.Driver.GroupChannel = groupChannel;
+                        }
+
+                        #endregion Group Channel
+                    }
+                }
+
+                #endregion Driver
+
             }
+
+            return project;
+ 
         }
+
+        
 
         #endregion Project Save
 
@@ -569,8 +574,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             ProjectDriver projectDriver = new ProjectDriver();
             projectDriver.Name = DriverPhrases.DriverName;
             projectDriver.Settings = new ProjectSettings();
-            projectDriver.Channels = new List<ProjectChannel>();
-            projectDriver.Channels = new List<ProjectChannel>();
+            projectDriver.GroupChannel = new ProjectGroupChannel();
             //Добавляем в дерево
             TreeNode driverNode = NodeProjectDriverAdd(projectDriver, null);
             //Добавляем в проект
@@ -590,11 +594,14 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             project.Driver.Settings = settings;
             #endregion Settings
 
-            #region List Channels
+            #region Group Channel
+            ProjectGroupChannel groupChannel = new ProjectGroupChannel();
+            groupChannel.Name = DriverPhrases.GroupChannelName;
+            groupChannel.ID = Guid.NewGuid();
 
-            TreeNode listChannelsNode = NodeListChannelsAdd(projectDriver.Channels, cmnuChannelAppend, driverNode);
+            TreeNode groupChannelNode = NodeProjectGroupChannelAdd(groupChannel, cmnuChannelAppend, driverNode);
 
-            #endregion List Channels
+            #endregion Group Channel
 
             #region Channel
             ProjectChannel projectChannel = new ProjectChannel();
@@ -617,9 +624,9 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
 
             projectChannel.CountError = 3;
             //Добавляем в дерево
-            TreeNode channelNode = NodeProjectChannelAdd(projectChannel, cmnuDeviceAppend, listChannelsNode);
+            TreeNode channelNode = NodeProjectChannelAdd(projectChannel, cmnuDeviceAppend, groupChannelNode);
             //Добавляем в проект
-            project.Driver.Channels.Add(projectChannel);
+            project.Driver.GroupChannel.Group.Add(projectChannel);
             #endregion Channel
 
             #region Device
@@ -743,41 +750,28 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
         }
         #endregion Project Settings
 
-        #region Project List Channels
+        #region Project Group Channel
 
-        public void ProjectListChannelsAdd()
+        public void ProjectGroupChannelsAdd()
         {
-            ProjectChannel projectChannel = new ProjectChannel();
-            projectChannel.KeyImage = ListImages.ImageKey.ChannelEmpty;
-            projectChannel.ID = Guid.NewGuid();
-            projectChannel.Name = DriverPhrases.ChannelName;
-            projectChannel.Description = "";
-            projectChannel.Enabled = true;
-            //projectChannel.GatewayTypeProtocol = 0;
-            //projectChannel.GatewayPort = 60000;
-            //projectChannel.GatewayConnectedClientsMax = 10;
+            ProjectGroupChannel projectGroupChannel = new ProjectGroupChannel();
+            projectGroupChannel.KeyImage = ListImages.ImageKey.GroupChannel;
+            projectGroupChannel.ID = Guid.NewGuid();
+            projectGroupChannel.Name = DriverPhrases.GroupChannelName;
 
-            projectChannel.WriteTimeout = 1000;
-            projectChannel.ReadTimeout = 1000;
-            projectChannel.Timeout = 1000;
-
-            projectChannel.WriteBufferSize = 8192;
-            projectChannel.ReadBufferSize = 8192;
-
-            projectChannel.CountError = 3;
-            //Добавляем в дерево
-            NodeProjectChannelAdd(projectChannel, cmnuDeviceAppend);
+            // Добавляем в дерево
+            NodeProjectGroupChannelAdd(projectGroupChannel, cmnuDeviceAppend);         
         }
 
         // add tree
-        public TreeNode NodeListChannelsAdd(List<ProjectChannel> lpc, ContextMenuStrip cms, TreeNode ptn = null)
+        public TreeNode NodeProjectGroupChannelAdd(ProjectGroupChannel pgc, ContextMenuStrip cms, TreeNode ptn = null)
         {
             ProjectNodeData ProjectNodeData = new ProjectNodeData();
-            ProjectNodeData.ListChannels = lpc;
-            ProjectNodeData.NodeType = ProjectNodeType.ListChannels;
+            ProjectNodeData.GroupChannel = pgc;
+            ProjectNodeData.NodeType = ProjectNodeType.GroupChannel;
 
-            TreeNode tn = new TreeNode(DriverPhrases.ListChannelsName);
-            tn.ImageKey = tn.SelectedImageKey = ListImages.ImageKey.ListChannels;
+            TreeNode tn = new TreeNode(DriverPhrases.GroupChannelName);
+            tn.ImageKey = tn.SelectedImageKey = ListImages.ImageKey.GroupChannel;
             tn.ContextMenuStrip = cms;
             tn.Tag = ProjectNodeData;
 
@@ -793,6 +787,22 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
         #region Project Channel
         public void ProjectChannelAdd()
         {
+            //В дереве выбран объект
+            TreeNode selectNode = trvProject.SelectedNode;
+            TreeNode parentNode = null;
+            ProjectGroupChannel projectGroupChannel = new ProjectGroupChannel();
+
+            if (selectNode != null)
+            {
+                parentNode = selectNode;
+                ProjectNodeData nodeData = (ProjectNodeData)parentNode.Tag;
+                projectGroupChannel = nodeData.GroupChannel;
+            }
+            else
+            {
+                return;
+            }
+
             ProjectChannel projectChannel = new ProjectChannel();
             projectChannel.KeyImage = ListImages.ImageKey.ChannelEmpty;
             projectChannel.ID = Guid.NewGuid();
@@ -811,8 +821,8 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             projectChannel.ReadBufferSize = 8192;
 
             projectChannel.CountError = 3;
-            //Добавляем в дерево
-            NodeProjectChannelAdd(projectChannel, cmnuDeviceAppend);
+            // добавляем в дерево
+            NodeProjectChannelAdd(projectChannel, cmnuDeviceAppend, parentNode);
         }
 
         //Добавляем в дерево
@@ -846,12 +856,12 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             tn.SelectedImageKey = imageKey;
             tn.ImageIndex = imgList.Images.IndexOfKey(imageKey);
 
-            ProjectNodeData ProjectNodeData = new ProjectNodeData();
-            ProjectNodeData.Channel = cnl;
-            ProjectNodeData.NodeType = ProjectNodeType.Channel;
+            ProjectNodeData nodeData = new ProjectNodeData();
+            nodeData.Channel = cnl;
+            nodeData.NodeType = ProjectNodeType.Channel;
 
             tn.ContextMenuStrip = cms;
-            tn.Tag = ProjectNodeData;
+            tn.Tag = nodeData;
 
             ptn.Nodes.Add(tn);
             ptn.Expand();
@@ -873,7 +883,8 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             if (selectNode != null)
             {
                 parentNode = selectNode;
-                projectChannel = (ProjectChannel)selectNode.Tag;
+                ProjectNodeData nodeData = (ProjectNodeData)parentNode.Tag;
+                projectChannel = nodeData.Channel;
             }
             else
             {
@@ -1807,6 +1818,10 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
         #endregion TreeView trvProject
 
         #region Menu
+        private void cmnuChannelAdd_Click(object sender, EventArgs e)
+        {
+            ProjectChannelAdd();
+        }
 
         private void cmnuDeviceAdd_Click(object sender, EventArgs e)
         {
@@ -2793,6 +2808,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
         //#endregion TreeView
 
         #endregion Sample
+
 
 
     }
