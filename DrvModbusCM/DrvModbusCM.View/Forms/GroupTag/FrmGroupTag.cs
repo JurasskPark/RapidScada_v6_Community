@@ -158,10 +158,10 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
                         ListTagsSort = ListTags.OrderByDescending(o => o.Description).ToList();
                         break;
                     case 4: //По типу
-                        ListTagsSort = ListTags.OrderBy(o => o.TagType).ToList();
+                        ListTagsSort = ListTags.OrderBy(o => o.Format).ToList();
                         break;
                     case -4: //По типу
-                        ListTagsSort = ListTags.OrderByDescending(o => o.TagType).ToList();
+                        ListTagsSort = ListTags.OrderByDescending(o => o.Format).ToList();
                         break;
                     case 5: //По значению
                         ListTagsSort = ListTags.OrderBy(o => o.DataValue).ToList();
@@ -192,7 +192,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
                                 DriverUtils.NullToString(tmpTag.Code),
                                 DriverUtils.NullToString(tmpTag.Address),
                                 DriverUtils.NullToString(tmpTag.Description),
-                                DriverUtils.NullToString(tmpTag.TagType),
+                                DriverUtils.NullToString(tmpTag.Format),
                                 DriverUtils.NullToString(DriverUtils.IsGuid(tmpTag.CommandID.ToString())),
                                 DriverUtils.NullToString(tmpTag.Enabled),
                             }
@@ -324,7 +324,6 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
 
         #region Tag
 
-
         #region Tag Refresh
 
         private void tolRefresh_Click(object sender, EventArgs e)
@@ -334,7 +333,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
 
         #endregion  Tag Refresh
 
-        #region Tag selection
+        #region Tag Selection
 
         private void lstTags_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -366,7 +365,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
                 ProjectTag tmpTag = ListTags.Find((Predicate<ProjectTag>)(r => r.ID == SelectTagID));
             }
         }
-        #endregion Tag selection
+        #endregion Tag Selection
 
         #region Tag Add
 
@@ -959,9 +958,5 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
 
         #endregion Tag
 
-        private void tolTagChange_Click_1(object sender, EventArgs e)
-        {
-
-        }
     }
 }

@@ -684,7 +684,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
 
             projectDevice.GroupTags = projectGroupTag;
             //Добавляем в дерево
-            TreeNode groupTagNode = NodeGroupTagAdd(projectGroupTag, cmnuTagAppend, deviceNode);
+            TreeNode groupTagNode = NodeGroupTagAdd(projectGroupTag, null, deviceNode);
 
             //Добавляем в проект
             projectChannel.Devices.Add(projectDevice);
@@ -945,7 +945,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
 
             projectDevice.GroupTags = projectGroupTag;
             //Добавляем в дерево
-            TreeNode groupTagNode = NodeGroupTagAdd(projectGroupTag, cmnuTagAppend, deviceNode);
+            TreeNode groupTagNode = NodeGroupTagAdd(projectGroupTag, null, deviceNode);
         }
 
         //Добавляем в дерево
@@ -1571,6 +1571,13 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
                         frmPropertyForm = frmCommand;
                         break;
                 }
+            }
+            else if(mtNodeData.NodeType == ProjectNodeType.GroupTag && mtNodeData.GroupTag != null)
+            {
+                FrmGroupTag frmGroupTag = new FrmGroupTag(ref mtNodeData, true);
+                frmGroupTag.frmParentGloabal = this;
+                frmPropertyForm = new Form();
+                frmPropertyForm = frmGroupTag;
             }
             else
             {

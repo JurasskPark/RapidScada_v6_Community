@@ -432,7 +432,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
         //                            try
         //                            {
         //                                ProjectTag.FormatData Type = (ProjectTag.FormatData)Enum.Parse(typeof(ProjectTag.FormatData), attributes["TYPE"]);
-        //                                projectTag.TagType = Type;
+        //                                projectTag.Format = Type;
         //                            }
         //                            catch { }
 
@@ -3010,6 +3010,10 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             xmlElem.AppendElem("KeyImage", KeyImage);
             xmlElem.AppendElem("Enabled", Enabled);
 
+            xmlElem.AppendElem("FunctionCode", FunctionCode);
+            xmlElem.AppendElem("RegisterStartAddress", RegisterStartAddress);
+            xmlElem.AppendElem("RegisterCount", RegisterCount);
+
             try
             {
                 if (RegisterCount == Convert.ToUInt64(RegisterWriteData.Length))
@@ -3026,6 +3030,11 @@ namespace Scada.Comm.Drivers.DrvModbusCM
                 }
             }
             catch { }
+
+            xmlElem.AppendElem("WriteDataOther", WriteDataOther);
+            xmlElem.AppendElem("FunctionCodeWrite", FunctionCodeWrite);
+            xmlElem.AppendElem("RegisterStartAddressWrite", RegisterStartAddressWrite);
+            xmlElem.AppendElem("RegisterCountWrite", RegisterCountWrite);
         }
         #endregion Save
     }
@@ -3204,7 +3213,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             for (int i = 0; i < listTags.Count; i++)
             {
                 ProjectTag tmpTag = listTags[i];
-                tmpDataTable.Rows.Add(tmpTag.Enabled.ToString(), tmpTag.Address.ToString(), tmpTag.Name, tmpTag.Description, tmpTag.TagType.ToString(), tmpTag.Coefficient, tmpTag.Scaled, tmpTag.ScaledHigh, tmpTag.ScaledLow, tmpTag.RowHigh, tmpTag.RowLow);
+                tmpDataTable.Rows.Add(tmpTag.Enabled.ToString(), tmpTag.Address.ToString(), tmpTag.Name, tmpTag.Description, tmpTag.Format.ToString(), tmpTag.Coefficient, tmpTag.Scaled, tmpTag.ScaledHigh, tmpTag.ScaledLow, tmpTag.RowHigh, tmpTag.RowLow);
             }
             return tmpDataTable;
         }
@@ -3226,7 +3235,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
                 newTag.Address = tmpDataRow.ItemArray[1].ToString();
                 newTag.Name = tmpDataRow.ItemArray[2].ToString();
                 newTag.Description = tmpDataRow.ItemArray[3].ToString();
-                newTag.TagType = (ProjectTag.FormatData)Enum.Parse(typeof(ProjectTag.FormatData), tmpDataRow.ItemArray[4].ToString());
+                newTag.Format = (ProjectTag.FormatData)Enum.Parse(typeof(ProjectTag.FormatData), tmpDataRow.ItemArray[4].ToString());
 
                 newTag.Coefficient = Convert.ToSingle(tmpDataRow.ItemArray[5]);
                 newTag.Scaled = Convert.ToInt32(tmpDataRow.ItemArray[6]);
@@ -3329,12 +3338,12 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             get { return description; }
         }
 
-        private object tagType;
+        private FormatData format;
         [XmlIgnore]
-        public object TagType
+        public FormatData Format
         {
-            set { tagType = value; }
-            get { return tagType; }
+            set { format = value; }
+            get { return format; }
         }
 
         private bool enabled;
@@ -3454,7 +3463,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
         public static int DeviceTagFormatDataRegisterCount(ProjectTag tag, int deviceRegistersBytes = 0)
         {
             int count = 0;
-            FormatData format = (FormatData)Enum.Parse(typeof(FormatData), tag.TagType.ToString());
+            FormatData format = (FormatData)Enum.Parse(typeof(FormatData), tag.Format.ToString());
             int startBit = 0;
             int endBit = 0;
             int countBit = 0;
@@ -3608,7 +3617,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
         public static object GetValue(ProjectTag tag, byte[] bytes)
         {
             object value = new object();
-            FormatData format = (FormatData)Enum.Parse(typeof(FormatData), tag.TagType.ToString());
+            FormatData format = (FormatData)Enum.Parse(typeof(FormatData), tag.Format.ToString());
             int startBit = 0;
             int endBit = 0;
             int countBit = 0;

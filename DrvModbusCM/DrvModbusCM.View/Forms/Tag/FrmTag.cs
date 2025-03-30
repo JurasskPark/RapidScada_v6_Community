@@ -20,6 +20,37 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             InitializeComponent();
         }
 
+        public FrmTag(ProjectTag tag, bool hasParent = false)
+        {
+            boolParent = false;
+            currentTag = tag;
+            InitializeComponent();
+
+            FormatWindow(hasParent);
+        }
+
+        public FrmTag(ProjectNodeData ProjectNodeData)
+        {
+            boolParent = false;
+
+            currentTag = ProjectNodeData.Tag;
+
+            InitializeComponent();
+
+            FormatWindow(true);
+        }
+
+        public FrmTag(ref ProjectNodeData ProjectNodeData, bool hasParent = true)
+        {
+            boolParent = true;
+            nodeData = ProjectNodeData;
+            currentTag = ProjectNodeData.Tag;
+
+            InitializeComponent();
+
+            FormatWindow(hasParent);
+        }
+
         #region Variables
 
         #region Form
@@ -33,36 +64,14 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
         #endregion Form
 
         #region Tag
-
-        ProjectTag currentTag;
+        public ProjectNodeData nodeData;           // the node data
+        public ProjectTag currentTag;              // the current tag
 
         #endregion Tag
 
         #endregion Variables
 
         #region Load
-
-        public FrmTag(ProjectNodeData ProjectNodeData)
-        {
-            boolParent = false;
-
-            currentTag = ProjectNodeData.Tag;
-          
-            InitializeComponent();
-
-            FormatWindow(true);
-        }
-
-        public FrmTag(ref ProjectNodeData ProjectNodeData, bool hasParent = true)
-        {
-            boolParent = true;
-
-            currentTag = ProjectNodeData.Tag;
-
-            InitializeComponent();
-
-            FormatWindow(hasParent);
-        }
 
         private void FormatWindow(bool hasParent)
         {
@@ -87,7 +96,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
         {
             txtTagID.Text = currentTag.ID.ToString();
             ckbTagEnabled.Checked = currentTag.Enabled;
-            txtTagname.Text = currentTag.Name;
+            txtName.Text = currentTag.Name;
             txtTagCode.Text = currentTag.Code;
             txtTagDescription.Text = currentTag.Description;
             txtTagAddress.Text = currentTag.Address;
@@ -145,9 +154,9 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             {
                 cmbTagType.Items.Clear();
                 cmbTagType.Items.AddRange(Enum.GetNames(typeof(ProjectTag.FormatData)));
-                if (currentTag.TagType != null)
+                if (currentTag.Format != null)
                 {
-                    cmbTagType.SelectedIndex = cmbTagType.FindString(currentTag.TagType.ToString());
+                    cmbTagType.SelectedIndex = cmbTagType.FindString(currentTag.Format.ToString());
                 }
             }
             catch { }
@@ -196,92 +205,60 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
 
         private void Save()
         {
-            //ControlsToConfig();
+            ControlsToConfig();
 
-            //if (txtName == "")
-            //{
-            //    MessageBox.Show(DriverDictonary.WarningEmpty);
-            //    return;
-            //}
+            if (String.IsNullOrEmpty(txtName.Text))
+            {
+                MessageBox.Show(DriverDictonary.WarningEmpty);
+                return;
+            }
 
-            //if (boolParent == true)
-            //{
-            //    MTNodeData.Tag.DeviceID = DeviceID;
-            //    MTNodeData.Tag.DeviceGroupTagID = DeviceGroupTagID;
-            //    MTNodeData.Tag.currentTag.ID = currentTag.ID;
-            //    MTNodeData.Tag.currentTag.CommandID = currentTag.CommandID;
+            if (boolParent == true)
+            {
+                //nodeData.Tag.DeviceID = DeviceID;
+                //nodeData.Tag.DeviceGroupTagID = DeviceGroupTagID;
+                nodeData.Tag.ID = currentTag.ID;
+                nodeData.Tag.CommandID = currentTag.CommandID;
 
-            //    MTNodeData.Tag.currentTag.Name = currentTag.name;
-            //    MTNodeData.Tag.currentTag.Code = currentTag.Code;
-            //    MTNodeData.Tag.currentTag.Code = currentTag.Code;
-            //    MTNodeData.Tag.currentTag.Address = currentTag.Address;
-            //    MTNodeData.Tag.currentTag.Description = currentTag.Description;
-            //    MTNodeData.Tag.currentTag.Enabled = currentTag.Enabled;
-            //    MTNodeData.Tag.currentTag.Type = currentTag.Type;
-            //    MTNodeData.Tag.currentTag.Sorting = currentTag.Sorting;
+                nodeData.Tag.Name = currentTag.Name;
+                nodeData.Tag.Code = currentTag.Code;
+                nodeData.Tag.Address = currentTag.Address;
+                nodeData.Tag.Description = currentTag.Description;
+                nodeData.Tag.Enabled = currentTag.Enabled;
+                nodeData.Tag.Format = currentTag.Format;
+                nodeData.Tag.Sorting = currentTag.Sorting;
 
-            //    MTNodeData.Tag.currentTag.Coefficient = currentTag.Coefficient;
-            //    MTNodeData.Tag.currentTag.Scaled = currentTag.Scaled;
-            //    MTNodeData.Tag.currentTag.ScaledHigh = currentTag.ScaledHigh;
-            //    MTNodeData.Tag.currentTag.ScaledLow = currentTag.ScaledLow;
-            //    MTNodeData.Tag.currentTag.RowHigh = currentTag.RowHigh;
-            //    MTNodeData.Tag.currentTag.RowLow = currentTag.RowLow;
+                nodeData.Tag.Coefficient = currentTag.Coefficient;
+                nodeData.Tag.Scaled = currentTag.Scaled;
+                nodeData.Tag.ScaledHigh = currentTag.ScaledHigh;
+                nodeData.Tag.ScaledLow = currentTag.ScaledLow;
+                nodeData.Tag.RowHigh = currentTag.RowHigh;
+                nodeData.Tag.RowLow = currentTag.RowLow;
 
-            //    MTNodeData.Tag.KeyImage = "tag_16.png";
+                nodeData.Tag.KeyImage = "tag_16.png";
 
-            //    this.DialogResult = DialogResult.OK;
-            //    this.Close();
-            //}
-            //else
-            //{
-            //    //Такая партянка из Parent:  TabPage, TabControl, SplitterPanel, SplitConteiner, Form
-            //    TreeNode stn = ((FrmConfigForm)this.Parent.Parent.Parent.Parent.Parent).trvProject.SelectedNode;
-            //    ProjectNodeData projectNodeData = (ProjectNodeData)stn.Tag;
-
-            //    projectNodeData.Tag.DeviceID = DeviceID;
-            //    projectNodeData.Tag.DeviceGroupTagID = DeviceGroupTagID;
-            //    projectNodeData.Tag.currentTag.ID = currentTag.ID;
-            //    projectNodeData.Tag.currentTag.CommandID = currentTag.CommandID;
-
-            //    projectNodeData.Tag.currentTag.Name = currentTag.name;
-            //    projectNodeData.Tag.currentTag.Code = currentTag.Code;
-            //    projectNodeData.Tag.currentTag.Code = currentTag.Code;
-            //    projectNodeData.Tag.currentTag.Address = currentTag.Address;
-            //    projectNodeData.Tag.currentTag.Description = currentTag.Description;
-            //    projectNodeData.Tag.currentTag.Enabled = currentTag.Enabled;
-            //    projectNodeData.Tag.currentTag.Type = currentTag.Type;
-            //    projectNodeData.Tag.currentTag.Sorting = currentTag.Sorting;
-
-            //    projectNodeData.Tag.currentTag.Coefficient = currentTag.Coefficient;
-            //    projectNodeData.Tag.currentTag.Scaled = currentTag.Scaled;
-            //    projectNodeData.Tag.currentTag.ScaledHigh = currentTag.ScaledHigh;
-            //    projectNodeData.Tag.currentTag.ScaledLow = currentTag.ScaledLow;
-            //    projectNodeData.Tag.currentTag.RowHigh = currentTag.RowHigh;
-            //    projectNodeData.Tag.currentTag.RowLow = currentTag.RowLow;
-
-            //    projectNodeData.Tag.KeyImage = stn.ImageKey = stn.SelectedImageKey = "tag_16.png";
-
-            //    stn.Text = currentTag.name;
-            //    stn.Tag = projectNodeData;
-            //}
+                this.DialogResult = DialogResult.OK;
+                this.Close();
+            }
+            
         }
 
         private void ControlsToConfig()
         {
-            //currentTag.CommandID = DriverUtils.StringToGuid(cmbTagCommand.SelectedValue.ToString());
-            //currentTag.Address = txtTagAddress.Text;
-            //currentTag.name = txtTagname.Text;
-            //currentTag.Code = txtTagCode.Text;
-            //currentTag.Description = txtTagDescription.Text;
-            //currentTag.Type = cmbTagType.Text;
-            //currentTag.Sorting = txtTagSorting.Text;
+            currentTag.CommandID = DriverUtils.StringToGuid(cmbTagCommand.SelectedValue.ToString());
+            currentTag.Address = txtTagAddress.Text;
+            currentTag.Name = txtName.Text;
+            currentTag.Code = txtTagCode.Text;
+            currentTag.Description = txtTagDescription.Text;
+            currentTag.Format = (ProjectTag.FormatData)Enum.Parse(typeof(ProjectTag.FormatData), cmbTagType.Text);
+            currentTag.Sorting = txtTagSorting.Text;
 
-            //currentTag.Coefficient = Convert.ToSingle(txtTagCoefficient.Text);
-            //currentTag.Scaled = cmbScaled.SelectedIndex;
-            //currentTag.ScaledHigh = Convert.ToSingle(txtLineScaledHigh.Text);
-            //currentTag.ScaledLow = Convert.ToSingle(txtLineScaledLow.Text);
-            //currentTag.RowHigh = Convert.ToSingle(txtLineScaledRowHigh.Text);
-            //currentTag.RowLow = Convert.ToSingle(txtLineScaledRowLow.Text);
+            currentTag.Coefficient = Convert.ToSingle(txtTagCoefficient.Text);
+            currentTag.Scaled = cmbScaled.SelectedIndex;
+            currentTag.ScaledHigh = Convert.ToSingle(txtLineScaledHigh.Text);
+            currentTag.ScaledLow = Convert.ToSingle(txtLineScaledLow.Text);
+            currentTag.RowHigh = Convert.ToSingle(txtLineScaledRowHigh.Text);
+            currentTag.RowLow = Convert.ToSingle(txtLineScaledRowLow.Text);
         }
         #endregion Save
 

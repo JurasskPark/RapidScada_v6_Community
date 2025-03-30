@@ -52,6 +52,7 @@
             smnuSeparator02 = new ToolStripSeparator();
             tolTagUp = new ToolStripMenuItem();
             tolTagDown = new ToolStripMenuItem();
+            toolStripSeparator1 = new ToolStripSeparator();
             tolTagSort = new ToolStripMenuItem();
             tolTagSortDefault = new ToolStripMenuItem();
             tolTagSortTagAddress = new ToolStripMenuItem();
@@ -195,57 +196,67 @@
             // 
             // cmnuTag
             // 
-            cmnuTag.Items.AddRange(new ToolStripItem[] { tolTagAdd, tolTagChange, tolTagDelete, tolTagDeleteAll, smnuSeparator02, tolTagUp, tolTagDown, tolTagSort, smnuSeparator03, tolCSV });
+            cmnuTag.Items.AddRange(new ToolStripItem[] { tolTagAdd, tolTagChange, tolTagDelete, tolTagDeleteAll, smnuSeparator02, tolTagUp, tolTagDown, toolStripSeparator1, tolTagSort, smnuSeparator03, tolCSV });
             cmnuTag.Name = "contextMenuDeviceEdit";
-            cmnuTag.Size = new Size(181, 214);
+            cmnuTag.Size = new Size(148, 198);
             // 
             // tolTagAdd
             // 
             tolTagAdd.Name = "tolTagAdd";
-            tolTagAdd.Size = new Size(180, 22);
+            tolTagAdd.Size = new Size(147, 22);
             tolTagAdd.Text = "Add";
+            tolTagAdd.Click += tolTagAdd_Click;
             // 
             // tolTagChange
             // 
             tolTagChange.Name = "tolTagChange";
-            tolTagChange.Size = new Size(180, 22);
+            tolTagChange.Size = new Size(147, 22);
             tolTagChange.Text = "Change";
-            tolTagChange.Click += tolTagChange_Click_1;
+            tolTagChange.Click += tolTagChange_Click;
             // 
             // tolTagDelete
             // 
             tolTagDelete.Name = "tolTagDelete";
-            tolTagDelete.Size = new Size(180, 22);
+            tolTagDelete.Size = new Size(147, 22);
             tolTagDelete.Text = "Delete";
+            tolTagDelete.Click += tolTagDelete_Click;
             // 
             // tolTagDeleteAll
             // 
             tolTagDeleteAll.Name = "tolTagDeleteAll";
-            tolTagDeleteAll.Size = new Size(180, 22);
+            tolTagDeleteAll.Size = new Size(147, 22);
             tolTagDeleteAll.Text = "Delete all tags";
+            tolTagDeleteAll.Click += tolTagDeleteAll_Click;
             // 
             // smnuSeparator02
             // 
             smnuSeparator02.Name = "smnuSeparator02";
-            smnuSeparator02.Size = new Size(177, 6);
+            smnuSeparator02.Size = new Size(144, 6);
             // 
             // tolTagUp
             // 
             tolTagUp.Name = "tolTagUp";
-            tolTagUp.Size = new Size(180, 22);
+            tolTagUp.Size = new Size(147, 22);
             tolTagUp.Text = "Tag up";
+            tolTagUp.Click += tolTagUp_Click;
             // 
             // tolTagDown
             // 
             tolTagDown.Name = "tolTagDown";
-            tolTagDown.Size = new Size(180, 22);
+            tolTagDown.Size = new Size(147, 22);
             tolTagDown.Text = "Tag down";
+            tolTagDown.Click += tolTagDown_Click;
+            // 
+            // toolStripSeparator1
+            // 
+            toolStripSeparator1.Name = "toolStripSeparator1";
+            toolStripSeparator1.Size = new Size(144, 6);
             // 
             // tolTagSort
             // 
             tolTagSort.DropDownItems.AddRange(new ToolStripItem[] { tolTagSortDefault, tolTagSortTagAddress, tolTagSortTagName, tolTagSortTagDescription, tolTagSortTagType });
             tolTagSort.Name = "tolTagSort";
-            tolTagSort.Size = new Size(180, 22);
+            tolTagSort.Size = new Size(147, 22);
             tolTagSort.Text = "Sorting";
             // 
             // tolTagSortDefault
@@ -281,13 +292,13 @@
             // smnuSeparator03
             // 
             smnuSeparator03.Name = "smnuSeparator03";
-            smnuSeparator03.Size = new Size(177, 6);
+            smnuSeparator03.Size = new Size(144, 6);
             // 
             // tolCSV
             // 
             tolCSV.DropDownItems.AddRange(new ToolStripItem[] { tolDataLoadAsCSV, tolDataSaveAsCSV });
             tolCSV.Name = "tolCSV";
-            tolCSV.Size = new Size(180, 22);
+            tolCSV.Size = new Size(147, 22);
             tolCSV.Text = "CSV";
             // 
             // tolDataLoadAsCSV
@@ -312,6 +323,7 @@
             Controls.Add(gpbGroup);
             Name = "FrmGroupTag";
             Text = "FrmDevice";
+            WindowState = FormWindowState.Maximized;
             Load += FrmGroupTag_Load;
             gpbGroup.ResumeLayout(false);
             gpbGroup.PerformLayout();
@@ -356,5 +368,6 @@
         private ToolStripMenuItem tolCSV;
         private ToolStripMenuItem tolDataLoadAsCSV;
         private ToolStripMenuItem tolDataSaveAsCSV;
+        private ToolStripSeparator toolStripSeparator1;
     }
 }

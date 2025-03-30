@@ -99,7 +99,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
         /// </summary>
         private static TagFormat GetTagFormat(ProjectTag tag)
         {
-            FormatData format = (FormatData)Enum.Parse(typeof(FormatData), tag.TagType.ToString());
+            FormatData format = (FormatData)Enum.Parse(typeof(FormatData), tag.Format.ToString());
 
             switch (format)
             {

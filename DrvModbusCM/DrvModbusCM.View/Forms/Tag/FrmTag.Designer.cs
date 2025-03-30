@@ -49,7 +49,7 @@
             txtTagDescription = new TextBox();
             txtTagAddress = new TextBox();
             lblTagAddress = new Label();
-            txtTagname = new TextBox();
+            txtName = new TextBox();
             lblTagName = new Label();
             tabScaling = new TabPage();
             gpbScaled = new GroupBox();
@@ -163,7 +163,7 @@
             gpbTagProperty.Controls.Add(txtTagDescription);
             gpbTagProperty.Controls.Add(txtTagAddress);
             gpbTagProperty.Controls.Add(lblTagAddress);
-            gpbTagProperty.Controls.Add(txtTagname);
+            gpbTagProperty.Controls.Add(txtName);
             gpbTagProperty.Controls.Add(lblTagName);
             gpbTagProperty.Location = new Point(7, 7);
             gpbTagProperty.Margin = new Padding(4, 3, 4, 3);
@@ -325,13 +325,13 @@
             lblTagAddress.TabIndex = 2;
             lblTagAddress.Text = "Address";
             // 
-            // txtTagname
+            // txtName
             // 
-            txtTagname.Location = new Point(124, 107);
-            txtTagname.Margin = new Padding(4, 3, 4, 3);
-            txtTagname.Name = "txtTagname";
-            txtTagname.Size = new Size(269, 23);
-            txtTagname.TabIndex = 1;
+            txtName.Location = new Point(124, 107);
+            txtName.Margin = new Padding(4, 3, 4, 3);
+            txtName.Name = "txtName";
+            txtName.Size = new Size(269, 23);
+            txtName.TabIndex = 1;
             // 
             // lblTagName
             // 
@@ -540,7 +540,7 @@
             // lblLineScalEdincrease
             // 
             lblLineScalEdincrease.AutoSize = true;
-            lblLineScalEdincrease.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            lblLineScalEdincrease.Font = new Font("Microsoft Sans Serif", 12F);
             lblLineScalEdincrease.Location = new Point(222, 108);
             lblLineScalEdincrease.Margin = new Padding(4, 0, 4, 0);
             lblLineScalEdincrease.Name = "lblLineScalEdincrease";
@@ -811,7 +811,7 @@
         private TextBox txtTagDescription;
         private TextBox txtTagAddress;
         private Label lblTagAddress;
-        private TextBox txtTagname;
+        private TextBox txtName;
         private Label lblTagName;
         private TabPage tabScaling;
         private GroupBox gpbScaled;
