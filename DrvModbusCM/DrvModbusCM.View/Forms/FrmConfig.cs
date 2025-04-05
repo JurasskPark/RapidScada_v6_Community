@@ -174,6 +174,8 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
         {
             try
             {
+                ProjectDefaultNew(DialogResult.No);
+
                 project.Load(configFileName, out string errMsg);
                 if (errMsg != string.Empty)
                 {
@@ -319,62 +321,42 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
 
         public void DeserializeTreeView(System.Windows.Forms.TreeView treeView, Project project)
         {
-            treeView.Nodes.Clear();
+            try
+            {
+                treeView.Nodes.Clear();
+                treeView.BeginUpdate();
 
-            //// add to tree
-            //TreeNode channelNode = NodeProjectChannelAdd(project.Settings.ProjectChannel, cmnuDeviceAppend);
+                ProjectDriver projectDriver = project.Driver;
+                TreeNode nodeDriver = NodeProjectDriverAdd(projectDriver, null);
 
-            //for (int d = 0; d < project.Settings.ProjectDevice.Count; d++)
-            //{
-            //    ProjectDevice projectDevice = project.Settings.ProjectDevice[d];
-            //    // add to tree
-            //    TreeNode deviceNode = NodeProjectDeviceAdd(projectDevice, channelNode, cmnuDeleteAction);
+                ProjectSettings projectSettings = projectDriver.Settings;
+                TreeNode nodeSettings = NodeProjectSettingsAdd(projectSettings, null, nodeDriver);
 
-            //    #region Group Command
+                ProjectGroupChannel projectGroupChannel = projectDriver.GroupChannel;
+                TreeNode nodeGroupChannel = NodeProjectGroupChannelAdd(projectGroupChannel, cmnuChannelAppend, nodeDriver);
+                foreach(ProjectChannel projectChannel in projectGroupChannel.Group)
+                {
+                    TreeNode nodeChannel = NodeProjectChannelAdd(projectChannel, cmnuDeviceAppend, nodeGroupChannel);
+                    foreach(ProjectDevice projectDevice in projectChannel.Devices)
+                    {
+                        TreeNode nodeDevice = NodeProjectDeviceAdd(projectDevice, cmnuDeviceDelete, nodeChannel);
+                        
+                        ProjectGroupCommand projectGroupCommand = projectDevice.GroupCommand;
+                        TreeNode nodeGroupCommand = NodeGroupCommandAdd(projectGroupCommand, cmnuCommandAppend, nodeDevice);
+                       
+                        foreach(ProjectCommand projectCommand in projectGroupCommand.ListCommands)
+                        {
+                            TreeNode nodeCommand = NodeCommandAdd(projectCommand, cmnuCommandDelete, nodeGroupCommand);
+                        }
+                        
+                        ProjectGroupTag projectGroupTag = projectDevice.GroupTag;
+                        TreeNode nodeGroupTag = NodeGroupTagAdd(projectGroupTag, cmnuTagAppend,nodeDevice);
+                    }
+                }   
 
-            //    List<ProjectGroupCommand> lstGroupCommandSearch = new List<ProjectGroupCommand>();
-            //    if (project.Settings.ProjectGroupCommand != null && project.Settings.ProjectGroupCommand.Count > 0)
-            //    {
-            //        lstGroupCommandSearch = project.Settings.ProjectGroupCommand.Where(r => r.ParentID == projectDevice.ID).ToList();
-
-            //        for (int gc = 0; gc < lstGroupCommandSearch.Count; gc++)
-            //        {
-            //            ProjectGroupCommand groupCommand = lstGroupCommandSearch[gc];
-            //            // add to tree
-            //            TreeNode groupCommandNode = NodeGroupCommandAdd(groupCommand, deviceNode, cmnuCommandAppend);
-
-            //            List<ProjectCommand> lstCommandSearch = new List<ProjectCommand>();
-            //            lstCommandSearch = project.Settings.ProjectCommand.Where(r => r.ParentID == groupCommand.ID).ToList();
-
-            //            for (int c = 0; c < lstCommandSearch.Count; c++)
-            //            {
-            //                ProjectCommand command = lstCommandSearch[c];
-            //                // add to tree
-            //                TreeNode commandNode = NodeCommandAdd(command, groupCommandNode, cmnuDeleteAction);
-            //            }
-            //        }
-            //    }
-
-            //    #endregion Group Command
-
-            //    #region Group Tag
-
-            //    List<ProjectGroupTag> lstGroupTagSearch = new List<ProjectGroupTag>();
-            //    if (project.Settings.ProjectGroupTag != null && project.Settings.ProjectGroupTag.Count > 0)
-            //    {
-            //        lstGroupTagSearch = project.Settings.ProjectGroupTag.Where(r => r.ParentID == projectDevice.ID).ToList();
-
-            //        for (int gt = 0; gt < lstGroupCommandSearch.Count; gt++)
-            //        {
-            //            ProjectGroupTag groupTag = lstGroupTagSearch[gt];
-            //            // add to tree
-            //            TreeNode groupTagNode = NodeGroupTagAdd(groupTag, deviceNode, cmnuTagAppend);
-            //        }
-            //    }
-
-            //    #endregion Group Tag
-
-            //}
+                treeView.EndUpdate();
+            }
+            catch { }
 
             treeView.Refresh();
             treeView.ExpandAll();
@@ -489,14 +471,14 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
                                                         }
                                                     }
 
-                                                    device.GroupCommands = groupCommand;
+                                                    device.GroupCommand = groupCommand;
                                                 }
 
                                                 if (prLevel04Node.NodeType == ProjectNodeType.GroupTag)
                                                 {
                                                     ProjectGroupTag groupTag = (ProjectGroupTag)prLevel04Node.GroupTag;
 
-                                                    device.GroupTags = groupTag;
+                                                    device.GroupTag = groupTag;
                                                 }
                                             }
                                             listDevices.Add(device);
@@ -656,8 +638,8 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             }
 
             //Иницилизация групп
-            projectDevice.GroupCommands = new ProjectGroupCommand();
-            projectDevice.GroupTags = new ProjectGroupTag();
+            projectDevice.GroupCommand = new ProjectGroupCommand();
+            projectDevice.GroupTag = new ProjectGroupTag();
 
             //Делаем активно меню 
             TreeNode deviceNode = NodeProjectDeviceAdd(projectDevice, cmnuDeleteAction, channelNode);
@@ -670,7 +652,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             projectGroupCommand.Name = DriverPhrases.GroupCommandName;
             projectGroupCommand.ListCommands = new List<ProjectCommand>();
 
-            projectDevice.GroupCommands = projectGroupCommand;
+            projectDevice.GroupCommand = projectGroupCommand;
             //Добавляем в дерево
             TreeNode groupCommandNode = NodeGroupCommandAdd(projectGroupCommand, cmnuCommandAppend, deviceNode);
 
@@ -682,7 +664,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             projectGroupTag.Name = DriverPhrases.GroupTagName;
             projectGroupTag.ListTags = new List<ProjectTag>();
 
-            projectDevice.GroupTags = projectGroupTag;
+            projectDevice.GroupTag = projectGroupTag;
             //Добавляем в дерево
             TreeNode groupTagNode = NodeGroupTagAdd(projectGroupTag, null, deviceNode);
 
@@ -917,8 +899,8 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             }
 
 
-            projectDevice.GroupCommands = new ProjectGroupCommand();
-            projectDevice.GroupTags = new ProjectGroupTag();
+            projectDevice.GroupCommand = new ProjectGroupCommand();
+            projectDevice.GroupTag = new ProjectGroupTag();
 
             //Делаем активно меню 
             TreeNode deviceNode = NodeProjectDeviceAdd(projectDevice, cmnuDeviceDelete, parentNode);
@@ -931,7 +913,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             projectGroupCommand.Name = DriverPhrases.GroupCommandName;
             projectGroupCommand.ListCommands = new List<ProjectCommand>();
 
-            projectDevice.GroupCommands = projectGroupCommand;
+            projectDevice.GroupCommand = projectGroupCommand;
             //Добавляем в дерево
             TreeNode groupCommandNode = NodeGroupCommandAdd(projectGroupCommand, cmnuCommandAppend, deviceNode);
 
@@ -943,7 +925,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             projectGroupTag.Name = DriverPhrases.GroupTagName;
             projectGroupTag.ListTags = new List<ProjectTag>();
 
-            projectDevice.GroupTags = projectGroupTag;
+            projectDevice.GroupTag = projectGroupTag;
             //Добавляем в дерево
             TreeNode groupTagNode = NodeGroupTagAdd(projectGroupTag, null, deviceNode);
         }
@@ -1037,13 +1019,11 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             projectCommand.Description = "";
 
             //Добавляем в дерево
-            NodeCommandAdd(projectCommand, selectNode, cmnuCommandDelete);
+            NodeCommandAdd(projectCommand, cmnuCommandDelete, selectNode);
         }
 
-        public TreeNode NodeCommandAdd(ProjectCommand devCmd, TreeNode ptn, ContextMenuStrip cms, TreeNode stn = null)
+        public TreeNode NodeCommandAdd(ProjectCommand devCmd, ContextMenuStrip cms, TreeNode ptn = null)
         {
-            if (null == stn)
-            {
                 TreeNode tn = new TreeNode(devCmd.Name);
 
                 tn.ImageKey = tn.SelectedImageKey = ProjectCommand.KeyImageName(devCmd.FunctionCode);
@@ -1057,8 +1037,6 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
                 tn.Tag = ProjectNodeData;
                 ptn.Expand();
                 return tn;
-            }
-            return null;
         }
 
         //Добавление команды Modbus
@@ -1234,156 +1212,6 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
         //}
 
         #endregion DeviceTag
-
-        #region Project Cmd Request
-
-        //public void AddCmdRequest()
-        //{
-        //    TreeNode selectNode = trvProject.SelectedNode;
-
-        //    Project.CmdRequest cmdRequest = new Project.CmdRequest();
-        //    // add to tree
-        //    NodeCmdRequestAdd(cmdRequest, selectNode, null);
-        //    // expand node
-        //    selectNode.Expand();
-        //}
-
-        //// add tree
-        //public TreeNode NodeCmdRequestAdd(Project.CmdRequest cmr, TreeNode ptn, ContextMenuStrip cms, TreeNode stn = null)
-        //{
-        //    if (null == stn)
-        //    {
-        //        ProjectNodeData ProjectNodeData = new ProjectNodeData();
-        //        ProjectNodeData.cmdRequest = cmr;
-        //        ProjectNodeData.NodeType = ProjectNodeType.CmdRequest;
-
-        //        TreeNode tn = new TreeNode(DriverPhrases.CmdRequest);
-        //        tn.ImageKey = tn.SelectedImageKey = ListImages.ImageKey.CmdRequest;
-        //        ptn.Nodes.Add(tn);
-        //        tn.ContextMenuStrip = cms;
-
-        //        tn.Tag = ProjectNodeData;
-        //        ptn.Expand();
-        //        return tn;
-        //    }
-        //    return null;
-        //}
-
-        #endregion Project Cmd Request
-
-        #region Project Snd Request
-
-        //public void AddSndRequest()
-        //{
-        //    TreeNode selectNode = trvProject.SelectedNode;
-
-        //    Project.SndRequest sndRequest = new Project.SndRequest();
-        //    sndRequest.SndName = DriverPhrases.SndRequest;
-        //    sndRequest.Signal = "0";
-
-        //    // add to tree
-        //    NodeSndRequestAdd(sndRequest, selectNode, cmnuVariableNode);
-        //    // expand node
-        //    selectNode.Expand();
-        //}
-
-        //// add tree
-        //public TreeNode NodeSndRequestAdd(Project.SndRequest snr, TreeNode ptn, ContextMenuStrip cms, TreeNode stn = null)
-        //{
-        //    if (null == stn)
-        //    {
-        //        ProjectNodeData ProjectNodeData = new ProjectNodeData();
-        //        ProjectNodeData.sndRequest = snr;
-        //        ProjectNodeData.NodeType = ProjectNodeType.SndRequest;
-
-        //        TreeNode tn = new TreeNode(snr.Signal + " (" + snr.SndName + ")");
-        //        tn.ImageKey = tn.SelectedImageKey = ListImages.ImageKey.SndRequest;
-        //        ptn.Nodes.Add(tn);
-        //        tn.ContextMenuStrip = cms;
-
-        //        tn.Tag = ProjectNodeData;
-        //        ptn.Expand();
-        //        return tn;
-        //    }
-        //    return null;
-        //}
-
-        #endregion Project  Snd Request
-
-        #region Project Cmd
-
-        //public void AddCmd()
-        //{
-        //    TreeNode selectNode = trvProject.SelectedNode;
-
-        //    Project.Command cmd = new Project.Command();
-        //    cmd.commName = DriverPhrases.Cmd;
-        //    // add to tree
-        //    NodeCmdAdd(cmd, selectNode, null);
-        //    // expand node
-        //    selectNode.Expand();
-        //}
-
-        //// add tree
-        //public TreeNode NodeCmdAdd(Project.Command cmd, TreeNode ptn, ContextMenuStrip cms, TreeNode stn = null)
-        //{
-        //    if (null == stn)
-        //    {
-        //        ProjectNodeData ProjectNodeData = new ProjectNodeData();
-        //        ProjectNodeData.cmd = cmd;
-        //        ProjectNodeData.NodeType = ProjectNodeType.Cmd;
-
-        //        TreeNode tn = new TreeNode(cmd.commSignal + " (" + cmd.commName + ")");
-        //        tn.ImageKey = tn.SelectedImageKey = ListImages.ImageKey.Cmd;
-        //        ptn.Nodes.Add(tn);
-        //        tn.ContextMenuStrip = cms;
-
-        //        tn.Tag = ProjectNodeData;
-        //        ptn.Expand();
-        //        return tn;
-        //    }
-        //    return null;
-        //}
-
-        #endregion Project Cmd
-
-        #region Project VariableConfig
-
-        //public void VariableConfigAdd()
-        //{
-        //    TreeNode selectNode = trvProject.SelectedNode;
-
-        //    SndRequest.Vals variableConfig = new SndRequest.Vals();
-        //    variableConfig.Name = DriverPhrases.UnnamedVariable;
-        //    // add to tree
-        //    NodeVariableConfigAdd(variableConfig, selectNode, cmnuVariableAction);
-        //    // expand node
-        //    selectNode.Expand();
-        //}
-
-        //// add to tree
-        //public TreeNode NodeVariableConfigAdd(SndRequest.Vals vc, TreeNode ptn, ContextMenuStrip cms, TreeNode stn = null)
-        //{
-        //    if (null == stn)
-        //    {
-        //        ProjectNodeData projectNodeData = new ProjectNodeData();
-        //        projectNodeData.variableSndRequest = vc;
-        //        projectNodeData.NodeType = ProjectNodeType.Variable;
-
-        //        TreeNode tn = new TreeNode(vc.Signal + " (" + vc.Name + ")");
-        //        tn.ImageKey = ListImages.ImageKey.Elem;
-        //        tn.SelectedImageKey = ListImages.ImageKey.Elem;
-        //        tn.ContextMenuStrip = cms;
-        //        tn.Tag = projectNodeData;
-
-        //        ptn.Nodes.Add(tn);
-
-        //        return tn;
-        //    }
-        //    return null;
-        //}
-
-        #endregion Project VariableConfig
 
         #region Project NodeDelete
 
@@ -1586,102 +1414,6 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
                 frmPropertyForm = new Form();
                 frmPropertyForm = frmEmpty;
             }
-
-            //else if (mtNodeData.NodeType == ProjectNodeType.GroupCmdRequest && mtNodeData.groupCmdRequest != null)
-            //{
-            //    trvProject.ContextMenuStrip = cmnuGroupCmdRequestNode;
-            //    cmnuAddCmdRequest.Image = ListImages.GetTreeViewImages().FirstOrDefault(x => x.Key == ListImages.ImageKey.CmdRequest).Value;
-            //}
-            //else if (mtNodeData.NodeType == ProjectNodeType.CmdRequest && mtNodeData.cmdRequest != null)
-            //{
-            //    trvProject.ContextMenuStrip = cmnuVariableAction;
-            //    cmnuDeleteVariable.Image = ListImages.GetTreeViewImages().FirstOrDefault(x => x.Key == ListImages.ImageKey.Delete).Value;
-            //    сmnuSelectVariableActionUp.Image = ListImages.GetTreeViewImages().FirstOrDefault(x => x.Key == ListImages.ImageKey.Up).Value;
-            //    сmnuSelectVariableActionDown.Image = ListImages.GetTreeViewImages().FirstOrDefault(x => x.Key == ListImages.ImageKey.Down).Value;
-            //    if (mtNodeData.cmdRequest.CmdMode == "prog" || mtNodeData.cmdRequest.CmdMode == "LockA")
-            //    {
-            //        cmnuDeleteVariable.Enabled = false;
-            //        сmnuSelectVariableActionUp.Enabled = false;
-            //        сmnuSelectVariableActionDown.Enabled = false;
-            //    }
-            //    else
-            //    {
-            //        cmnuDeleteVariable.Enabled = true;
-            //        сmnuSelectVariableActionUp.Enabled = true;
-            //        сmnuSelectVariableActionDown.Enabled = true;
-            //    }
-
-            //    FrmCmdRequest frmCmdRequest = new FrmCmdRequest(ref mtNodeData, true);
-            //    frmCmdRequest.frmParentGloabal = this;
-            //    frmPropertyForm = new Form();
-            //    frmPropertyForm = frmCmdRequest;
-            //}
-            //else if (mtNodeData.NodeType == ProjectNodeType.GroupSndRequest && mtNodeData.groupSndRequest != null)
-            //{
-            //    trvProject.ContextMenuStrip = cmnuGroupSndRequestNode;
-            //    cmnuAddSndRequest.Image = ListImages.GetTreeViewImages().FirstOrDefault(x => x.Key == ListImages.ImageKey.SndRequest).Value;
-            //}
-            //else if (mtNodeData.NodeType == ProjectNodeType.SndRequest && mtNodeData.sndRequest != null)
-            //{
-            //    TreeNode selectNode = trvProject.SelectedNode;
-
-            //    trvProject.ContextMenuStrip = cmnuVariableNode;
-            //    cmnuAddVariable.Image = ListImages.GetTreeViewImages().FirstOrDefault(x => x.Key == ListImages.ImageKey.Elem).Value;
-            //    cmnuDeleteGroup.Image = ListImages.GetTreeViewImages().FirstOrDefault(x => x.Key == ListImages.ImageKey.Delete).Value;
-            //    сmnuSelectVariableUp.Image = ListImages.GetTreeViewImages().FirstOrDefault(x => x.Key == ListImages.ImageKey.Up).Value;
-            //    сmnuSelectVariableDown.Image = ListImages.GetTreeViewImages().FirstOrDefault(x => x.Key == ListImages.ImageKey.Down).Value;
-
-            //    SndRequest projectSndRequst = mtNodeData.sndRequest;
-
-            //    if (projectSndRequst.Values == null)
-            //    {
-            //        projectSndRequst.Values = new List<SndRequest.Vals>();
-            //    }
-
-            //    projectSndRequst.Values.Clear();
-
-            //    foreach (TreeNode tagNode in selectNode.Nodes)
-            //    {
-            //        ProjectNodeData mtTagNodeData = (ProjectNodeData)tagNode.Tag;
-            //        SndRequest.Vals projectVal = mtTagNodeData.variableSndRequest;
-            //        projectSndRequst.Values.Add(projectVal);
-            //    }
-
-            //    FrmSndRequest frmSndRequest = new FrmSndRequest(ref mtNodeData, true);
-            //    frmSndRequest.frmParentGloabal = this;
-            //    frmPropertyForm = new Form();
-            //    frmPropertyForm = frmSndRequest;
-            //}
-            //else if (mtNodeData.NodeType == ProjectNodeType.Variable && mtNodeData.variableSndRequest != null)
-            //{
-            //    trvProject.ContextMenuStrip = cmnuVariableAction;
-            //    cmnuDeleteVariable.Image = ListImages.GetTreeViewImages().FirstOrDefault(x => x.Key == ListImages.ImageKey.Delete).Value;
-            //    сmnuSelectVariableActionUp.Image = ListImages.GetTreeViewImages().FirstOrDefault(x => x.Key == ListImages.ImageKey.Up).Value;
-            //    сmnuSelectVariableActionDown.Image = ListImages.GetTreeViewImages().FirstOrDefault(x => x.Key == ListImages.ImageKey.Down).Value;
-
-            //    FrmVariable frmVariable = new FrmVariable(ref mtNodeData, true);
-            //    frmVariable.frmParentGloabal = this;
-            //    frmPropertyForm = new Form();
-            //    frmPropertyForm = frmVariable;
-            //}
-            //else if (mtNodeData.NodeType == ProjectNodeType.GroupCmd && mtNodeData.groupCmd != null)
-            //{
-            //    trvProject.ContextMenuStrip = cmnuGroupCmdNode;
-            //    cmnuAddCmd.Image = ListImages.GetTreeViewImages().FirstOrDefault(x => x.Key == ListImages.ImageKey.Cmd).Value;
-            //}
-            //else if (mtNodeData.NodeType == ProjectNodeType.Cmd && mtNodeData.cmd != null)
-            //{
-            //    trvProject.ContextMenuStrip = cmnuVariableAction;
-            //    cmnuDeleteVariable.Image = ListImages.GetTreeViewImages().FirstOrDefault(x => x.Key == ListImages.ImageKey.Delete).Value;
-            //    сmnuSelectVariableActionUp.Image = ListImages.GetTreeViewImages().FirstOrDefault(x => x.Key == ListImages.ImageKey.Up).Value;
-            //    сmnuSelectVariableActionDown.Image = ListImages.GetTreeViewImages().FirstOrDefault(x => x.Key == ListImages.ImageKey.Down).Value;
-
-            //    FrmCommand frmCommand = new FrmCommand(ref mtNodeData, true);
-            //    frmCommand.frmParentGloabal = this;
-            //    frmPropertyForm = new Form();
-            //    frmPropertyForm = frmCommand;
-            //}
-
 
             try
             {

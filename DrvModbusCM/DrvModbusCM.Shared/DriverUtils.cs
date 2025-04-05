@@ -448,5 +448,13 @@ namespace Scada.Comm.Drivers.DrvModbusCM
         }
 
         #endregion Exception Error
+
+        #region Help
+
+        // Enum
+        // string[] names = Enum.GetNames(typeof (Dimension));
+        // Dimension d = (Dimension)Enum.Parse(typeof (Dimension), names[x]);
+
+        #endregion Help
     }
 }

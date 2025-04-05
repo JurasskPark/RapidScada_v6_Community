@@ -4,6 +4,7 @@ using Scada.Data.Entities;
 using Scada.Lang;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Data;
 using System.Diagnostics;
 using System.IO;
@@ -122,366 +123,6 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             }
         }
         #endregion Save
-
-        #region Load Old Version
-        #region Project Xml
-        private const string XmlNodeTag = "NODE";
-        private const string XmlNodeTextAtt = "TEXT";
-        private const string XmlNodeTagAtt = "TAG";
-        private const string XmlNodeImageIndexAtt = "KEYIMAGE";
-        #endregion Project Xml
-
-        //public bool LoadOldVersion(string fileName, out string errMsg)
-        //{
-
-        //SetToDefault();
-        //errMsg = "";
-
-        //ProjectSettings settings = new ProjectSettings();
-        //ProjectSettings project = new ProjectSettings();
-        //ProjectChannel tmpProjectChannel = new ProjectChannel();
-        //List<ProjectDevice> tmpProjectDevice = new List<ProjectDevice>();
-        //List<ProjectGroupCommand> tmpProjectGroupCommand = new List<ProjectGroupCommand>();
-        //List<ProjectCommand> tmpProjectCommand = new List<ProjectCommand>();
-        //List<ProjectGroupTag> tmpProjectGroupTag = new List<ProjectGroupTag>();
-        //List<ProjectTag> tmpProjectTag = new List<ProjectTag>();
-
-        //XmlTextReader reader = null;
-        //try
-        //{
-        //    // disabling re-drawing of treeview till all nodes are added
-        //    reader = new XmlTextReader(fileName);
-
-        //    while (reader.Read())
-        //    {
-        //        if (reader.NodeType == XmlNodeType.Element)
-        //        {
-        //            if (reader.Name == XmlNodeTag)
-        //            {
-        //                bool isEmptyElement = reader.IsEmptyElement;
-
-        //                // loading node attributes
-        //                int attributeCount = reader.AttributeCount;
-
-        //                if (attributeCount > 0)
-        //                {
-        //                    Dictionary<string, string> attributes = new Dictionary<string, string>();
-        //                    string newNodeName = string.Empty;
-        //                    string newNodeImageKey = string.Empty;
-        //                    string newNodeType = string.Empty;
-
-        //                    for (int i = 0; i < attributeCount; i++)
-        //                    {
-        //                        reader.MoveToAttribute(i);
-        //                        attributes.Add(reader.Name, reader.Value);
-        //                    }
-
-        //                    newNodeName = attributes[XmlNodeTextAtt];
-        //                    if (attributes.TryGetValue(XmlNodeTextAtt, out string attributesValue1))
-        //                    {
-        //                        newNodeName = attributes[XmlNodeTextAtt];
-        //                    }
-
-        //                    newNodeImageKey = attributes[XmlNodeImageIndexAtt];
-        //                    if (attributes.TryGetValue(XmlNodeImageIndexAtt, out string attributesValue2))
-        //                    {
-        //                        newNodeImageKey = attributes[XmlNodeImageIndexAtt];
-        //                    }
-
-        //                    if (attributes.TryGetValue(XmlNodeTagAtt, out string attributesValue3))
-        //                    {
-        //                        newNodeType = attributes[XmlNodeTagAtt];
-        //                    }
-
-        //                    ProjectNodeData projectNodeData = new ProjectNodeData();
-
-        //                    switch (newNodeType)
-        //                    {
-        //                        case "SETTINGS":
-        //                            try { settings.AutoRun = Convert.ToBoolean(attributes["AUTORUN"]); } catch { }
-
-        //                            break;
-
-        //                        case "CHANNEL":
-        //                            #region Channel
-        //                            ProjectChannel projectChannel = new ProjectChannel();
-
-        //                            try { projectChannel.KeyImage = attributes["NAME"]; } catch { }
-        //                            try { projectChannel.ID = DriverUtils.StringToGuid(attributes["ID"]); } catch { }
-        //                            try { projectChannel.Name = attributes["NAME"]; } catch { }
-        //                            try { projectChannel.Description = attributes["DESCRIPTION"]; } catch { }
-        //                            try { projectChannel.Enabled = Convert.ToBoolean(attributes["ENABLED"]); } catch { }
-        //                            try { projectChannel.Type = Convert.ToInt32(attributes["TYPE"]); } catch { }
-        //                            try { projectChannel.GatewayTypeProtocol = Convert.ToInt32(attributes["GATEWAY"]); } catch { }
-        //                            try { projectChannel.GatewayPort = Convert.ToInt32(attributes["GATEWAYPORT"]); } catch { }
-        //                            try { projectChannel.GatewayConnectedClientsMax = Convert.ToInt32(attributes["CONNECTEDCLIENTSMAX"]); } catch { }
-
-        //                            try { projectChannel.WriteTimeout = Convert.ToInt32(attributes["WRITETIMEOUT"]); } catch { }
-        //                            try { projectChannel.ReadTimeout = Convert.ToInt32(attributes["READTIMEOUT"]); } catch { }
-        //                            try { projectChannel.Timeout = Convert.ToInt32(attributes["TIMEOUT"]); } catch { }
-
-        //                            try { projectChannel.WriteBufferSize = Convert.ToInt32(attributes["WRITEBUFFERSIZE"]); } catch { }
-        //                            try { projectChannel.ReadBufferSize = Convert.ToInt32(attributes["READBUFFERSIZE"]); } catch { }
-
-        //                            try { projectChannel.CountError = Convert.ToInt32(attributes["COUNTERROR"]); } catch { }
-
-        //                            if (Convert.ToInt32(attributes["TYPE"]) == 1) //Последовательный порт
-        //                            {
-        //                                try { projectChannel.SerialPortName = attributes["SERIALPORTNAME"]; } catch { }
-        //                                try { projectChannel.SerialPortBaudRate = attributes["SERIALPORTBAUDRATE"]; } catch { }
-        //                                try { projectChannel.SerialPortDataBits = attributes["SERIALPORTDATABITS"]; } catch { }
-        //                                try { projectChannel.SerialPortParity = attributes["SERIALPORTPARITY"]; } catch { }
-        //                                try { projectChannel.SerialPortStopBits = attributes["SERIALPORTSTOPBITS"]; } catch { }
-
-        //                                try { projectChannel.SerialPortHandshake = attributes["HANDSHAKE"]; } catch { }
-        //                                try { projectChannel.SerialPortDtrEnable = Convert.ToBoolean(attributes["DTR"]); } catch { }
-        //                                try { projectChannel.SerialPortRtsEnable = Convert.ToBoolean(attributes["RTS"]); } catch { }
-        //                                try { projectChannel.SerialPortReceivedBytesThreshold = Convert.ToInt32(attributes["RECEIVEDBYTESTHRESHOLD"]); } catch { }
-        //                            }
-
-        //                            if (Convert.ToInt32(attributes["TYPE"]) == 2 || Convert.ToInt32(attributes["TYPE"]) == 3) // TCP UDP клиент
-        //                            {
-        //                                try { projectChannel.ClientHost = attributes["CLIENTHOST"]; } catch { }
-        //                                try { projectChannel.ClientPort = Convert.ToInt32(attributes["CLIENTPORT"]); } catch { }
-        //                            }
-
-        //                            try { projectChannel.Debug = Convert.ToBoolean(attributes["DEBUG"]); } catch { }
-
-        //                            projectNodeData.channel = projectChannel;
-        //                            projectNodeData.NodeType = ProjectNodeType.Channel;
-
-        //                            tmpProjectChannel = projectChannel;
-        //                            #endregion Channel
-        //                            break;
-        //                        case "DEVICE":
-        //                            #region Device
-        //                            ProjectDevice projectDevice = new ProjectDevice();
-
-        //                            try { projectDevice.ID = DriverUtils.StringToGuid(attributes["IDPARENT"]); } catch { }
-        //                            try { projectDevice.ID = DriverUtils.StringToGuid(attributes["ID"]); } catch { }
-        //                            try { projectDevice.Address = Convert.ToUInt16(attributes["ADDRESS"]); } catch { }
-        //                            try { projectDevice.Name = attributes["NAME"]; } catch { }
-        //                            try { projectDevice.Description = attributes["DESCRIPTION"]; } catch { }
-        //                            try { projectDevice.Enabled = Convert.ToBoolean(attributes["ENABLED"]); } catch { }
-
-        //                            try { projectDevice.DeviceRegistersBytes = Convert.ToInt32(attributes["REGISTERSBYTES"]); } catch { }
-        //                            try { projectDevice.DeviceGatewayRegistersBytes = Convert.ToInt32(attributes["GATEWAYREGISTERSBYTES"]); } catch { }
-
-        //                            try { projectDevice.Status = Convert.ToInt32(attributes["STATUS"]); } catch { }
-        //                            try { projectDevice.PollingOnScheduleStatus = Convert.ToBoolean(attributes["POLLINGONSCHEDULESTATUS"]); } catch { }
-        //                            try { projectDevice.IntervalPool = Convert.ToInt32(attributes["INTERVALPOOL"]); } catch { }
-        //                            try { projectDevice.TypeProtocol = Convert.ToInt32(attributes["TYPEPROTOCOL"]); } catch { }
-
-        //                            try { projectDevice.DateTimeLastSuccessfully = DateTime.Parse(attributes["DATETIMELASTSUCCESSFULLY"]); } catch { }
-        //                            try
-        //                            {
-        //                                // creating a buffer
-        //                                // adding Registers 65535
-        //                                for (ulong index = 0; index < (ulong)65535; ++index)
-        //                                {
-        //                                    bool status = false;
-        //                                    ulong value = 0;
-
-        //                                    projectDevice.SetCoil(Convert.ToUInt64(index), status);
-        //                                    projectDevice.SetDiscreteInput(Convert.ToUInt64(index), status);
-        //                                    projectDevice.SetHoldingRegister(Convert.ToUInt64(index), value);
-        //                                    projectDevice.SetInputRegister(Convert.ToUInt64(index), value);
-        //                                }
-
-        //                                for (ulong index = 0; index < (ulong)9999999; ++index)
-        //                                {
-        //                                    string value = string.Empty;
-        //                                    projectDevice.SetDataBuffer(Convert.ToUInt64(index), value);
-        //                                }
-        //                            }
-        //                            catch { }
-
-        //                            // fill in the registers by the name of the attribute and its value from the dictionary of Attribute registers 65535
-        //                            foreach (string key in attributes.Keys)
-        //                            {
-        //                                if (key.Contains("COILREGISTER"))
-        //                                {
-        //                                    try
-        //                                    {
-        //                                        bool Coil = Convert.ToBoolean(attributes[key]);
-        //                                        ulong RegAddr = Convert.ToUInt64(key.Replace("COILREGISTER", ""));
-        //                                        projectDevice.SetCoil(RegAddr, Coil);
-        //                                    }
-        //                                    catch { }
-        //                                }
-        //                                else if (key.Contains("DISCRETEINPUT"))
-        //                                {
-        //                                    try
-        //                                    {
-        //                                        bool DiscreteInput = Convert.ToBoolean(attributes[key]);
-        //                                        ulong RegAddr = Convert.ToUInt64(key.Replace("DISCRETEINPUT", ""));
-        //                                        projectDevice.SetDiscreteInput(RegAddr, DiscreteInput);
-        //                                    }
-        //                                    catch { }
-        //                                }
-        //                                else if (key.Contains("HOLDINGREGISTER"))
-        //                                {
-        //                                    try
-        //                                    {
-        //                                        ulong HoldingRegister = Convert.ToUInt64(attributes[key]);
-        //                                        ulong RegAddr = Convert.ToUInt64(key.Replace("HOLDINGREGISTER", ""));
-        //                                        projectDevice.SetHoldingRegister(RegAddr, HoldingRegister);
-        //                                    }
-        //                                    catch { }
-        //                                }
-        //                                else if (key.Contains("INPUTREGISTER"))
-        //                                {
-        //                                    try
-        //                                    {
-        //                                        ulong InputRegister = Convert.ToUInt16(Convert.ToInt64(attributes[key]));
-        //                                        ulong RegAddr = Convert.ToUInt64(key.Replace("INPUTREGISTER", ""));
-        //                                        projectDevice.SetInputRegister(RegAddr, InputRegister);
-        //                                    }
-        //                                    catch { }
-        //                                }
-        //                            }
-
-        //                            projectNodeData.Device = projectDevice;
-        //                            projectNodeData.NodeType = ProjectNodeType.Device;
-
-        //                            tmpProjectDevice.Add(projectDevice);
-        //                            #endregion Device
-        //                            break;
-        //                        case "GROUPCOMMAND":
-        //                            #region Device Group Command
-        //                            ProjectGroupCommand projectGroupCommand = new ProjectGroupCommand();
-
-        //                            try { projectGroupCommand.ParentID = DriverUtils.StringToGuid(attributes["IDPARENT"]); } catch { }
-        //                            try { projectGroupCommand.ID = DriverUtils.StringToGuid(attributes["ID"]); } catch { }
-        //                            try { projectGroupCommand.Name = attributes["NAME"]; } catch { }
-        //                            try { projectGroupCommand.Description = attributes["DESCRIPTION"]; } catch { }
-        //                            try { projectGroupCommand.Enabled = Convert.ToBoolean(attributes["ENABLED"]); } catch { }
-
-        //                            projectNodeData.GroupCommand = projectGroupCommand;
-        //                            projectNodeData.NodeType = ProjectNodeType.GroupCommand;
-
-        //                            tmpProjectGroupCommand.Add(projectGroupCommand);
-        //                            #endregion Device Group Command
-        //                            break;
-        //                        case "COMMAND":
-        //                            #region Device
-        //                            ProjectCommand projectCommand = new ProjectCommand();
-
-        //                            try { projectCommand.ParentID = DriverUtils.StringToGuid(attributes["IDPARENT"]); } catch { }
-        //                            try { projectCommand.ID = DriverUtils.StringToGuid(attributes["ID"]); } catch { }
-        //                            try { projectCommand.Name = attributes["NAME"]; } catch { }
-        //                            try { projectCommand.Description = attributes["DESCRIPTION"]; } catch { }
-        //                            try { projectCommand.Enabled = Convert.ToBoolean(attributes["ENABLED"]); } catch { }
-        //                            try { projectCommand.FunctionCode = Convert.ToUInt16(attributes["FUNCTION"]); } catch { }
-        //                            try { projectCommand.RegisterStartAddress = Convert.ToUInt16(attributes["REGISTERSTARTADDRESS"]); } catch { }
-        //                            try { projectCommand.RegisterCount = Convert.ToUInt16(attributes["REGISTERCOUNT"]); } catch { }
-        //                            try { projectCommand.Parametr = Convert.ToUInt16(attributes["REGISTERPARAMETR"]); } catch { }
-        //                            try { projectCommand.CurrentValue = Convert.ToBoolean(attributes["CURRENTVALUE"]); } catch { }
-
-        //                            try { projectCommand.RegisterNameReadData = attributes["REGISTERNAMEREADDATA"].Split(' '); } catch { }
-        //                            try { projectCommand.RegisterReadData = Array.ConvertAll(attributes["REGISTERREADDATA"].Split(' '), x => { ulong res = Convert.ToUInt64(x); return res; }); } catch { }
-
-        //                            try { projectCommand.RegisterNameWriteData = attributes["REGISTERNAMEWRITEDATA"].Split(' '); } catch { }
-        //                            try { projectCommand.RegisterWriteData = Array.ConvertAll(attributes["REGISTERWRITEDATA"].Split(' '), x => { ulong res = Convert.ToUInt64(x); return res; }); } catch { }
-
-        //                            projectNodeData.Command = projectCommand;
-        //                            projectNodeData.NodeType = ProjectNodeType.Command;
-
-        //                            tmpProjectCommand.Add(projectCommand);
-
-        //                            #endregion Device
-        //                            break;
-        //                        case "GROUPTAG":
-        //                            #region Device Group Tag
-        //                            ProjectGroupTag projectGroupTag = new ProjectGroupTag();
-
-        //                            try { projectGroupTag.ParentID = DriverUtils.StringToGuid(attributes["IDPARENT"]); } catch { }
-        //                            try { projectGroupTag.ID = DriverUtils.StringToGuid(attributes["ID"]); } catch { }
-        //                            try { projectGroupTag.Name = attributes["NAME"]; } catch { }
-        //                            try { projectGroupTag.Description = attributes["DESCRIPTION"]; } catch { }
-        //                            try { projectGroupTag.Enabled = Convert.ToBoolean(attributes["ENABLED"]); } catch { }
-
-        //                            projectNodeData.GroupTag = projectGroupTag;
-        //                            projectNodeData.NodeType = ProjectNodeType.GroupTag;
-
-        //                            tmpProjectGroupTag.Add(projectGroupTag);
-
-        //                            #endregion Device Group Tag
-        //                            break;
-        //                        case "TAG":
-        //                            #region Device Tag
-        //                            ProjectTag projectTag = new ProjectTag();
-
-        //                            try { projectTag.ParentID = DriverUtils.StringToGuid(attributes["IDPARENT"]); } catch { }
-        //                            try { projectTag.ID = DriverUtils.StringToGuid(attributes["ID"]); } catch { }
-        //                            try { projectTag.CommandID = DriverUtils.StringToGuid(attributes["COMMANDID"]); } catch { }
-        //                            try { projectTag.Enabled = Convert.ToBoolean(attributes["ENABLED"]); } catch { }
-        //                            try { projectTag.Address = attributes["ADDRESS"]; } catch { }
-        //                            try { projectTag.Name = attributes["NAME"]; } catch { }
-        //                            try { projectTag.Code = attributes["CODE"]; } catch { }
-        //                            try { projectTag.Description = attributes["DESCRIPTION"]; } catch { }
-        //                            try { projectTag.Coefficient = Convert.ToSingle(attributes["COEFFICIENT"]); } catch { }
-        //                            try { projectTag.Sorting = attributes["SORTING"]; } catch { }
-
-        //                            try { projectTag.Scaled = Convert.ToInt32(attributes["SCALED"]); } catch { }
-        //                            try { projectTag.ScaledHigh = Convert.ToSingle(attributes["SCALEDHIGH"]); } catch { }
-        //                            try { projectTag.ScaledLow = Convert.ToSingle(attributes["SCALEDLOW"]); } catch { }
-        //                            try { projectTag.RowHigh = Convert.ToSingle(attributes["ROWHIGH"]); } catch { }
-        //                            try { projectTag.RowLow = Convert.ToSingle(attributes["ROWLOW"]); } catch { }
-
-        //                            try
-        //                            {
-        //                                ProjectTag.FormatData Type = (ProjectTag.FormatData)Enum.Parse(typeof(ProjectTag.FormatData), attributes["TYPE"]);
-        //                                projectTag.Format = Type;
-        //                            }
-        //                            catch { }
-
-        //                            projectNodeData.Tag = projectTag;
-        //                            projectNodeData.NodeType = ProjectNodeType.Tag;
-
-        //                            tmpProjectTag.Add(projectTag);
-        //                            #endregion Device Tag
-        //                            break;
-        //                        default:
-
-        //                            break;
-        //                    }
-        //                }
-
-        //            }
-        //        }
-        //        else if (reader.NodeType == XmlNodeType.XmlDeclaration)
-        //        {
-        //            //Ignore Xml Declaration                    
-        //        }
-        //        else if (reader.NodeType == XmlNodeType.None)
-        //        {
-        //            //Ignore Xml Declaration  
-        //        }
-        //        else if (reader.NodeType == XmlNodeType.Text)
-        //        {
-        //            //Ignore Xml Declaration  
-        //        }
-
-        //    }
-        //}
-        //finally
-        //{
-        //    // enabling redrawing of treeview after all nodes are added
-        //    reader.Close();
-        //}
-
-        //Settings.ProjectChannel = tmpProjectChannel;
-        ////Settings.ProjectDevice = tmpProjectDevice;
-        ////Settings.ProjectGroupCommand = tmpProjectGroupCommand;
-        ////Settings.ProjectCommand = tmpProjectCommand;
-        ////Settings.ProjectGroupTag = tmpProjectGroupTag;
-        ////Settings.ProjectTag = tmpProjectTag;
-
-        //errMsg = "";
-        //return true;
-        //}
-        #endregion Load Old Version
 
     }
     #endregion Project
@@ -800,7 +441,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
 
             try
             {
-                XmlElement groupChannelElem = xmlElem.AppendElem("ListChannel");
+                XmlElement groupChannelElem = xmlElem.AppendElem("ListChannels");
                 foreach (ProjectChannel channel in Group)
                 {
                     channel.SaveToXml(groupChannelElem.AppendElem("Channel"));
@@ -1501,8 +1142,8 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             }
             catch { }
 
-            GroupCommands = new ProjectGroupCommand();
-            GroupTags = new ProjectGroupTag();
+            GroupCommand = new ProjectGroupCommand();
+            GroupTag = new ProjectGroupTag();
         }
 
         #region Variables
@@ -1695,21 +1336,21 @@ namespace Scada.Comm.Drivers.DrvModbusCM
 
         #endregion Gateway        
 
-        #region Group Commands
-        private ProjectGroupCommand groupCommands;
-        public ProjectGroupCommand GroupCommands
+        #region Group Command
+        private ProjectGroupCommand groupCommand;
+        public ProjectGroupCommand GroupCommand
         {
-            get { return groupCommands; }
-            set { groupCommands = value; }
+            get { return groupCommand; }
+            set { groupCommand = value; }
         }
-        #endregion Group Commands
+        #endregion Group Command
 
         #region Group Tags
-        private ProjectGroupTag groupTags;
-        public ProjectGroupTag GroupTags
+        private ProjectGroupTag groupTag;
+        public ProjectGroupTag GroupTag
         {
-            get { return groupTags; }
-            set { groupTags = value; }
+            get { return groupTag; }
+            set { groupTag = value; }
         }
         #endregion Group Tags
 
@@ -2139,6 +1780,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             GatewayAddress = xmlNode.GetChildAsInt("GatewayAddress");
             GatewayPort = xmlNode.GetChildAsInt("GatewayPort");
 
+            #region Load Registers
             if (SaveRegisters)
             {
                 try
@@ -2153,10 +1795,6 @@ namespace Scada.Comm.Drivers.DrvModbusCM
                     //        Devices.Add(device);
                     //    }
                     //}
-
-
-
-
 
                     //// fill in the registers by the name of the attribute and its value from the dictionary of Attribute registers 65535
                     //foreach (string key in attributes.Keys)
@@ -2206,25 +1844,10 @@ namespace Scada.Comm.Drivers.DrvModbusCM
                 }
                 catch { }
             }
+            #endregion Load Registers
 
-            //TcpServerSettings.LoadFromXml(xmlNode.SelectSingleNode("TcpServerSettings"));
-            //SerialPortSettings.LoadFromXml(xmlNode.SelectSingleNode("SerialPortSettings"));
-            //EthernetClientSettings.LoadFromXml(xmlNode.SelectSingleNode("EthernetClientSettings"));
-
-            //try
-            //{
-            //    if (xmlNode.SelectSingleNode("ListDevices") is XmlNode listDevicesNode)
-            //    {
-            //        Devices = new List<ProjectDevice>();
-            //        foreach (XmlNode deviceNode in listDevicesNode.SelectNodes("Device"))
-            //        {
-            //            ProjectDevice device = new ProjectDevice);
-            //            device.LoadFromXml(deviceNode);
-            //            Devices.Add(device);
-            //        }
-            //    }
-            //}
-            //catch { Devices = new List<ProjectDevice>(); }
+            GroupCommand.LoadFromXml(xmlNode.SelectSingleNode("GroupCommand"));
+            GroupTag.LoadFromXml(xmlNode.SelectSingleNode("GroupTag"));
         }
         #endregion Load
 
@@ -2366,7 +1989,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             }
             #endregion Save Registers
 
-            GroupCommands.SaveToXml(xmlElem.AppendElem("GroupCommands"));
+            GroupCommand.SaveToXml(xmlElem.AppendElem("GroupCommand"));
 
         }
         #endregion Save
@@ -3122,10 +2745,21 @@ namespace Scada.Comm.Drivers.DrvModbusCM
     {
         public ProjectGroupTag()
         {
+            ID = new Guid();
+            ParentID = new Guid();
+            KeyImage = string.Empty;
+
+            Name = string.Empty;
+            Description = string.Empty;
+
+            Enabled = true;
+
             ListTags = new List<ProjectTag>();
         }
 
-        #region Группа тегов
+        #region Variables
+
+        #region Group
         //ID
         private Guid id;
         [XmlAttribute]
@@ -3180,9 +2814,9 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             set { enabled = value; }
         }
 
-        #endregion Группа тегов
+        #endregion Group
 
-        #region Список тегов
+        #region List Tags
 
         private List<ProjectTag> listTags;
         public List<ProjectTag> ListTags
@@ -3191,7 +2825,75 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             set { listTags = value; }
         }
 
-        #endregion Список тегов
+        #endregion List Tags
+
+        #endregion Variables
+
+        #region Load
+        /// <summary>
+        /// Loads the settings from the XML node.
+        /// <para>Загружает настройки из узла XML.</para>
+        /// </summary>
+        public void LoadFromXml(XmlNode xmlNode)
+        {
+            if (xmlNode == null)
+            {
+                throw new ArgumentNullException("xmlNode");
+            }
+
+            ID = DriverUtils.StringToGuid(xmlNode.GetChildAsString("ID"));
+            Name = xmlNode.GetChildAsString("Name");
+            Description = xmlNode.GetChildAsString("Description");
+            KeyImage = xmlNode.GetChildAsString("KeyImage");
+            Enabled = xmlNode.GetChildAsBool("Enabled");
+
+            try
+            {
+                if (xmlNode.SelectSingleNode("ListTags") is XmlNode listTagsNode)
+                {
+                    ListTags = new List<ProjectTag>();
+                    foreach (XmlNode tagNode in listTagsNode.SelectNodes("Tag"))
+                    {
+                        ProjectTag tag = new ProjectTag();
+                        tag.LoadFromXml(tagNode);
+                        ListTags.Add(tag);
+                    }
+                }
+            }
+            catch { ListTags = new List<ProjectTag>(); }
+        }
+        #endregion Load
+
+        #region Save
+        /// <summary>
+        /// Saves the settings into the XML node.
+        /// <para>Сохраняет настройки в узле XML.</para>
+        /// </summary>
+        public void SaveToXml(XmlElement xmlElem)
+        {
+            if (xmlElem == null)
+            {
+                throw new ArgumentNullException("xmlElem");
+            }
+
+            xmlElem.AppendElem("ID", ID.ToString());
+            xmlElem.AppendElem("Name", Name);
+            xmlElem.AppendElem("Description", Description);
+            xmlElem.AppendElem("KeyImage", KeyImage);
+            xmlElem.AppendElem("Enabled", Enabled);
+
+            try
+            {
+                XmlElement listTagsElem = xmlElem.AppendElem("ListTags");
+                foreach (ProjectTag tag in ListTags)
+                {
+                    tag.SaveToXml(listTagsElem.AppendElem("Tag"));
+                }
+            }
+            catch { }
+
+        }
+        #endregion Save
 
         #region Конвертирование
         public DataTable ConvertListTagsToDataTable(List<ProjectTag> listTags)
@@ -3265,10 +2967,29 @@ namespace Scada.Comm.Drivers.DrvModbusCM
     {
         public ProjectTag()
         {
+            ID = new Guid();
+            ParentID = new Guid();
+            CommandID = new Guid();
+            KeyImage = string.Empty;
 
+            Name = string.Empty;
+            Description = string.Empty;
+            Code = string.Empty;
+            Address = string.Empty;
+            Format = FormatData.NONE;
+            Sorting = string.Empty;
+
+            Enabled = true;
+
+            Scaled = FormatScaled.NONE;
+            Coefficient = 1d;     
+            ScaledHigh = 0;
+            ScaledLow = 0;
+            RowHigh = 0;
+            RowLow = 0;
         }
 
-        #region Тег
+        #region Variables
 
         //ID
         private Guid id;
@@ -3297,14 +3018,6 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             set { commandID = value; }
         }
 
-        private string code;
-        [XmlAttribute]
-        public string Code
-        {
-            get { return code; }
-            set { code = value; }
-        }
-
         //Иконка
         private string keyImage;
         [XmlAttribute]
@@ -3312,14 +3025,6 @@ namespace Scada.Comm.Drivers.DrvModbusCM
         {
             get { return keyImage; }
             set { keyImage = value; }
-        }
-
-        private string address;
-        [XmlAttribute]
-        public string Address
-        {
-            get { return address; }
-            set { address = value; }
         }
 
         private string name;
@@ -3336,6 +3041,22 @@ namespace Scada.Comm.Drivers.DrvModbusCM
         {
             set { description = value; }
             get { return description; }
+        }
+
+        private string code;
+        [XmlAttribute]
+        public string Code
+        {
+            get { return code; }
+            set { code = value; }
+        }
+
+        private string address;
+        [XmlAttribute]
+        public string Address
+        {
+            get { return address; }
+            set { address = value; }
         }
 
         private FormatData format;
@@ -3386,61 +3107,57 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             get { return quality; }
         }
 
-        private float coefficient;
+        private double coefficient;
         [XmlAttribute]
-        public float Coefficient
+        public double Coefficient
         {
             get { return coefficient; }
             set { coefficient = value; }
         }
 
-        private int scaled;
+        private FormatScaled scaled;
         [XmlAttribute]
-        public int Scaled
+        public FormatScaled Scaled
         {
             set { scaled = value; }
             get { return scaled; }
         }
 
-        private float scaledHigh;
+        private double scaledHigh;
         [XmlAttribute]
-        public float ScaledHigh
+        public double ScaledHigh
         {
             get { return scaledHigh; }
             set { scaledHigh = value; }
         }
 
-        private float scaledLow;
+        private double scaledLow;
         [XmlAttribute]
-        public float ScaledLow
+        public double ScaledLow
         {
             get { return scaledLow; }
             set { scaledLow = value; }
         }
 
-        private float rowHigh;
+        private double rowHigh;
         [XmlAttribute]
-        public float RowHigh
+        public double RowHigh
         {
             get { return rowHigh; }
             set { rowHigh = value; }
         }
 
-        private float rowLow;
+        private double rowLow;
         [XmlAttribute]
-        public float RowLow
+        public double RowLow
         {
             get { return rowLow; }
             set { rowLow = value; }
         }
 
-        //string[] names = Enum.GetNames(typeof (Dimension));
-        //Dimension d = (Dimension)Enum.Parse(typeof (Dimension), names[x]);
-
-        #endregion Тег
-
         public enum FormatData
         {
+            NONE,
             BIT,
             BIT32,
             BIT64,
@@ -3460,6 +3177,72 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             USHORT,
         }
 
+        public enum FormatScaled : int
+        {
+            NONE = 0,
+            LINEAR = 1,
+        }
+
+        #endregion #region Variables
+
+        #region Load
+        /// <summary>
+        /// Loads the settings from the XML node.
+        /// <para>Загружает настройки из узла XML.</para>
+        /// </summary>
+        public void LoadFromXml(XmlNode xmlNode)
+        {
+            if (xmlNode == null)
+            {
+                throw new ArgumentNullException("xmlNode");
+            }
+
+            ID = DriverUtils.StringToGuid(xmlNode.GetChildAsString("ID"));
+            ParentID = DriverUtils.StringToGuid(xmlNode.GetChildAsString("ParentID"));
+            CommandID = DriverUtils.StringToGuid(xmlNode.GetChildAsString("CommandID"));
+
+            Name = xmlNode.GetChildAsString("Name");
+            Description = xmlNode.GetChildAsString("Description");
+            KeyImage = xmlNode.GetChildAsString("KeyImage");
+            Enabled = xmlNode.GetChildAsBool("Enabled");
+
+            Code = xmlNode.GetChildAsString("Code");
+            Address = xmlNode.GetChildAsString("Address");
+            Format = (FormatData)Enum.Parse(typeof(FormatData), xmlNode.GetChildAsString("Format"));
+            Sorting = xmlNode.GetChildAsString("Sorting");
+
+            Scaled = (FormatScaled)Enum.Parse(typeof(FormatScaled), xmlNode.GetChildAsString("Scaled"));
+            Coefficient = xmlNode.GetChildAsDouble("Coefficient");
+            ScaledHigh = xmlNode.GetChildAsDouble("ScaledHigh");
+            ScaledLow = xmlNode.GetChildAsDouble("ScaledLow");
+            RowHigh = xmlNode.GetChildAsDouble("RowHigh");
+            RowLow = xmlNode.GetChildAsDouble("RowLow");
+
+        }
+        #endregion Load
+
+        #region Save
+        /// <summary>
+        /// Saves the settings into the XML node.
+        /// <para>Сохраняет настройки в узле XML.</para>
+        /// </summary>
+        public void SaveToXml(XmlElement xmlElem)
+        {
+            if (xmlElem == null)
+            {
+                throw new ArgumentNullException("xmlElem");
+            }
+
+            xmlElem.AppendElem("ID", ID.ToString());
+            xmlElem.AppendElem("Name", Name);
+            xmlElem.AppendElem("Description", Description);
+            xmlElem.AppendElem("KeyImage", KeyImage);
+            xmlElem.AppendElem("Enabled", Enabled);
+
+        }
+        #endregion Save
+
+        #region Action
         public static int DeviceTagFormatDataRegisterCount(ProjectTag tag, int deviceRegistersBytes = 0)
         {
             int count = 0;
@@ -3834,6 +3617,8 @@ namespace Scada.Comm.Drivers.DrvModbusCM
         //OPC_QUALITY_LOCAL_OVERRIDE = 216; //Значение было переопределено. Как правило, это означает, что вход был отключен и заданное вручную значение было принудительно введено.
 
         #endregion Качество
+
+        #endregion Action
 
     }
 
