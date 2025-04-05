@@ -18,6 +18,7 @@ using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using static Scada.Comm.Drivers.DrvModbusCM.ProjectTag;
 
 namespace Scada.Comm.Drivers.DrvModbusCM
 {
@@ -1990,6 +1991,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             #endregion Save Registers
 
             GroupCommand.SaveToXml(xmlElem.AppendElem("GroupCommand"));
+            GroupTag.SaveToXml(xmlElem.AppendElem("GroupTag"));
 
         }
         #endregion Save
@@ -2939,12 +2941,12 @@ namespace Scada.Comm.Drivers.DrvModbusCM
                 newTag.Description = tmpDataRow.ItemArray[3].ToString();
                 newTag.Format = (ProjectTag.FormatData)Enum.Parse(typeof(ProjectTag.FormatData), tmpDataRow.ItemArray[4].ToString());
 
-                newTag.Coefficient = Convert.ToSingle(tmpDataRow.ItemArray[5]);
-                newTag.Scaled = Convert.ToInt32(tmpDataRow.ItemArray[6]);
-                newTag.ScaledHigh = Convert.ToSingle(tmpDataRow.ItemArray[7]);
-                newTag.ScaledLow = Convert.ToSingle(tmpDataRow.ItemArray[8]);
-                newTag.RowHigh = Convert.ToSingle(tmpDataRow.ItemArray[9]);
-                newTag.RowLow = Convert.ToSingle(tmpDataRow.ItemArray[10]);
+                newTag.Coefficient = Convert.ToDouble(tmpDataRow.ItemArray[5]);
+                newTag.Scaled = (FormatScaled)Enum.Parse(typeof(FormatScaled), tmpDataRow.ItemArray[6].ToString());
+                newTag.ScaledHigh = Convert.ToDouble(tmpDataRow.ItemArray[7]);
+                newTag.ScaledLow = Convert.ToDouble(tmpDataRow.ItemArray[8]);
+                newTag.RowHigh = Convert.ToDouble(tmpDataRow.ItemArray[9]);
+                newTag.RowLow = Convert.ToDouble(tmpDataRow.ItemArray[10]);
 
                 newTag.TagDateTime = DateTime.MinValue;
                 newTag.DataValue = 0;
@@ -3234,11 +3236,25 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             }
 
             xmlElem.AppendElem("ID", ID.ToString());
+            xmlElem.AppendElem("ParentID", ParentID.ToString());
+            xmlElem.AppendElem("CommandID", CommandID.ToString());
+
             xmlElem.AppendElem("Name", Name);
             xmlElem.AppendElem("Description", Description);
             xmlElem.AppendElem("KeyImage", KeyImage);
             xmlElem.AppendElem("Enabled", Enabled);
 
+            xmlElem.AppendElem("Code", Code);
+            xmlElem.AppendElem("Address", Address);
+            xmlElem.AppendElem("Format", Enum.GetName(typeof(FormatData), Format));
+            xmlElem.AppendElem("Sorting", Sorting);
+
+            xmlElem.AppendElem("Scaled", Enum.GetName(typeof(FormatScaled), Scaled));
+            xmlElem.AppendElem("Coefficient", Coefficient);
+            xmlElem.AppendElem("ScaledHigh", ScaledHigh);
+            xmlElem.AppendElem("ScaledLow", ScaledLow);
+            xmlElem.AppendElem("RowHigh", RowHigh);
+            xmlElem.AppendElem("RowLow", RowLow);
         }
         #endregion Save
 
@@ -3400,7 +3416,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
         public static object GetValue(ProjectTag tag, byte[] bytes)
         {
             object value = new object();
-            FormatData format = (FormatData)Enum.Parse(typeof(FormatData), tag.Format.ToString());
+            FormatData format = tag.Format;
             int startBit = 0;
             int endBit = 0;
             int countBit = 0;
@@ -3548,7 +3564,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
 
             try
             {
-                if (tag.Scaled == 1)
+                if (tag.Scaled == FormatScaled.LINEAR)
                 {
                     value = (((tag.ScaledHigh - tag.ScaledLow) / (tag.RowHigh - tag.RowLow)) * (Convert.ToSingle(value) - tag.RowLow)) + tag.ScaledLow;
                 }
@@ -3563,12 +3579,12 @@ namespace Scada.Comm.Drivers.DrvModbusCM
 
         #region Scaled
 
-        public static float CalcLineScaled(string Value, float DeviceTagCoefficient, int Scaled, float ScaledHigh, float ScaledLow, float RowHigh, float RowLow)
+        public static double CalcLineScaled(string Value, float DeviceTagCoefficient, int Scaled, double ScaledHigh, double ScaledLow, double RowHigh, double RowLow)
         {
             try
             {
-                float ScaledValue = DriverUtils.FloatAsFloat(Value);
-                if (DriverUtils.IsNaN(ScaledValue))
+                double ScaledValue = DriverUtils.DoubleAsDouble(Value);
+                if (DriverUtils.DoubleIsNaN(ScaledValue))
                 {
                     return ScaledValue;
                 }
@@ -3583,16 +3599,16 @@ namespace Scada.Comm.Drivers.DrvModbusCM
                 }
                 else if (Scaled == 1)
                 {
-                    float Result = (((ScaledHigh - ScaledLow) / (RowHigh - RowLow)) * (ScaledValue - RowLow)) + ScaledLow;
+                    double Result = (((ScaledHigh - ScaledLow) / (RowHigh - RowLow)) * (ScaledValue - RowLow)) + ScaledLow;
                     Result = Result * DeviceTagCoefficient;
                     return Result;
                 }
 
-                return float.NaN;
+                return double.NaN;
             }
             catch
             {
-                return float.NaN;
+                return double.NaN;
             }
         }
 

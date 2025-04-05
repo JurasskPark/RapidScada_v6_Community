@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static Scada.Comm.Drivers.DrvModbusCM.ProjectTag;
 
 namespace Scada.Comm.Drivers.DrvModbusCM.View
 {
@@ -161,7 +162,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             }
             catch { }
 
-            cmbScaled.SelectedIndex = currentTag.Scaled;
+            cmbScaled.SelectedIndex = (int)currentTag.Scaled;
             txtLineScaledHigh.Text = currentTag.ScaledHigh.ToString();
             txtLineScaledLow.Text = currentTag.ScaledLow.ToString();
             txtLineScaledRowHigh.Text = currentTag.RowHigh.ToString();
@@ -254,7 +255,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             currentTag.Sorting = txtTagSorting.Text;
 
             currentTag.Coefficient = Convert.ToSingle(txtTagCoefficient.Text);
-            currentTag.Scaled = cmbScaled.SelectedIndex;
+            currentTag.Scaled = (FormatScaled)cmbScaled.SelectedIndex;
             currentTag.ScaledHigh = Convert.ToSingle(txtLineScaledHigh.Text);
             currentTag.ScaledLow = Convert.ToSingle(txtLineScaledLow.Text);
             currentTag.RowHigh = Convert.ToSingle(txtLineScaledRowHigh.Text);

@@ -399,7 +399,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             public int binary;
         }
 
-        public static bool IsNaN(float f)
+        public static bool FloatIsNaN(float f)
         {
             FloatUnion union = new FloatUnion();
             union.value = f;
@@ -408,9 +408,11 @@ namespace Scada.Comm.Drivers.DrvModbusCM
         }
 
         #endregion Float String
-     
-        #region Double String
 
+        #region Double String
+        /// <summary>
+        /// Converting a string to a double value.
+        /// </summary>
         public static double DoubleAsDouble(string s)
         {
             try
@@ -423,12 +425,67 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             }
         }
 
-        private static string DoublePuttingInOrder(string s)
+        /// <summary>
+        /// Converting a string to a double value according to the language standards.
+        /// </summary>
+        public static string StringDoubleAsString(string s)
+        {
+            double result;
+            if (!double.TryParse(s, out result))
+            {
+                s = s.Replace(",", ".").Trim();
+                if (!double.TryParse(s, out result))
+                {
+                    s = s.Replace(".", ",").Trim();
+                    if (double.TryParse(s, out result))
+                    {
+                        return s;
+                    }
+                    else
+                    {
+                        return "NaN";
+                    }
+                }
+                else
+                {
+                    return s;
+                }
+            }
+            else
+            {
+                return s;
+            }
+        }
+
+        /// <summary>
+        /// Replacing the comma in the float string with a dot.
+        /// </summary>
+        public static string DoublePuttingInOrder(string s)
         {
             s = s.Replace(",", ".").Trim();
             return s;
         }
 
+        /// <summary>
+        /// Converting a string to a double value.
+        /// </summary>
+        public static double StringToDouble(string s)
+        {
+            double result = 0;
+            if (!double.TryParse(s, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.GetCultureInfo("ru-RU"), out result))
+            {
+                if (!double.TryParse(s, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.GetCultureInfo("en-US"), out result))
+                {
+                    return 0;
+                }
+            }
+            return result;
+        }
+
+        public static bool DoubleIsNaN(double value)
+        {
+            return !Double.IsNaN(value) && !Double.IsInfinity(value);
+        }
         #endregion Double String
 
         #region Exception Error
