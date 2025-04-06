@@ -1,5 +1,8 @@
 ﻿using Scada.Comm.Drivers.DrvModbusCM;
+using Scada.Forms;
+using Scada.Lang;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace Scada.Comm.Drivers.DrvModbusCM.View
@@ -9,78 +12,35 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
         #region InitializeComponent
         /// <summary>
         /// Initializes a new instance of the class.
+        /// <para>Инициализирует новый экземпляр класса.</para>
         /// </summary>
         public FrmStart()
         {
             InitializeComponent();
 
             InitializeWindows();
-            ProjectOpen();         
+            this.appDirectory = ApplicationPath.StartPath;
+            this.languageDir = ApplicationPath.LangDir;
+            ProjectOpen();
+            LoadLanguage(languageDir, project.Driver.Settings.LanguageIsRussian);
+            Translate();
         }
         #endregion InitializeComponent
 
         #region Variables
+        string appDirectory;                                           // the applications directory
+        string languageDir;                                            // the language directory
+        private string culture = "en-GB";                              // the culture
+        bool isRussian;												   // the language
+
         public Project project;                                        // the project configuration
         private string configFileName;                                 // the configuration file name
         #endregion Variables
 
-        #region Start App
-        /// <summary>
-        /// 
-        /// <para></para>
-        /// </summary>
-        public void ProjectOpen()
-        {
-            string errMsg = string.Empty;
-            project = new Project();
-            configFileName = Path.Combine(Application.StartupPath, DriverUtils.GetFileName());
-            project.Load(configFileName, out errMsg);
-
-            if (errMsg != string.Empty)
-            {
-                MessageBox.Show(errMsg, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-        #endregion Start App
-
-        #region Save App
-        /// <summary>
-        /// 
-        /// <para></para>
-        /// </summary>
-        private void tolApplicationSave_Click(object sender, EventArgs e)
-        {
-            ProjectSave();
-        }
-
-        /// <summary>
-        /// 
-        /// <para></para>
-        /// </summary>
-        public void ProjectSave()
-        {
-            string errMsg = string.Empty;
-            project.Save(configFileName, out errMsg);
-            if (errMsg != string.Empty)
-            {
-                MessageBox.Show(errMsg, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-        #endregion Save App
-
         #region Application
         /// <summary>
-        /// 
-        /// <para></para>
-        /// </summary>
-        private void tolApplicationNew_Click(object sender, EventArgs e)
-        {
-            ProjectNew();
-        }
-
-        /// <summary>
-        /// 
-        /// <para></para>
+        /// Create a new project.
+        /// <para>Создать новый проект.</para>
         /// </summary>
         private void ProjectNew()
         {
@@ -99,17 +59,25 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
         }
 
         /// <summary>
-        /// 
-        /// <para></para>
+        /// Open project.
+        /// <para>Открыть проект.</para>
         /// </summary>
-        private void tolApplicationOpen_Click(object sender, EventArgs e)
+        public void ProjectOpen()
         {
-            ProjectOpenDialog();
+            string errMsg = string.Empty;
+            project = new Project();
+            configFileName = Path.Combine(Application.StartupPath, DriverUtils.GetFileName());
+            project.Load(configFileName, out errMsg);
+
+            if (errMsg != string.Empty)
+            {
+                MessageBox.Show(errMsg, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         /// <summary>
-        /// 
-        /// <para></para>
+        /// Open the project via the dialog form.
+        /// <para>Открыть проект через диалоговую форму.</para>
         /// </summary>
         private void ProjectOpenDialog()
         {
@@ -128,17 +96,22 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
         }
 
         /// <summary>
-        /// 
-        /// <para></para>
+        /// Save the project.
+        /// <para>Сохранить проект.</para>
         /// </summary>
-        private void tolApplicationSaveAs_Click(object sender, EventArgs e)
+        public void ProjectSave()
         {
-            ProjectSaveDialog();
+            string errMsg = string.Empty;
+            project.Save(configFileName, out errMsg);
+            if (errMsg != string.Empty)
+            {
+                MessageBox.Show(errMsg, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         /// <summary>
-        /// 
-        /// <para></para>
+        /// Save the project via the dialog form.
+        /// <para>Сохранить проект через диалоговую форму.</para>
         /// </summary>
         private void ProjectSaveDialog()
         {
@@ -157,10 +130,131 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
         }
         #endregion Application
 
+        #region Menu
+        /// <summary>
+        /// A menu item. Create a new project.
+        /// <para>Пункт меню. Создать новый проект.</para>
+        /// </summary>
+        private void tolApplicationNew_Click(object sender, EventArgs e)
+        {
+            ProjectNew();
+        }
+
+        /// <summary>
+        /// A menu item. Open the project via the dialog form.
+        /// <para>Пункт меню. Открыть проект через диалоговую форму.</para>
+        /// </summary>
+        private void tolApplicationOpen_Click(object sender, EventArgs e)
+        {
+            ProjectOpenDialog();
+        }
+
+        /// <summary>
+        /// A menu item. Save the project.
+        /// <para>Пункт меню. Сохранить проект.</para>
+        /// </summary>
+        private void tolApplicationSave_Click(object sender, EventArgs e)
+        {
+            ProjectSave();
+        }
+
+        /// <summary>
+        /// A menu item. Save the project via the dialog form.
+        /// <para>Пункт меню. Сохранить проект через диалоговую форму.</para>
+        /// </summary>
+        private void tolApplicationSaveAs_Click(object sender, EventArgs e)
+        {
+            ProjectSaveDialog();
+        }
+
+        /// <summary>
+        /// A menu item. Change the language and save the parameter to the project.
+        /// <para>Пункт меню. Изменение языка и сохранение параметра в проект.</para>
+        /// </summary>
+        private void tolLang_Click(object sender, EventArgs e)
+        {
+            ChangeLanguage();
+        }
+        #endregion Menu
+
+        #region Lang
+        /// <summary>
+        /// Change the language and save the parameter to the project.
+        /// <para>Изменение языка и сохранение параметра в проект.</para>
+        /// </summary>
+        public void ChangeLanguage()
+        {
+            isRussian = !isRussian;
+            if (isRussian)
+            {
+                tolLang.Image = imgListMenu.Images[1];
+            }
+            else
+            {
+                tolLang.Image = imgListMenu.Images[0];
+            }
+            LoadLanguage(languageDir, isRussian);
+            Translate();
+
+            project.Driver.Settings.LanguageIsRussian = isRussian;
+            ProjectSave();
+        }
+
+        /// <summary>
+        /// Loading from the translation catalog by language.
+        /// <para>Загрузка из каталога перевода по признаку языка</para>
+        /// </summary>
+        public void LoadLanguage(string languageDir, bool IsRussian = false)
+        {
+            this.languageDir = languageDir;
+            // load translate
+            this.isRussian = IsRussian;
+
+            culture = "en-GB";
+            string EnglishCultureName = "en-GB";
+            string RussianCultureName = "ru-RU";
+            if (!IsRussian)
+            {
+                culture = EnglishCultureName;
+            }
+            else
+            {
+                culture = RussianCultureName;
+            }
+
+            string languageFile = Path.Combine(languageDir, DriverUtils.DriverCode + "." + culture + ".xml");
+
+            if (!File.Exists(languageFile))
+            {
+                MessageBox.Show(languageFile, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            Locale.LoadDictionaries(languageFile, out string errMsg);
+            Locale.GetDictionary("Scada.Comm.Drivers.DrvModbusCM.View.FrmStart");
+            Locale.GetDictionary("Scada.Comm.Drivers.DrvModbusCM.View.Config");
+            CommonPhrases.Init();
+
+            if (errMsg != string.Empty)
+            {
+                MessageBox.Show(errMsg, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        /// <summary>
+        /// Translation of the form.
+        /// <para>Перевод формы.</para>
+        /// </summary>
+        private void Translate()
+        {
+            // translate the form
+            FormTranslator.Translate(this, GetType().FullName);
+        }
+        #endregion Lang
+
         #region Configuration
         /// <summary>
-        /// 
-        /// <para></para>
+        /// Open the form with the basic settings of the application.
+        /// <para>Открыть форму с основными настройками приложения.</para>
         /// </summary>
         private void tolConfiguration_Click(object sender, EventArgs e)
         {
@@ -178,8 +272,8 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
 
         #region Setting
         /// <summary>
-        /// 
-        /// <para></para>
+        /// Open the form with additional application settings.
+        /// <para>Открыть форму с дополнительными настройками приложения.</para>
         /// </summary>
         private void tolSettings_Click(object sender, EventArgs e)
         {
@@ -197,8 +291,8 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
 
         #region Tools
         /// <summary>
-        /// 
-        /// <para></para>
+        /// Open the form with the converter.
+        /// <para>Открыть форму с конвертером.</para>
         /// </summary>
         private void tolConverter_Click(object sender, EventArgs e)
         {
@@ -209,8 +303,8 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
 
         #region Windows
         /// <summary>
-        /// 
-        /// <para></para>
+        /// Initialization of form window settings.
+        /// <para>Инициализация настроек окон форм.</para>
         /// </summary>
         private void InitializeWindows()
         {
@@ -220,8 +314,8 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
         }
 
         /// <summary>
-        /// 
-        /// <para></para>
+        /// Adding an open child form to the list of windows.
+        /// <para>Добавление открытой дочерней формы в список окон.</para>
         /// </summary>
         private void Child_AddForm(Form child)
         {
@@ -260,8 +354,8 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
         }
 
         /// <summary>
-        /// 
-        /// <para></para>
+        /// Closing a child form.
+        /// <para>Закрытие дочерней формы.</para>
         /// </summary>
         private void Child_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -283,8 +377,8 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
         }
 
         /// <summary>
-        /// 
-        /// <para></para>
+        /// Adding information about a child form to a menu item.
+        /// <para>Добавлению информации о дочерней формы в пункт меню.</para>
         /// </summary>
         private void ChildFormMenu_Click(object sender, EventArgs e)
         {
@@ -301,8 +395,8 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
         }
 
         /// <summary>
-        /// 
-        /// <para></para>
+        /// Building child forms in the form of a cascade.
+        /// <para>Выстраивание дочерних форм в виде каскада.</para>
         /// </summary>
         private void tolCascade_Click(object sender, EventArgs e)
         {
@@ -310,8 +404,8 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
         }
 
         /// <summary>
-        /// 
-        /// <para></para>
+        /// Building child forms horizontal.
+        /// <para>Выстраивание дочерних форм по горизонтали.</para>
         /// </summary>
         private void tolHorizontal_Click(object sender, EventArgs e)
         {
@@ -319,8 +413,8 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
         }
 
         /// <summary>
-        /// 
-        /// <para></para>
+        /// Building child forms vertically.
+        /// <para>Выстраивание дочерних форм по вертикали.</para>
         /// </summary>
         private void tolVertical_Click(object sender, EventArgs e)
         {
@@ -328,8 +422,8 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
         }
 
         /// <summary>
-        /// 
-        /// <para></para>
+        /// Close all open child forms.
+        /// <para>Закрыть все открытые дочерние формы.</para>
         /// </summary>
         private void tolCloseAll_Click(object sender, EventArgs e)
         {
@@ -513,6 +607,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
         //}
 
         #endregion
+
 
     }
 }

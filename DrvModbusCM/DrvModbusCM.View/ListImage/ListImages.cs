@@ -17,7 +17,8 @@
             public const string Stop = "stop.png";
             public const string ActionLog = "action_log.png";
 
-
+            public const string FlagRussia = "flag_russia.png";
+            public const string FlagUSA = "flag_usa.png";
         }
 
         /// <summary>
@@ -26,6 +27,7 @@
         public static Dictionary<string, Image> GetFormImages()
         {
             FrmConfig frmConfig = new FrmConfig();
+            FrmStart frmStart = new FrmStart();
             return new Dictionary<string, Image>
             {
                 { ImageKeyForm.New, frmConfig.imgListForm.Images[ImageKeyForm.New] },
@@ -35,6 +37,9 @@
                 { ImageKeyForm.Start, frmConfig.imgListForm.Images[ImageKeyForm.Start] },
                 { ImageKeyForm.Stop, frmConfig.imgListForm.Images[ImageKeyForm.Stop] },
                 { ImageKeyForm.ActionLog, frmConfig.imgListForm.Images[ImageKeyForm.ActionLog] },
+
+                { ImageKeyForm.FlagRussia, frmStart.imgListMenu.Images[ImageKeyForm.FlagRussia] },
+                { ImageKeyForm.FlagUSA, frmStart.imgListMenu.Images[ImageKeyForm.FlagUSA] },
             };
         }
 

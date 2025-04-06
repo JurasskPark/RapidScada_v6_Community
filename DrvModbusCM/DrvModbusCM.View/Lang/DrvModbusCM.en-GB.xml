@@ -1,5 +1,40 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <DrvModbusCMDictionaries>
+	<Dictionary key="Scada.Comm.Drivers.DrvModbusCM.View.FrmStart">
+		<Phrase key="this">Rapid Scada Community Modbus Driver</Phrase>
+		<Phrase key="tolAdministration.Text">Administration</Phrase>
+		<Phrase key="tolApplication.Text">Application</Phrase>
+		<Phrase key="tolApplicationNew.Text">New</Phrase>
+		<Phrase key="tolApplicationOpen.Text">Open</Phrase>
+		<Phrase key="tolApplicationSave.Text">Save</Phrase>
+		<Phrase key="tolApplicationSaveAs.Text">Save As...</Phrase>
+		<Phrase key="tolCascade.Text">Cascade</Phrase>
+		<Phrase key="tolCommands.Text">Commands</Phrase>
+		<Phrase key="tolConverter.Text">Converter</Phrase>
+		<Phrase key="tolDatabase.Text">Database</Phrase>
+		<Phrase key="tolDebug.Text">Debug</Phrase>
+		<Phrase key="tolDevices.Text">Devices</Phrase>
+		<Phrase key="tolLang.Text">Language: Russian</Phrase>
+		<Phrase key="tolHorizontal.Text">Horizontal</Phrase>
+		<Phrase key="tolMaps.Text">Maps</Phrase>
+		<Phrase key="tolParser.Text">Parser</Phrase>
+		<Phrase key="tolRefBook.Text">Refbook</Phrase>
+		<Phrase key="tolSerialPortToTcpServer.Text">Serial Port to Tcp Server</Phrase>
+		<Phrase key="tolServer.Text">Server</Phrase>
+		<Phrase key="tolServers.Text">Servers</Phrase>
+		<Phrase key="tolSettings.Text">Settings</Phrase>
+		<Phrase key="tolTools.Text">Tools</Phrase>
+		<Phrase key="tolTables.Text">Tables</Phrase>
+		<Phrase key="tolTasks.Text">Tasks</Phrase>
+		<Phrase key="tolTcpServer.Text">Tcp Server</Phrase>
+		<Phrase key="tolTemplates.Text">Templates</Phrase>
+		<Phrase key="tolVertical.Text">Vertical</Phrase>
+		<Phrase key="tolWindow.Text">Windows</Phrase>
+		<Phrase key="tolChapter.Text">Chapter</Phrase>
+		<Phrase key="tolLithography.Text">Lithography</Phrase>
+		<Phrase key="tolRecipes.Text">Recipes</Phrase>
+		<Phrase key="tolCommandsTemplates">Commands templates</Phrase>
+	</Dictionary>
 	<Dictionary key="Scada.Comm.Drivers.DrvModbusCM.View.FrmConfig">
 		<Phrase key="this">ModbusCM</Phrase>
 		<Phrase key="cmnuAddCmd.Text">Add Command</Phrase>

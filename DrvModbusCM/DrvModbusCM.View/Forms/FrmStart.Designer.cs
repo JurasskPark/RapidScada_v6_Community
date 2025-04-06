@@ -48,14 +48,16 @@
             tolConverter = new ToolStripMenuItem();
             tolSettings = new ToolStripMenuItem();
             tolWindows = new ToolStripMenuItem();
+            tolSeparator1 = new ToolStripSeparator();
             tolCascade = new ToolStripMenuItem();
             tolHorizontal = new ToolStripMenuItem();
             tolVertical = new ToolStripMenuItem();
-            tolCloseAll = new ToolStripMenuItem();
-            tolSeparator1 = new ToolStripSeparator();
-            tolDebug = new ToolStripMenuItem();
-            imgListMenu = new ImageList(components);
             tolSeparator2 = new ToolStripSeparator();
+            tolCloseAll = new ToolStripMenuItem();
+            tolDebug = new ToolStripMenuItem();
+            tolEmptySpace = new ToolStripMenuItem();
+            tolLang = new ToolStripMenuItem();
+            imgListMenu = new ImageList(components);
             mnuMenu.SuspendLayout();
             SuspendLayout();
             // 
@@ -69,7 +71,7 @@
             // 
             // mnuMenu
             // 
-            mnuMenu.Items.AddRange(new ToolStripItem[] { tolProject, tolAdministration, toolsToolStripMenuItem, tolSettings, tolWindows, tolDebug });
+            mnuMenu.Items.AddRange(new ToolStripItem[] { tolProject, tolAdministration, toolsToolStripMenuItem, tolSettings, tolWindows, tolDebug, tolEmptySpace, tolLang });
             mnuMenu.Location = new Point(0, 0);
             mnuMenu.Name = "mnuMenu";
             mnuMenu.Size = new Size(800, 24);
@@ -199,11 +201,16 @@
             tolWindows.Size = new Size(84, 20);
             tolWindows.Text = "Windows";
             // 
+            // tolSeparator1
+            // 
+            tolSeparator1.Name = "tolSeparator1";
+            tolSeparator1.Size = new Size(126, 6);
+            // 
             // tolCascade
             // 
             tolCascade.Image = (Image)resources.GetObject("tolCascade.Image");
             tolCascade.Name = "tolCascade";
-            tolCascade.Size = new Size(180, 22);
+            tolCascade.Size = new Size(129, 22);
             tolCascade.Text = "Cascade";
             tolCascade.Click += tolCascade_Click;
             // 
@@ -211,7 +218,7 @@
             // 
             tolHorizontal.Image = (Image)resources.GetObject("tolHorizontal.Image");
             tolHorizontal.Name = "tolHorizontal";
-            tolHorizontal.Size = new Size(180, 22);
+            tolHorizontal.Size = new Size(129, 22);
             tolHorizontal.Text = "Horizontal";
             tolHorizontal.Click += tolHorizontal_Click;
             // 
@@ -219,21 +226,21 @@
             // 
             tolVertical.Image = (Image)resources.GetObject("tolVertical.Image");
             tolVertical.Name = "tolVertical";
-            tolVertical.Size = new Size(180, 22);
+            tolVertical.Size = new Size(129, 22);
             tolVertical.Text = "Vertical";
             tolVertical.Click += tolVertical_Click;
+            // 
+            // tolSeparator2
+            // 
+            tolSeparator2.Name = "tolSeparator2";
+            tolSeparator2.Size = new Size(126, 6);
             // 
             // tolCloseAll
             // 
             tolCloseAll.Name = "tolCloseAll";
-            tolCloseAll.Size = new Size(180, 22);
+            tolCloseAll.Size = new Size(129, 22);
             tolCloseAll.Text = "Close All";
             tolCloseAll.Click += tolCloseAll_Click;
-            // 
-            // tolSeparator1
-            // 
-            tolSeparator1.Name = "tolSeparator1";
-            tolSeparator1.Size = new Size(177, 6);
             // 
             // tolDebug
             // 
@@ -242,16 +249,29 @@
             tolDebug.Size = new Size(70, 20);
             tolDebug.Text = "Debug";
             // 
+            // tolEmptySpace
+            // 
+            tolEmptySpace.Alignment = ToolStripItemAlignment.Right;
+            tolEmptySpace.Name = "tolEmptySpace";
+            tolEmptySpace.Size = new Size(37, 20);
+            tolEmptySpace.Text = "      ";
+            // 
+            // tolLang
+            // 
+            tolLang.Alignment = ToolStripItemAlignment.Right;
+            tolLang.Image = (Image)resources.GetObject("tolLang.Image");
+            tolLang.Name = "tolLang";
+            tolLang.Size = new Size(87, 20);
+            tolLang.Text = "Language";
+            tolLang.Click += tolLang_Click;
+            // 
             // imgListMenu
             // 
             imgListMenu.ColorDepth = ColorDepth.Depth32Bit;
-            imgListMenu.ImageSize = new Size(16, 16);
+            imgListMenu.ImageStream = (ImageListStreamer)resources.GetObject("imgListMenu.ImageStream");
             imgListMenu.TransparentColor = Color.Transparent;
-            // 
-            // tolSeparator2
-            // 
-            tolSeparator2.Name = "tolSeparator2";
-            tolSeparator2.Size = new Size(177, 6);
+            imgListMenu.Images.SetKeyName(0, "flag_russia.png");
+            imgListMenu.Images.SetKeyName(1, "flag_usa.png");
             // 
             // FrmStart
             // 
@@ -266,7 +286,7 @@
             MainMenuStrip = mnuMenu;
             Name = "FrmStart";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "Modbus Community";
+            Text = "Rapid Scada Community Modbus Driver";
             WindowState = FormWindowState.Maximized;
             mnuMenu.ResumeLayout(false);
             mnuMenu.PerformLayout();
@@ -295,12 +315,14 @@
         private ToolStripMenuItem tolConverter;
         private ToolStripMenuItem tolTemplates;
         private ToolStripMenuItem tolDebug;
-        private ImageList imgListMenu;
         private ToolStripMenuItem tolProjectNew;
         private ToolStripMenuItem tolProjectSaveAs;
         private ToolStripMenuItem tolConfiguration;
         private ToolStripMenuItem tolCloseAll;
         private ToolStripSeparator tolSeparator1;
         private ToolStripSeparator tolSeparator2;
+        private ToolStripMenuItem tolLang;
+        private ToolStripMenuItem tolEmptySpace;
+        public ImageList imgListMenu;
     }
 }

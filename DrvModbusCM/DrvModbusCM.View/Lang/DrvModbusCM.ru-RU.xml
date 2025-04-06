@@ -1,5 +1,40 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <DrvModbusCMDictionaries>
+	<Dictionary key="Scada.Comm.Drivers.DrvModbusCM.View.FrmStart">
+		<Phrase key="this">Драйвер Modbus сообщества Rapid Scada</Phrase>
+		<Phrase key="tolAdministration.Text">Администирование</Phrase>
+		<Phrase key="tolApplication.Text">Приложение</Phrase>
+		<Phrase key="tolApplicationNew.Text">Новый</Phrase>
+		<Phrase key="tolApplicationOpen.Text">Открыть</Phrase>
+		<Phrase key="tolApplicationSave.Text">Сохранить</Phrase>
+		<Phrase key="tolApplicationSaveAs.Text">Сохранить как...</Phrase>
+		<Phrase key="tolCascade.Text">Каскадом</Phrase>
+		<Phrase key="tolCommands.Text">Команды</Phrase>
+		<Phrase key="tolConverter.Text">Конвертер</Phrase>
+		<Phrase key="tolDatabase.Text">База данных</Phrase>
+		<Phrase key="tolDebug.Text">Отладка</Phrase>
+		<Phrase key="tolDevices.Text">Устройства</Phrase>
+		<Phrase key="tolLang.Text">Язык: Английский</Phrase>
+		<Phrase key="tolHorizontal.Text">Горизонтально</Phrase>
+		<Phrase key="tolMaps.Text">Карты</Phrase>
+		<Phrase key="tolParser.Text">Парсер</Phrase>
+		<Phrase key="tolRefBook.Text">Справочник</Phrase>
+		<Phrase key="tolSerialPortToTcpServer.Text">Последовательный порт в TCP-сервер</Phrase>
+		<Phrase key="tolServer.Text">Сервер</Phrase>
+		<Phrase key="tolServers.Text">Сервера</Phrase>
+		<Phrase key="tolSettings.Text">Настройки</Phrase>
+		<Phrase key="tolTools.Text">Инструменты</Phrase>
+		<Phrase key="tolTables.Text">Таблицы</Phrase>
+		<Phrase key="tolTasks.Text">Задачи</Phrase>
+		<Phrase key="tolTcpServer.Text">TCP-сервер</Phrase>
+		<Phrase key="tolTemplates.Text">Шаблоны</Phrase>
+		<Phrase key="tolVertical.Text">Вертикально</Phrase>
+		<Phrase key="tolWindow.Text">Окна</Phrase>
+		<Phrase key="tolChapter.Text">Раздел</Phrase>
+		<Phrase key="tolLithography.Text">Литография</Phrase>
+		<Phrase key="tolRecipes.Text">Рецепты</Phrase>
+		<Phrase key="tolCommandsTemplates">Шаблоны команд</Phrase>
+	</Dictionary>
   <Dictionary key="Scada.Comm.Drivers.DrvModbusCM.View.FrmConfig">
     <Phrase key="this">ModbusCM</Phrase>
     <Phrase key="cmnuAddCmd.Text">Добавить команду</Phrase>
