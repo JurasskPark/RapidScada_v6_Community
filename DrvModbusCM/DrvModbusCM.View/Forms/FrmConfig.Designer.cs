@@ -45,7 +45,6 @@
             cmnuSeparator3 = new ToolStripSeparator();
             сmnuSelectVariableActionUp = new ToolStripMenuItem();
             сmnuSelectVariableActionDown = new ToolStripMenuItem();
-            tmrTimer = new System.Windows.Forms.Timer(components);
             splContainer = new SplitContainer();
             tlsMenu = new ToolStrip();
             tlsProjectNew = new ToolStripButton();
@@ -53,8 +52,6 @@
             tlsProjectSave = new ToolStripButton();
             tlsProjectSaveAs = new ToolStripButton();
             toolStripSeparator2 = new ToolStripSeparator();
-            tlsProjectStartStop = new ToolStripButton();
-            toolStripSeparator3 = new ToolStripSeparator();
             imgListForm = new ImageList(components);
             cmnuDeviceAppend = new ContextMenuStrip(components);
             cmnuDeviceAdd = new ToolStripMenuItem();
@@ -116,15 +113,9 @@
             trvProject.Location = new Point(0, 0);
             trvProject.Name = "trvProject";
             trvProject.SelectedImageIndex = 0;
-            trvProject.Size = new Size(273, 446);
+            trvProject.Size = new Size(172, 446);
             trvProject.TabIndex = 0;
-            trvProject.ItemDrag += trvProject_ItemDrag;
-            trvProject.BeforeSelect += trvProject_BeforeSelect;
             trvProject.AfterSelect += trvProject_AfterSelect;
-            trvProject.NodeMouseClick += trvProject_NodeMouseClick;
-            trvProject.DragDrop += trvProject_DragDrop;
-            trvProject.DragEnter += trvProject_DragEnter;
-            trvProject.MouseClick += trvProject_MouseClick;
             trvProject.MouseDown += trvProject_MouseDown;
             // 
             // imgList
@@ -167,7 +158,7 @@
             tabControl.Location = new Point(0, 0);
             tabControl.Name = "tabControl";
             tabControl.SelectedIndex = 0;
-            tabControl.Size = new Size(542, 446);
+            tabControl.Size = new Size(643, 446);
             tabControl.TabIndex = 1;
             // 
             // cmnuTagAppend
@@ -175,43 +166,41 @@
             cmnuTagAppend.ImageScalingSize = new Size(24, 24);
             cmnuTagAppend.Items.AddRange(new ToolStripItem[] { cmnuAddTag, cmnuSeparator1, cmnuDeleteGroup, cmnuSeparator2, сmnuSelectVariableUp, сmnuSelectVariableDown });
             cmnuTagAppend.Name = "cmnu";
-            cmnuTagAppend.Size = new Size(118, 104);
+            cmnuTagAppend.Size = new Size(108, 104);
             // 
             // cmnuAddTag
             // 
             cmnuAddTag.Name = "cmnuAddTag";
-            cmnuAddTag.Size = new Size(117, 22);
-            cmnuAddTag.Text = "Add Tag";
-            cmnuAddTag.Click += cmnuAddVariable_Click;
+            cmnuAddTag.Size = new Size(107, 22);
             // 
             // cmnuSeparator1
             // 
             cmnuSeparator1.Name = "cmnuSeparator1";
-            cmnuSeparator1.Size = new Size(114, 6);
+            cmnuSeparator1.Size = new Size(104, 6);
             // 
             // cmnuDeleteGroup
             // 
             cmnuDeleteGroup.Name = "cmnuDeleteGroup";
-            cmnuDeleteGroup.Size = new Size(117, 22);
+            cmnuDeleteGroup.Size = new Size(107, 22);
             cmnuDeleteGroup.Text = "Delete";
             cmnuDeleteGroup.Click += cmnuDeleteGroup_Click;
             // 
             // cmnuSeparator2
             // 
             cmnuSeparator2.Name = "cmnuSeparator2";
-            cmnuSeparator2.Size = new Size(114, 6);
+            cmnuSeparator2.Size = new Size(104, 6);
             // 
             // сmnuSelectVariableUp
             // 
             сmnuSelectVariableUp.Name = "сmnuSelectVariableUp";
-            сmnuSelectVariableUp.Size = new Size(117, 22);
+            сmnuSelectVariableUp.Size = new Size(107, 22);
             сmnuSelectVariableUp.Text = "Up";
             сmnuSelectVariableUp.Click += сmnuSelectVariableUp_Click;
             // 
             // сmnuSelectVariableDown
             // 
             сmnuSelectVariableDown.Name = "сmnuSelectVariableDown";
-            сmnuSelectVariableDown.Size = new Size(117, 22);
+            сmnuSelectVariableDown.Size = new Size(107, 22);
             сmnuSelectVariableDown.Text = "Down";
             сmnuSelectVariableDown.Click += сmnuSelectVariableDown_Click;
             // 
@@ -248,11 +237,6 @@
             сmnuSelectVariableActionDown.Text = "Down";
             сmnuSelectVariableActionDown.Click += сmnuSelectVariableActionDown_Click;
             // 
-            // tmrTimer
-            // 
-            tmrTimer.Interval = 1000;
-            tmrTimer.Tick += tmrTimer_Tick;
-            // 
             // splContainer
             // 
             splContainer.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
@@ -267,13 +251,14 @@
             // 
             splContainer.Panel2.Controls.Add(tabControl);
             splContainer.Size = new Size(819, 446);
-            splContainer.SplitterDistance = 273;
+            splContainer.SplitterDistance = 172;
             splContainer.TabIndex = 5;
+            splContainer.SplitterMoved += splContainer_SplitterMoved;
             // 
             // tlsMenu
             // 
             tlsMenu.ImageScalingSize = new Size(32, 32);
-            tlsMenu.Items.AddRange(new ToolStripItem[] { tlsProjectNew, tlsProjectOpen, tlsProjectSave, tlsProjectSaveAs, toolStripSeparator2, tlsProjectStartStop, toolStripSeparator3 });
+            tlsMenu.Items.AddRange(new ToolStripItem[] { tlsProjectNew, tlsProjectOpen, tlsProjectSave, tlsProjectSaveAs, toolStripSeparator2 });
             tlsMenu.Location = new Point(0, 0);
             tlsMenu.Name = "tlsMenu";
             tlsMenu.Padding = new Padding(0, 0, 2, 0);
@@ -325,21 +310,6 @@
             // 
             toolStripSeparator2.Name = "toolStripSeparator2";
             toolStripSeparator2.Size = new Size(6, 39);
-            // 
-            // tlsProjectStartStop
-            // 
-            tlsProjectStartStop.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            tlsProjectStartStop.Image = (Image)resources.GetObject("tlsProjectStartStop.Image");
-            tlsProjectStartStop.ImageTransparentColor = Color.Magenta;
-            tlsProjectStartStop.Name = "tlsProjectStartStop";
-            tlsProjectStartStop.Size = new Size(36, 36);
-            tlsProjectStartStop.Text = "Start";
-            tlsProjectStartStop.Click += tlsProjectStartStop_Click;
-            // 
-            // toolStripSeparator3
-            // 
-            toolStripSeparator3.Name = "toolStripSeparator3";
-            toolStripSeparator3.Size = new Size(6, 39);
             // 
             // imgListForm
             // 
@@ -644,7 +614,6 @@
         private ToolStripMenuItem сmnuSelectVariableActionDown;
         private ToolStripMenuItem cmnuDeleteGroup;
         private ToolStripSeparator cmnuSeparator2;
-        private System.Windows.Forms.Timer tmrTimer;
         private SplitContainer splContainer;
         private ToolStrip tlsMenu;
         private ToolStripButton tlsProjectNew;
@@ -681,8 +650,6 @@
         private ToolStripMenuItem cmnuCommandDown;
         private ToolStripSeparator toolStripSeparator1;
         private ToolStripMenuItem cmnuCommandDel;
-        private ToolStripButton tlsProjectStartStop;
-        private ToolStripSeparator toolStripSeparator3;
         public ContextMenuStrip cmnuChannelAppend;
         private ToolStripMenuItem cmnuChannelAdd;
         private ToolStripSeparator toolStripSeparator5;
