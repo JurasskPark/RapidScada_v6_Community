@@ -39,12 +39,7 @@
             tolProjectSaveAs = new ToolStripMenuItem();
             tolAdministration = new ToolStripMenuItem();
             tolConfiguration = new ToolStripMenuItem();
-            tolTables = new ToolStripMenuItem();
-            tolServers = new ToolStripMenuItem();
-            tolDevices = new ToolStripMenuItem();
-            tolCommands = new ToolStripMenuItem();
-            tolTemplates = new ToolStripMenuItem();
-            toolsToolStripMenuItem = new ToolStripMenuItem();
+            tolTools = new ToolStripMenuItem();
             tolConverter = new ToolStripMenuItem();
             tolSettings = new ToolStripMenuItem();
             tolWindows = new ToolStripMenuItem();
@@ -67,16 +62,14 @@
             stsStrip.Name = "stsStrip";
             stsStrip.Size = new Size(800, 22);
             stsStrip.TabIndex = 0;
-            stsStrip.Text = "statusStrip1";
             // 
             // mnuMenu
             // 
-            mnuMenu.Items.AddRange(new ToolStripItem[] { tolProject, tolAdministration, toolsToolStripMenuItem, tolSettings, tolWindows, tolDebug, tolEmptySpace, tolLang });
+            mnuMenu.Items.AddRange(new ToolStripItem[] { tolProject, tolAdministration, tolTools, tolSettings, tolWindows, tolDebug, tolEmptySpace, tolLang });
             mnuMenu.Location = new Point(0, 0);
             mnuMenu.Name = "mnuMenu";
             mnuMenu.Size = new Size(800, 24);
             mnuMenu.TabIndex = 1;
-            mnuMenu.Text = "menuStrip1";
             // 
             // tolProject
             // 
@@ -90,7 +83,7 @@
             // 
             tolProjectNew.Image = (Image)resources.GetObject("tolProjectNew.Image");
             tolProjectNew.Name = "tolProjectNew";
-            tolProjectNew.Size = new Size(123, 22);
+            tolProjectNew.Size = new Size(180, 22);
             tolProjectNew.Text = "New";
             tolProjectNew.Click += tolApplicationNew_Click;
             // 
@@ -98,7 +91,7 @@
             // 
             tolProjectOpen.Image = (Image)resources.GetObject("tolProjectOpen.Image");
             tolProjectOpen.Name = "tolProjectOpen";
-            tolProjectOpen.Size = new Size(123, 22);
+            tolProjectOpen.Size = new Size(180, 22);
             tolProjectOpen.Text = "Open";
             tolProjectOpen.Click += tolApplicationOpen_Click;
             // 
@@ -106,7 +99,7 @@
             // 
             tolProjectSave.Image = (Image)resources.GetObject("tolProjectSave.Image");
             tolProjectSave.Name = "tolProjectSave";
-            tolProjectSave.Size = new Size(123, 22);
+            tolProjectSave.Size = new Size(180, 22);
             tolProjectSave.Text = "Save";
             tolProjectSave.Click += tolApplicationSave_Click;
             // 
@@ -114,13 +107,13 @@
             // 
             tolProjectSaveAs.Image = (Image)resources.GetObject("tolProjectSaveAs.Image");
             tolProjectSaveAs.Name = "tolProjectSaveAs";
-            tolProjectSaveAs.Size = new Size(123, 22);
+            tolProjectSaveAs.Size = new Size(180, 22);
             tolProjectSaveAs.Text = "Save As...";
             tolProjectSaveAs.Click += tolApplicationSaveAs_Click;
             // 
             // tolAdministration
             // 
-            tolAdministration.DropDownItems.AddRange(new ToolStripItem[] { tolConfiguration, tolTables });
+            tolAdministration.DropDownItems.AddRange(new ToolStripItem[] { tolConfiguration });
             tolAdministration.Image = (Image)resources.GetObject("tolAdministration.Image");
             tolAdministration.Name = "tolAdministration";
             tolAdministration.Size = new Size(114, 20);
@@ -128,54 +121,19 @@
             // 
             // tolConfiguration
             // 
+            tolConfiguration.Image = (Image)resources.GetObject("tolConfiguration.Image");
             tolConfiguration.Name = "tolConfiguration";
-            tolConfiguration.Size = new Size(148, 22);
+            tolConfiguration.Size = new Size(180, 22);
             tolConfiguration.Text = "Configuration";
             tolConfiguration.Click += tolConfiguration_Click;
             // 
-            // tolTables
+            // tolTools
             // 
-            tolTables.DropDownItems.AddRange(new ToolStripItem[] { tolServers, tolDevices, tolCommands, tolTemplates });
-            tolTables.Image = (Image)resources.GetObject("tolTables.Image");
-            tolTables.Name = "tolTables";
-            tolTables.Size = new Size(148, 22);
-            tolTables.Text = "Tables";
-            // 
-            // tolServers
-            // 
-            tolServers.Image = (Image)resources.GetObject("tolServers.Image");
-            tolServers.Name = "tolServers";
-            tolServers.Size = new Size(136, 22);
-            tolServers.Text = "Servers";
-            // 
-            // tolDevices
-            // 
-            tolDevices.Image = (Image)resources.GetObject("tolDevices.Image");
-            tolDevices.Name = "tolDevices";
-            tolDevices.Size = new Size(136, 22);
-            tolDevices.Text = "Devices";
-            // 
-            // tolCommands
-            // 
-            tolCommands.Image = (Image)resources.GetObject("tolCommands.Image");
-            tolCommands.Name = "tolCommands";
-            tolCommands.Size = new Size(136, 22);
-            tolCommands.Text = "Commands";
-            // 
-            // tolTemplates
-            // 
-            tolTemplates.Image = (Image)resources.GetObject("tolTemplates.Image");
-            tolTemplates.Name = "tolTemplates";
-            tolTemplates.Size = new Size(136, 22);
-            tolTemplates.Text = "Templates";
-            // 
-            // toolsToolStripMenuItem
-            // 
-            toolsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { tolConverter });
-            toolsToolStripMenuItem.Image = (Image)resources.GetObject("toolsToolStripMenuItem.Image");
-            toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-            toolsToolStripMenuItem.Size = new Size(62, 20);
-            toolsToolStripMenuItem.Text = "Tools";
+            tolTools.DropDownItems.AddRange(new ToolStripItem[] { tolConverter });
+            tolTools.Image = (Image)resources.GetObject("tolTools.Image");
+            tolTools.Name = "tolTools";
+            tolTools.Size = new Size(62, 20);
+            tolTools.Text = "Tools";
             // 
             // tolConverter
             // 
@@ -204,13 +162,13 @@
             // tolSeparator1
             // 
             tolSeparator1.Name = "tolSeparator1";
-            tolSeparator1.Size = new Size(126, 6);
+            tolSeparator1.Size = new Size(177, 6);
             // 
             // tolCascade
             // 
             tolCascade.Image = (Image)resources.GetObject("tolCascade.Image");
             tolCascade.Name = "tolCascade";
-            tolCascade.Size = new Size(129, 22);
+            tolCascade.Size = new Size(180, 22);
             tolCascade.Text = "Cascade";
             tolCascade.Click += tolCascade_Click;
             // 
@@ -218,7 +176,7 @@
             // 
             tolHorizontal.Image = (Image)resources.GetObject("tolHorizontal.Image");
             tolHorizontal.Name = "tolHorizontal";
-            tolHorizontal.Size = new Size(129, 22);
+            tolHorizontal.Size = new Size(180, 22);
             tolHorizontal.Text = "Horizontal";
             tolHorizontal.Click += tolHorizontal_Click;
             // 
@@ -226,19 +184,19 @@
             // 
             tolVertical.Image = (Image)resources.GetObject("tolVertical.Image");
             tolVertical.Name = "tolVertical";
-            tolVertical.Size = new Size(129, 22);
+            tolVertical.Size = new Size(180, 22);
             tolVertical.Text = "Vertical";
             tolVertical.Click += tolVertical_Click;
             // 
             // tolSeparator2
             // 
             tolSeparator2.Name = "tolSeparator2";
-            tolSeparator2.Size = new Size(126, 6);
+            tolSeparator2.Size = new Size(177, 6);
             // 
             // tolCloseAll
             // 
             tolCloseAll.Name = "tolCloseAll";
-            tolCloseAll.Size = new Size(129, 22);
+            tolCloseAll.Size = new Size(180, 22);
             tolCloseAll.Text = "Close All";
             tolCloseAll.Click += tolCloseAll_Click;
             // 
@@ -300,8 +258,6 @@
         private MenuStrip mnuMenu;
         private ToolStripMenuItem tolSettings;
         private ToolStripMenuItem tolAdministration;
-        private ToolStripMenuItem tolTables;
-        private ToolStripMenuItem tolDevices;
         private ToolStripMenuItem tolWindows;
         private ToolStripMenuItem tolCascade;
         private ToolStripMenuItem tolHorizontal;
@@ -309,11 +265,8 @@
         private ToolStripMenuItem tolProject;
         private ToolStripMenuItem tolProjectOpen;
         private ToolStripMenuItem tolProjectSave;
-        private ToolStripMenuItem toolsToolStripMenuItem;
-        private ToolStripMenuItem tolServers;
-        private ToolStripMenuItem tolCommands;
+        private ToolStripMenuItem tolTools;
         private ToolStripMenuItem tolConverter;
-        private ToolStripMenuItem tolTemplates;
         private ToolStripMenuItem tolDebug;
         private ToolStripMenuItem tolProjectNew;
         private ToolStripMenuItem tolProjectSaveAs;

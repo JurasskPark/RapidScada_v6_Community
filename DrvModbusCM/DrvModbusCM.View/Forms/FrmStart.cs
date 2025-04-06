@@ -608,6 +608,5 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
 
         #endregion
 
-
     }
 }
