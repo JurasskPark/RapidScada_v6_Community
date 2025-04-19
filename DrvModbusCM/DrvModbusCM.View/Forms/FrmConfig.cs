@@ -382,6 +382,8 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
                         ProjectGroupTag projectGroupTag = projectDevice.GroupTag;
                         TreeNode nodeGroupTag = NodeGroupTagAdd(projectGroupTag, cmnuTagAppend, nodeDevice);
                     }
+
+                    
                 }
 
                 treeView.EndUpdate();
@@ -472,16 +474,17 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
 
                         #region Group Channel
                         if (prLevel01Node.NodeType == ProjectNodeType.GroupChannel)
-                        {
+                        {               
                             ProjectGroupChannel groupChannel = (ProjectGroupChannel)prLevel01Node.GroupChannel;
+                            groupChannel.Group = new List<ProjectChannel>();
 
                             #region Channel
                             foreach (TreeNode tnLevel02 in tnLevel01.Nodes)
                             {
                                 ProjectNodeData prLevel02Node = (ProjectNodeData)tnLevel02.Tag;
-
                                 if (prLevel02Node.NodeType == ProjectNodeType.Channel)
                                 {
+                                    
                                     ProjectChannel channel = (ProjectChannel)prLevel02Node.Channel;
                                     List<ProjectDevice> listDevices = new List<ProjectDevice>();
                                     foreach (TreeNode tnLevel03 in tnLevel02.Nodes)
@@ -524,11 +527,12 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
                                             listDevices.Add(device);
 
                                         }
-                                        channel.Devices = listDevices;
+                                       
                                     }
-
+                                    channel.Devices = listDevices;
                                     groupChannel.Group.Add(channel);
                                 }
+                                
                             }
                             #endregion Channel
 
