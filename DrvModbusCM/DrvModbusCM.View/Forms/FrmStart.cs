@@ -1,4 +1,5 @@
-﻿using Scada.Comm.Drivers.DrvModbusCM;
+﻿using DrvModbusCM.View.Forms.Log;
+using Scada.Comm.Drivers.DrvModbusCM;
 using Scada.Forms;
 using Scada.Lang;
 using System.Diagnostics;
@@ -267,6 +268,23 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             frmConfig.Show();
 
             Child_AddForm(frmConfig);
+        }
+
+        /// <summary>
+        /// Open the form with the application logs.
+        /// <para>Открыть форму с логами приложения.</para>
+        /// </summary>
+        private void tolLogs_Click(object sender, EventArgs e)
+        {
+            FrmLogs frmLogs = new FrmLogs();
+            frmLogs.MdiParent = this;
+            frmLogs.Text = frmLogs.Text.ToString(); 
+            frmLogs.WindowState = FormWindowState.Maximized;
+            frmLogs.formParent = this;
+            frmLogs.project = project;
+            frmLogs.Show();
+
+            Child_AddForm(frmLogs);
         }
         #endregion Configuration
 
@@ -613,5 +631,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             DriverThread driverThread = new DriverThread(project);
             driverThread.ThreadsStart();
         }
+
+
     }
 }

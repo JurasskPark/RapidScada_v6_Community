@@ -85,7 +85,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             }
         }
         //Получение RxTx
-        void DevicePollTxRxGet(Guid id, string type, int data)
+        public void DevicePollTxRxGet(Guid id, string type, int data)
         {
             //try
             //{
@@ -130,7 +130,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
         }
 
 
-        void DevicePollLogGet(Guid id, string text)
+        public void DevicePollLogGet(Guid id, string text)
         {
             //try
             //{
@@ -179,7 +179,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             //catch { }
         }
 
-        void DevicePollTCPServerLogGet(Guid id, string text)
+        public void DevicePollTCPServerLogGet(Guid id, string text)
         {
             //    try
             //    {

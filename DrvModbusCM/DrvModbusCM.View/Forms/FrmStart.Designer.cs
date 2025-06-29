@@ -53,6 +53,7 @@
             tolEmptySpace = new ToolStripMenuItem();
             tolLang = new ToolStripMenuItem();
             imgListMenu = new ImageList(components);
+            tolLogs = new ToolStripMenuItem();
             mnuMenu.SuspendLayout();
             SuspendLayout();
             // 
@@ -113,7 +114,7 @@
             // 
             // tolAdministration
             // 
-            tolAdministration.DropDownItems.AddRange(new ToolStripItem[] { tolConfiguration });
+            tolAdministration.DropDownItems.AddRange(new ToolStripItem[] { tolConfiguration, tolLogs });
             tolAdministration.Image = (Image)resources.GetObject("tolAdministration.Image");
             tolAdministration.Name = "tolAdministration";
             tolAdministration.Size = new Size(114, 20);
@@ -232,6 +233,13 @@
             imgListMenu.Images.SetKeyName(0, "flag_russia.png");
             imgListMenu.Images.SetKeyName(1, "flag_usa.png");
             // 
+            // tolLogs
+            // 
+            tolLogs.Name = "tolLogs";
+            tolLogs.Size = new Size(180, 22);
+            tolLogs.Text = "Logs";
+            tolLogs.Click += tolLogs_Click;
+            // 
             // FrmStart
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -278,5 +286,6 @@
         private ToolStripMenuItem tolLang;
         private ToolStripMenuItem tolEmptySpace;
         public ImageList imgListMenu;
+        private ToolStripMenuItem tolLogs;
     }
 }
