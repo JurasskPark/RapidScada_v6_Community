@@ -207,7 +207,16 @@ namespace Scada.Comm.Drivers.DrvModbusCM
         /// <para>Получение и передача информации о RxTx<para>
         /// </summary>
         public static EventDevicePollTxRx EventHandlerEventDevicePollTxRx;
-        public delegate void EventDevicePollTxRx(string type, int data);
+        public delegate void EventDevicePollTxRx(Guid id, string type, int count);
+        internal void DebugerTxRx(string type, int count)
+        {
+            if (EventHandlerEventDevicePollTxRx == null)
+            {
+                return;
+            }
+
+            EventHandlerEventDevicePollTxRx(channel.ID, type, count);
+        }
         #endregion EventDevicePollTxRx
 
         #region DebugerLog
@@ -216,7 +225,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
         /// <para>Получение лога<para>
         /// </summary>
         public static DebugData OnDebug;
-        public delegate void DebugData(string msg);
+        public delegate void DebugData(Guid id, string msg);
         internal void DebugerLog(string text)
         {
             if (OnDebug == null)
@@ -224,7 +233,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
                 return;
             }
 
-            OnDebug(text);
+            OnDebug(channel.ID, text);
         }
         #endregion DebugerLog
 
@@ -290,9 +299,11 @@ namespace Scada.Comm.Drivers.DrvModbusCM
 
         }
 
-        public DriverClient(Project currentProject)
+
+
+        public DriverClient(ProjectChannel channel)
         {
-            this.project = currentProject;
+            this.channel = channel;
         }
 
 

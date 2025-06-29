@@ -11,6 +11,7 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)CnlPrototypeFactory\CnlPrototypeFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Communication\ComminicationClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DriverClient\DriverThread.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Project\ApplicationPath.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Protocols\MasterDeviceReceiverSender.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Protocols\Master\Protocol.cs" />

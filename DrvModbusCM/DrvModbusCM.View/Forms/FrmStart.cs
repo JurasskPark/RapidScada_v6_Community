@@ -608,5 +608,10 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
 
         #endregion
 
+        private void tolDebug_Click(object sender, EventArgs e)
+        {
+            DriverThread driverThread = new DriverThread(project);
+            driverThread.ThreadsStart();
+        }
     }
 }

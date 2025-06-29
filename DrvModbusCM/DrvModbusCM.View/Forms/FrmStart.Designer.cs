@@ -83,7 +83,7 @@
             // 
             tolProjectNew.Image = (Image)resources.GetObject("tolProjectNew.Image");
             tolProjectNew.Name = "tolProjectNew";
-            tolProjectNew.Size = new Size(180, 22);
+            tolProjectNew.Size = new Size(123, 22);
             tolProjectNew.Text = "New";
             tolProjectNew.Click += tolApplicationNew_Click;
             // 
@@ -91,7 +91,7 @@
             // 
             tolProjectOpen.Image = (Image)resources.GetObject("tolProjectOpen.Image");
             tolProjectOpen.Name = "tolProjectOpen";
-            tolProjectOpen.Size = new Size(180, 22);
+            tolProjectOpen.Size = new Size(123, 22);
             tolProjectOpen.Text = "Open";
             tolProjectOpen.Click += tolApplicationOpen_Click;
             // 
@@ -99,7 +99,7 @@
             // 
             tolProjectSave.Image = (Image)resources.GetObject("tolProjectSave.Image");
             tolProjectSave.Name = "tolProjectSave";
-            tolProjectSave.Size = new Size(180, 22);
+            tolProjectSave.Size = new Size(123, 22);
             tolProjectSave.Text = "Save";
             tolProjectSave.Click += tolApplicationSave_Click;
             // 
@@ -107,7 +107,7 @@
             // 
             tolProjectSaveAs.Image = (Image)resources.GetObject("tolProjectSaveAs.Image");
             tolProjectSaveAs.Name = "tolProjectSaveAs";
-            tolProjectSaveAs.Size = new Size(180, 22);
+            tolProjectSaveAs.Size = new Size(123, 22);
             tolProjectSaveAs.Text = "Save As...";
             tolProjectSaveAs.Click += tolApplicationSaveAs_Click;
             // 
@@ -162,13 +162,13 @@
             // tolSeparator1
             // 
             tolSeparator1.Name = "tolSeparator1";
-            tolSeparator1.Size = new Size(177, 6);
+            tolSeparator1.Size = new Size(126, 6);
             // 
             // tolCascade
             // 
             tolCascade.Image = (Image)resources.GetObject("tolCascade.Image");
             tolCascade.Name = "tolCascade";
-            tolCascade.Size = new Size(180, 22);
+            tolCascade.Size = new Size(129, 22);
             tolCascade.Text = "Cascade";
             tolCascade.Click += tolCascade_Click;
             // 
@@ -176,7 +176,7 @@
             // 
             tolHorizontal.Image = (Image)resources.GetObject("tolHorizontal.Image");
             tolHorizontal.Name = "tolHorizontal";
-            tolHorizontal.Size = new Size(180, 22);
+            tolHorizontal.Size = new Size(129, 22);
             tolHorizontal.Text = "Horizontal";
             tolHorizontal.Click += tolHorizontal_Click;
             // 
@@ -184,19 +184,19 @@
             // 
             tolVertical.Image = (Image)resources.GetObject("tolVertical.Image");
             tolVertical.Name = "tolVertical";
-            tolVertical.Size = new Size(180, 22);
+            tolVertical.Size = new Size(129, 22);
             tolVertical.Text = "Vertical";
             tolVertical.Click += tolVertical_Click;
             // 
             // tolSeparator2
             // 
             tolSeparator2.Name = "tolSeparator2";
-            tolSeparator2.Size = new Size(177, 6);
+            tolSeparator2.Size = new Size(126, 6);
             // 
             // tolCloseAll
             // 
             tolCloseAll.Name = "tolCloseAll";
-            tolCloseAll.Size = new Size(180, 22);
+            tolCloseAll.Size = new Size(129, 22);
             tolCloseAll.Text = "Close All";
             tolCloseAll.Click += tolCloseAll_Click;
             // 
@@ -206,6 +206,7 @@
             tolDebug.Name = "tolDebug";
             tolDebug.Size = new Size(70, 20);
             tolDebug.Text = "Debug";
+            tolDebug.Click += tolDebug_Click;
             // 
             // tolEmptySpace
             // 
