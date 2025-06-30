@@ -1,16 +1,7 @@
 ﻿using Scada.Comm.Drivers.DrvModbusCM;
 using Scada.Comm.Drivers.DrvModbusCM.View;
 using Scada.Forms;
-using Scada.Lang;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace DrvModbusCM.View.Forms.Log
 {
@@ -25,8 +16,11 @@ namespace DrvModbusCM.View.Forms.Log
         public FrmStart formParent;                     // parent form
         public Project project;                         // the project configuration
 
-        private string id;
+        private DriverClient driverClient = new DriverClient();
+
+        private Guid id;
         private string name;
+        private bool logWrite = true;
         #endregion Variables
 
 
@@ -85,12 +79,12 @@ namespace DrvModbusCM.View.Forms.Log
             #region Combobox
             DataTable dataTableChannels = new DataTable();
             dataTableChannels.TableName = "Data";
-            dataTableChannels.Columns.Add("Id", typeof(string));
+            dataTableChannels.Columns.Add("Id", typeof(Guid));
             dataTableChannels.Columns.Add("Name", typeof(string));
 
             foreach (ProjectChannel channel in project.Driver.GroupChannel.Group)
             {
-                dataTableChannels.Rows.Add(channel.ID.ToString(), channel.Name.ToString());
+                dataTableChannels.Rows.Add(channel.ID, channel.Name.ToString());
             }
 
             cmbChannel.DataSource = dataTableChannels;
@@ -98,6 +92,8 @@ namespace DrvModbusCM.View.Forms.Log
             cmbChannel.DisplayMember = "Name";
             cmbChannel.SelectedIndex = 0;
             #endregion Combobox
+
+            DriverClient.OnDebug = new DriverClient.DebugData(LogDriverClient);
         }
 
         /// <summary>
@@ -109,6 +105,15 @@ namespace DrvModbusCM.View.Forms.Log
 
         }
 
+        private void cmbChannel_MouseClick(object sender, MouseEventArgs e)
+        {
+            DriverClient.OnDebug -= new DriverClient.DebugData(LogDriverClient);
+        }
+
+        private void cmbChannel_MouseUp(object sender, MouseEventArgs e)
+        {
+            DriverClient.OnDebug += new DriverClient.DebugData(LogDriverClient);
+        }
 
         private void cmbChannel_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -121,16 +126,80 @@ namespace DrvModbusCM.View.Forms.Log
             {
                 System.Data.DataRowView dataRowView = (DataRowView)cmbChannel.SelectedItem;
                 if (dataRowView != null &&
-                    String.IsNullOrEmpty(Convert.ToString(dataRowView.Row.ItemArray[0]).Trim()) == false &&
-                    String.IsNullOrEmpty(Convert.ToString(dataRowView.Row.ItemArray[1]).Trim()) == false
+                    System.String.IsNullOrEmpty(Convert.ToString(dataRowView.Row.ItemArray[0]).Trim()) == false &&
+                    System.String.IsNullOrEmpty(Convert.ToString(dataRowView.Row.ItemArray[1]).Trim()) == false
                     )
                 {
-                    id = Convert.ToString(dataRowView.Row.ItemArray[0]).Trim();
+                    id = DriverUtils.StringToGuid(Convert.ToString(dataRowView.Row.ItemArray[0]).Trim());
                     name = Convert.ToString(dataRowView.Row.ItemArray[1]).Trim();
 
+                    LogClear();
+
+                    DriverClient.OnDebug = new DriverClient.DebugData(LogDriverClient);
                 }
             }
             catch { }
+        }
+
+        public void LogDriverClient(Guid id, string text)
+        {
+            if (logWrite)
+            {
+                if (this.id == id)
+                {
+                    Log(text);
+                }
+            }
+        }
+
+        public void Log(string text)
+        {
+            if (!IsHandleCreated)
+            {
+                this.CreateControl();
+            }
+
+            if (IsHandleCreated)
+            {
+                this.Invoke((MethodInvoker)delegate
+                {
+                    fctLog.AppendText(@$"{text}" + Environment.NewLine);
+
+                    if (fctLog.Lines.Count() > 200)
+                    {
+                        fctLog.Text = "";
+                    }
+                });
+            }
+            else
+            {
+                fctLog.AppendText(@$"{text}" + Environment.NewLine);
+
+                if (fctLog.Lines.Count() > 200)
+                {
+                    fctLog.Text = "";
+                }
+            }
+        }
+
+        public void LogClear()
+        {
+            if (!IsHandleCreated)
+            {
+                this.CreateControl();
+            }
+
+            if (IsHandleCreated)
+            {
+                this.Invoke((MethodInvoker)delegate
+                {
+                    fctLog.Text = string.Empty;
+                });
+            }
+            else
+            {
+                fctLog.Text = string.Empty;
+            }
         }
         #endregion Config 
 
@@ -142,5 +211,10 @@ namespace DrvModbusCM.View.Forms.Log
 
 
 
+
+        private void ckbPause_CheckedChanged(object sender, EventArgs e)
+        {
+            logWrite = !ckbPause.Checked;
+        }
     }
 }

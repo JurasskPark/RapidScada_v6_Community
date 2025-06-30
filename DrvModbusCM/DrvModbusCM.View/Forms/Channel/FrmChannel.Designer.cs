@@ -31,6 +31,16 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmChannel));
             tabChannel = new TabControl();
             tabChannelSettings = new TabPage();
+            gpbSettingsChannelTime = new GroupBox();
+            numChannelTimeout = new NumericUpDown();
+            lblms_3 = new Label();
+            numChannelReadTimeout = new NumericUpDown();
+            numChannelWriteTimeout = new NumericUpDown();
+            lblChannelTimeout = new Label();
+            lblms_2 = new Label();
+            lblms_1 = new Label();
+            lblChannelReadTimeout = new Label();
+            lblChannelWriteTimeout = new Label();
             gpbGroup = new GroupBox();
             ckbEnabled = new CheckBox();
             lblName = new Label();
@@ -40,7 +50,7 @@
             lblСhannelID = new Label();
             txtСhannelID = new TextBox();
             lblType = new Label();
-            cmbType = new ComboBox();
+            cmbTypeClient = new ComboBox();
             rchChannelInfo = new RichTextBox();
             gpbSerialPort = new GroupBox();
             gbSerialPortSettings = new GroupBox();
@@ -65,8 +75,8 @@
             gpbTCPUDPClient = new GroupBox();
             numPort = new NumericUpDown();
             txtHost = new TextBox();
-            lblPort = new Label();
             lblHost = new Label();
+            lblPort = new Label();
             tabChannelSettingsAdvanced = new TabPage();
             btnSaveOptions = new Button();
             gpbSettingsСhannelGateway = new GroupBox();
@@ -85,18 +95,12 @@
             gpbSettingsСhannelNumError = new GroupBox();
             numChannelCountError = new NumericUpDown();
             lblChannelCountError = new Label();
-            gpbSettingsChannelTime = new GroupBox();
-            numChannelTimeout = new NumericUpDown();
-            lblms_3 = new Label();
-            numChannelReadTimeout = new NumericUpDown();
-            numChannelWriteTimeout = new NumericUpDown();
-            lblChannelTimeout = new Label();
-            lblms_2 = new Label();
-            lblms_1 = new Label();
-            lblChannelReadTimeout = new Label();
-            lblChannelWriteTimeout = new Label();
             tabChannel.SuspendLayout();
             tabChannelSettings.SuspendLayout();
+            gpbSettingsChannelTime.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)numChannelTimeout).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numChannelReadTimeout).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numChannelWriteTimeout).BeginInit();
             gpbGroup.SuspendLayout();
             gpbSettingsСhannel.SuspendLayout();
             gpbSerialPort.SuspendLayout();
@@ -115,10 +119,6 @@
             ((System.ComponentModel.ISupportInitialize)numChannelReadBufferSize).BeginInit();
             gpbSettingsСhannelNumError.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)numChannelCountError).BeginInit();
-            gpbSettingsChannelTime.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)numChannelTimeout).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)numChannelReadTimeout).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)numChannelWriteTimeout).BeginInit();
             SuspendLayout();
             // 
             // tabChannel
@@ -148,6 +148,117 @@
             tabChannelSettings.TabIndex = 0;
             tabChannelSettings.Text = "Settings";
             tabChannelSettings.UseVisualStyleBackColor = true;
+            // 
+            // gpbSettingsChannelTime
+            // 
+            gpbSettingsChannelTime.Controls.Add(numChannelTimeout);
+            gpbSettingsChannelTime.Controls.Add(lblms_3);
+            gpbSettingsChannelTime.Controls.Add(numChannelReadTimeout);
+            gpbSettingsChannelTime.Controls.Add(numChannelWriteTimeout);
+            gpbSettingsChannelTime.Controls.Add(lblChannelTimeout);
+            gpbSettingsChannelTime.Controls.Add(lblms_2);
+            gpbSettingsChannelTime.Controls.Add(lblms_1);
+            gpbSettingsChannelTime.Controls.Add(lblChannelReadTimeout);
+            gpbSettingsChannelTime.Controls.Add(lblChannelWriteTimeout);
+            gpbSettingsChannelTime.Location = new Point(6, 379);
+            gpbSettingsChannelTime.Margin = new Padding(4, 3, 4, 3);
+            gpbSettingsChannelTime.Name = "gpbSettingsChannelTime";
+            gpbSettingsChannelTime.Padding = new Padding(4, 3, 4, 3);
+            gpbSettingsChannelTime.Size = new Size(566, 114);
+            gpbSettingsChannelTime.TabIndex = 77;
+            gpbSettingsChannelTime.TabStop = false;
+            gpbSettingsChannelTime.Text = "Waiting time for operations to be performed";
+            gpbSettingsChannelTime.Visible = false;
+            // 
+            // numChannelTimeout
+            // 
+            numChannelTimeout.Location = new Point(292, 77);
+            numChannelTimeout.Margin = new Padding(4, 3, 4, 3);
+            numChannelTimeout.Maximum = new decimal(new int[] { 60000, 0, 0, 0 });
+            numChannelTimeout.Name = "numChannelTimeout";
+            numChannelTimeout.Size = new Size(84, 23);
+            numChannelTimeout.TabIndex = 56;
+            numChannelTimeout.Value = new decimal(new int[] { 1000, 0, 0, 0 });
+            // 
+            // lblms_3
+            // 
+            lblms_3.AutoSize = true;
+            lblms_3.Location = new Point(385, 79);
+            lblms_3.Margin = new Padding(4, 0, 4, 0);
+            lblms_3.Name = "lblms_3";
+            lblms_3.Size = new Size(23, 15);
+            lblms_3.TabIndex = 43;
+            lblms_3.Text = "ms";
+            // 
+            // numChannelReadTimeout
+            // 
+            numChannelReadTimeout.Location = new Point(292, 47);
+            numChannelReadTimeout.Margin = new Padding(4, 3, 4, 3);
+            numChannelReadTimeout.Maximum = new decimal(new int[] { 60000, 0, 0, 0 });
+            numChannelReadTimeout.Name = "numChannelReadTimeout";
+            numChannelReadTimeout.Size = new Size(84, 23);
+            numChannelReadTimeout.TabIndex = 55;
+            numChannelReadTimeout.Value = new decimal(new int[] { 1000, 0, 0, 0 });
+            // 
+            // numChannelWriteTimeout
+            // 
+            numChannelWriteTimeout.Location = new Point(292, 17);
+            numChannelWriteTimeout.Margin = new Padding(4, 3, 4, 3);
+            numChannelWriteTimeout.Maximum = new decimal(new int[] { 60000, 0, 0, 0 });
+            numChannelWriteTimeout.Name = "numChannelWriteTimeout";
+            numChannelWriteTimeout.Size = new Size(84, 23);
+            numChannelWriteTimeout.TabIndex = 54;
+            numChannelWriteTimeout.Value = new decimal(new int[] { 1000, 0, 0, 0 });
+            // 
+            // lblChannelTimeout
+            // 
+            lblChannelTimeout.AutoSize = true;
+            lblChannelTimeout.Location = new Point(8, 79);
+            lblChannelTimeout.Margin = new Padding(4, 0, 4, 0);
+            lblChannelTimeout.Name = "lblChannelTimeout";
+            lblChannelTimeout.Size = new Size(124, 15);
+            lblChannelTimeout.TabIndex = 42;
+            lblChannelTimeout.Text = "Time between packets";
+            // 
+            // lblms_2
+            // 
+            lblms_2.AutoSize = true;
+            lblms_2.Location = new Point(385, 49);
+            lblms_2.Margin = new Padding(4, 0, 4, 0);
+            lblms_2.Name = "lblms_2";
+            lblms_2.Size = new Size(23, 15);
+            lblms_2.TabIndex = 40;
+            lblms_2.Text = "ms";
+            // 
+            // lblms_1
+            // 
+            lblms_1.AutoSize = true;
+            lblms_1.Location = new Point(385, 19);
+            lblms_1.Margin = new Padding(4, 0, 4, 0);
+            lblms_1.Name = "lblms_1";
+            lblms_1.Size = new Size(23, 15);
+            lblms_1.TabIndex = 39;
+            lblms_1.Text = "ms";
+            // 
+            // lblChannelReadTimeout
+            // 
+            lblChannelReadTimeout.AutoSize = true;
+            lblChannelReadTimeout.Location = new Point(8, 49);
+            lblChannelReadTimeout.Margin = new Padding(4, 0, 4, 0);
+            lblChannelReadTimeout.Name = "lblChannelReadTimeout";
+            lblChannelReadTimeout.Size = new Size(77, 15);
+            lblChannelReadTimeout.TabIndex = 38;
+            lblChannelReadTimeout.Text = "Reading time";
+            // 
+            // lblChannelWriteTimeout
+            // 
+            lblChannelWriteTimeout.AutoSize = true;
+            lblChannelWriteTimeout.Location = new Point(8, 19);
+            lblChannelWriteTimeout.Margin = new Padding(4, 0, 4, 0);
+            lblChannelWriteTimeout.Name = "lblChannelWriteTimeout";
+            lblChannelWriteTimeout.Size = new Size(88, 15);
+            lblChannelWriteTimeout.TabIndex = 36;
+            lblChannelWriteTimeout.Text = "Recording time";
             // 
             // gpbGroup
             // 
@@ -210,7 +321,7 @@
             gpbSettingsСhannel.Controls.Add(lblСhannelID);
             gpbSettingsСhannel.Controls.Add(txtСhannelID);
             gpbSettingsСhannel.Controls.Add(lblType);
-            gpbSettingsСhannel.Controls.Add(cmbType);
+            gpbSettingsСhannel.Controls.Add(cmbTypeClient);
             gpbSettingsСhannel.Location = new Point(7, 79);
             gpbSettingsСhannel.Margin = new Padding(4, 3, 4, 3);
             gpbSettingsСhannel.Name = "gpbSettingsСhannel";
@@ -250,18 +361,18 @@
             lblType.TabIndex = 23;
             lblType.Text = "Type";
             // 
-            // cmbType
+            // cmbTypeClient
             // 
-            cmbType.DropDownStyle = ComboBoxStyle.DropDownList;
-            cmbType.Enabled = false;
-            cmbType.FormattingEnabled = true;
-            cmbType.Items.AddRange(new object[] { "None", "Serial Port", "TCP client", "UDP client" });
-            cmbType.Location = new Point(88, 48);
-            cmbType.Margin = new Padding(4, 3, 4, 3);
-            cmbType.Name = "cmbType";
-            cmbType.Size = new Size(250, 23);
-            cmbType.TabIndex = 22;
-            cmbType.SelectedIndexChanged += cmbType_SelectedIndexChanged;
+            cmbTypeClient.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbTypeClient.Enabled = false;
+            cmbTypeClient.FormattingEnabled = true;
+            cmbTypeClient.Items.AddRange(new object[] { "None", "Serial Port", "TCP client", "UDP client" });
+            cmbTypeClient.Location = new Point(88, 48);
+            cmbTypeClient.Margin = new Padding(4, 3, 4, 3);
+            cmbTypeClient.Name = "cmbTypeClient";
+            cmbTypeClient.Size = new Size(250, 23);
+            cmbTypeClient.TabIndex = 22;
+            cmbTypeClient.SelectedIndexChanged += cmbTypeClient_SelectedIndexChanged;
             // 
             // rchChannelInfo
             // 
@@ -538,16 +649,6 @@
             txtHost.Text = "127.0.0.1";
             txtHost.TextChanged += control_Changed;
             // 
-            // lblPort
-            // 
-            lblPort.AutoSize = true;
-            lblPort.Location = new Point(9, 53);
-            lblPort.Margin = new Padding(4, 0, 4, 0);
-            lblPort.Name = "lblPort";
-            lblPort.Size = new Size(29, 15);
-            lblPort.TabIndex = 77;
-            lblPort.Text = "Port";
-            // 
             // lblHost
             // 
             lblHost.AutoSize = true;
@@ -557,6 +658,16 @@
             lblHost.Size = new Size(76, 15);
             lblHost.TabIndex = 78;
             lblHost.Text = "Remote Host";
+            // 
+            // lblPort
+            // 
+            lblPort.AutoSize = true;
+            lblPort.Location = new Point(9, 53);
+            lblPort.Margin = new Padding(4, 0, 4, 0);
+            lblPort.Name = "lblPort";
+            lblPort.Size = new Size(29, 15);
+            lblPort.TabIndex = 77;
+            lblPort.Text = "Port";
             // 
             // tabChannelSettingsAdvanced
             // 
@@ -775,117 +886,6 @@
             lblChannelCountError.TabIndex = 0;
             lblChannelCountError.Text = "Number of request attempts in case of an error";
             // 
-            // gpbSettingsChannelTime
-            // 
-            gpbSettingsChannelTime.Controls.Add(numChannelTimeout);
-            gpbSettingsChannelTime.Controls.Add(lblms_3);
-            gpbSettingsChannelTime.Controls.Add(numChannelReadTimeout);
-            gpbSettingsChannelTime.Controls.Add(numChannelWriteTimeout);
-            gpbSettingsChannelTime.Controls.Add(lblChannelTimeout);
-            gpbSettingsChannelTime.Controls.Add(lblms_2);
-            gpbSettingsChannelTime.Controls.Add(lblms_1);
-            gpbSettingsChannelTime.Controls.Add(lblChannelReadTimeout);
-            gpbSettingsChannelTime.Controls.Add(lblChannelWriteTimeout);
-            gpbSettingsChannelTime.Location = new Point(6, 379);
-            gpbSettingsChannelTime.Margin = new Padding(4, 3, 4, 3);
-            gpbSettingsChannelTime.Name = "gpbSettingsChannelTime";
-            gpbSettingsChannelTime.Padding = new Padding(4, 3, 4, 3);
-            gpbSettingsChannelTime.Size = new Size(566, 114);
-            gpbSettingsChannelTime.TabIndex = 77;
-            gpbSettingsChannelTime.TabStop = false;
-            gpbSettingsChannelTime.Text = "Waiting time for operations to be performed";
-            gpbSettingsChannelTime.Visible = false;
-            // 
-            // numChannelTimeout
-            // 
-            numChannelTimeout.Location = new Point(292, 77);
-            numChannelTimeout.Margin = new Padding(4, 3, 4, 3);
-            numChannelTimeout.Maximum = new decimal(new int[] { 60000, 0, 0, 0 });
-            numChannelTimeout.Name = "numChannelTimeout";
-            numChannelTimeout.Size = new Size(84, 23);
-            numChannelTimeout.TabIndex = 56;
-            numChannelTimeout.Value = new decimal(new int[] { 1000, 0, 0, 0 });
-            // 
-            // lblms_3
-            // 
-            lblms_3.AutoSize = true;
-            lblms_3.Location = new Point(385, 79);
-            lblms_3.Margin = new Padding(4, 0, 4, 0);
-            lblms_3.Name = "lblms_3";
-            lblms_3.Size = new Size(23, 15);
-            lblms_3.TabIndex = 43;
-            lblms_3.Text = "ms";
-            // 
-            // numChannelReadTimeout
-            // 
-            numChannelReadTimeout.Location = new Point(292, 47);
-            numChannelReadTimeout.Margin = new Padding(4, 3, 4, 3);
-            numChannelReadTimeout.Maximum = new decimal(new int[] { 60000, 0, 0, 0 });
-            numChannelReadTimeout.Name = "numChannelReadTimeout";
-            numChannelReadTimeout.Size = new Size(84, 23);
-            numChannelReadTimeout.TabIndex = 55;
-            numChannelReadTimeout.Value = new decimal(new int[] { 1000, 0, 0, 0 });
-            // 
-            // numChannelWriteTimeout
-            // 
-            numChannelWriteTimeout.Location = new Point(292, 17);
-            numChannelWriteTimeout.Margin = new Padding(4, 3, 4, 3);
-            numChannelWriteTimeout.Maximum = new decimal(new int[] { 60000, 0, 0, 0 });
-            numChannelWriteTimeout.Name = "numChannelWriteTimeout";
-            numChannelWriteTimeout.Size = new Size(84, 23);
-            numChannelWriteTimeout.TabIndex = 54;
-            numChannelWriteTimeout.Value = new decimal(new int[] { 1000, 0, 0, 0 });
-            // 
-            // lblChannelTimeout
-            // 
-            lblChannelTimeout.AutoSize = true;
-            lblChannelTimeout.Location = new Point(8, 79);
-            lblChannelTimeout.Margin = new Padding(4, 0, 4, 0);
-            lblChannelTimeout.Name = "lblChannelTimeout";
-            lblChannelTimeout.Size = new Size(124, 15);
-            lblChannelTimeout.TabIndex = 42;
-            lblChannelTimeout.Text = "Time between packets";
-            // 
-            // lblms_2
-            // 
-            lblms_2.AutoSize = true;
-            lblms_2.Location = new Point(385, 49);
-            lblms_2.Margin = new Padding(4, 0, 4, 0);
-            lblms_2.Name = "lblms_2";
-            lblms_2.Size = new Size(23, 15);
-            lblms_2.TabIndex = 40;
-            lblms_2.Text = "ms";
-            // 
-            // lblms_1
-            // 
-            lblms_1.AutoSize = true;
-            lblms_1.Location = new Point(385, 19);
-            lblms_1.Margin = new Padding(4, 0, 4, 0);
-            lblms_1.Name = "lblms_1";
-            lblms_1.Size = new Size(23, 15);
-            lblms_1.TabIndex = 39;
-            lblms_1.Text = "ms";
-            // 
-            // lblChannelReadTimeout
-            // 
-            lblChannelReadTimeout.AutoSize = true;
-            lblChannelReadTimeout.Location = new Point(8, 49);
-            lblChannelReadTimeout.Margin = new Padding(4, 0, 4, 0);
-            lblChannelReadTimeout.Name = "lblChannelReadTimeout";
-            lblChannelReadTimeout.Size = new Size(77, 15);
-            lblChannelReadTimeout.TabIndex = 38;
-            lblChannelReadTimeout.Text = "Reading time";
-            // 
-            // lblChannelWriteTimeout
-            // 
-            lblChannelWriteTimeout.AutoSize = true;
-            lblChannelWriteTimeout.Location = new Point(8, 19);
-            lblChannelWriteTimeout.Margin = new Padding(4, 0, 4, 0);
-            lblChannelWriteTimeout.Name = "lblChannelWriteTimeout";
-            lblChannelWriteTimeout.Size = new Size(88, 15);
-            lblChannelWriteTimeout.TabIndex = 36;
-            lblChannelWriteTimeout.Text = "Recording time";
-            // 
             // FrmChannel
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -897,6 +897,11 @@
             Load += FrmChannel_Load;
             tabChannel.ResumeLayout(false);
             tabChannelSettings.ResumeLayout(false);
+            gpbSettingsChannelTime.ResumeLayout(false);
+            gpbSettingsChannelTime.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)numChannelTimeout).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numChannelReadTimeout).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numChannelWriteTimeout).EndInit();
             gpbGroup.ResumeLayout(false);
             gpbGroup.PerformLayout();
             gpbSettingsСhannel.ResumeLayout(false);
@@ -924,11 +929,6 @@
             gpbSettingsСhannelNumError.ResumeLayout(false);
             gpbSettingsСhannelNumError.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)numChannelCountError).EndInit();
-            gpbSettingsChannelTime.ResumeLayout(false);
-            gpbSettingsChannelTime.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)numChannelTimeout).EndInit();
-            ((System.ComponentModel.ISupportInitialize)numChannelReadTimeout).EndInit();
-            ((System.ComponentModel.ISupportInitialize)numChannelWriteTimeout).EndInit();
             ResumeLayout(false);
         }
 
@@ -945,7 +945,7 @@
         private Label lblСhannelID;
         private TextBox txtСhannelID;
         private Label lblType;
-        private ComboBox cmbType;
+        private ComboBox cmbTypeClient;
         private RichTextBox rchChannelInfo;
         private GroupBox gpbSerialPort;
         private GroupBox gbSerialPortSettings;

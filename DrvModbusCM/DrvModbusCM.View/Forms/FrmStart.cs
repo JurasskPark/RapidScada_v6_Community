@@ -455,109 +455,15 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
         #region 
         private void tlsProjectStartStop_Click(object sender, EventArgs e)
         {
-            StartProcess();
+            
         }
 
-        private void StartProcess()
-        {
-            #region Save Load
-
-            //SaveProject();
-            //ProjectLoad();
-
-            #endregion Save Load
-
-            #region Port
-
-            //if (project.Driver.Settings.ProjectChannel.GatewayTypeProtocol == 0)
-            //{
-            //    //Если шлюз не указан т.е. выключен, то генерируем порт 
-            //    currentPort = TcpServerPortGenerator.New();
-            //}
-            //else
-            //{
-            //    bool checkedPort = TcpServerPortGenerator.CheckAvailableServerPort(Convert.ToInt32(project.Settings.ProjectChannel.GatewayPort));
-            //    if (checkedPort == false)
-            //    {
-            //        //MessageBox.Show("Указанный порт " + project.Settings.ProjectChannel.GatewayPort + " занят! Попробуйте другой!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            //        return;
-            //    }
-            //}
-
-            #endregion Port
-
-            //DriverClient.OnDebug = new DriverClient.DebugData(DebugerLog);
-            //driverClient = new DriverClient(project);
-            //driverClient.InitializingDriver();
-
-            //FrmViewData.ShowSplashScreen();
-
-
-        }
+      
 
         public void DebugerLog(string text)
         {
 
         }
-
-        //private void Start()
-        //{
-        //    string errMsg = string.Empty;
-
-        //    // save the configuration
-        //    ControlsToConfig();
-
-        //    // load a configuration
-        //    ConfigToControls();
-
-        //    int port = 0;
-        //    if (project.Settings.ProjectChannel.GatewayTypeProtocol == 0)
-        //    {
-        //        //Если шлюз не указан т.е. выключен, то генерируем порт 
-        //        port = GENERATE_TCP_SERVER_PORT.PORT_NEW();
-        //    }
-        //    else
-        //    {
-        //        bool checked_port = GENERATE_TCP_SERVER_PORT.CheckAvailableServerPort(Convert.ToInt32(project.Settings.ProjectChannel.GatewayPort));
-        //        if (checked_port == false)
-        //        {
-        //            MessageBox.Show("Указанный порт " + project.Settings.ProjectChannel.GatewayPort + " занят! Попробуйте другой!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        //            return;
-        //        }
-        //    }
-
-        //    project.Settings.ProjectChannel.ThreadEnabled = true;
-
-        //    //Получение RxTx 
-        //    DriverClient.EventHandlerEventDevicePollTxRx = new DriverClient.EventDevicePollTxRx(PollTxRxGet);
-        //    //Получение лога
-        //    DriverClient.OnDebug = new DriverClient.DebugData(PollLogGet);
-        //    //Получение информации с TCP сервера
-        //    DriverClient.OnDebugTCPServer = new DriverClient.DebugDataTCPServer(PollLogGetTCPServer);
-
-        //    DriverClient driverClient = new DriverClient(project);
-        //    driverClient.InitializingDriver();
-
-        //    new Thread(new ParameterizedThreadStart(driverClient.ExecuteCycle))
-        //    {
-        //        IsBackground = true
-        //    }.Start((object)driverClient);
-
-
-
-
-        //    if (errMsg != string.Empty)
-        //    {
-        //        ScadaUiUtils.ShowError(errMsg);
-        //    }
-        //}
-
-
-        //private void Stop()
-        //{
-        //    project.Settings.ProjectChannel.ThreadEnabled = false;
-        //}
-
 
         void PollLogGet(string text)
         {
@@ -569,60 +475,6 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             //FrmViewData.SetLogTcpServer(text);
         }
 
-        /// <summary>
-        /// Receiving and recording logs
-        /// <para>Получение и запись логов</para>
-        /// </summary>
-        //private void ServerMaster_MasterLog(ServerMaster sender, ServerMasterEventArgs e)
-        //{
-        //    string text = string.Empty;
-        //    string date = DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss.fffff");
-
-        //    List<string> parameters = e.Parameters;
-
-        //    #region RichTextBox Log
-        //    try
-        //    {
-        //        if (!IsHandleCreated)
-        //        {
-        //            this.CreateControl();
-        //        }
-
-        //        if (IsHandleCreated)
-        //        {
-        //            this.Invoke((MethodInvoker)delegate
-        //            {
-        //                rtbServerLog.AppendText(@$"[{date}]{text}" + Environment.NewLine);
-        //                rtbServerLog.ScrollToCaret();
-        //                rtbServerLog.Focus();
-
-        //                //Если количество строк, больше 200, то очищаем RichTextBox
-        //                //Число 200 беретеся из Настроек
-        //                if (rtbServerLog.Lines.Count() > 200)
-        //                {
-        //                    rtbServerLog.Text = "";
-        //                }
-        //            });
-        //        }
-        //        else
-        //        {
-        //            rtbServerLog.AppendText(@$"[{date}]{text}" + Environment.NewLine);
-        //            rtbServerLog.ScrollToCaret();
-        //            rtbServerLog.Focus();
-
-        //            //Если количество строк, больше 200, то очищаем RichTextBox
-        //            //Число 200 беретеся из Настроек
-        //            if (rtbServerLog.Lines.Count() > 200)
-        //            {
-        //                rtbServerLog.Text = "";
-        //            }
-        //        }
-
-        //    }
-        //    catch { }
-        //    #endregion RichTextBox Log
-
-        //}
 
         #endregion
 

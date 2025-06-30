@@ -30,17 +30,17 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmLogs));
-            fastColoredTextBox1 = new FastColoredTextBoxNS.FastColoredTextBox();
+            fctLog = new FastColoredTextBoxNS.FastColoredTextBox();
             lblChannel = new Label();
             cmbChannel = new ComboBox();
             ckbPause = new CheckBox();
-            ((System.ComponentModel.ISupportInitialize)fastColoredTextBox1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)fctLog).BeginInit();
             SuspendLayout();
             // 
-            // fastColoredTextBox1
+            // fctLog
             // 
-            fastColoredTextBox1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            fastColoredTextBox1.AutoCompleteBracketsList = new char[]
+            fctLog.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            fctLog.AutoCompleteBracketsList = new char[]
     {
     '(',
     ')',
@@ -53,25 +53,26 @@
     '\'',
     '\''
     };
-            fastColoredTextBox1.AutoIndentCharsPatterns = "^\\s*[\\w\\.]+(\\s\\w+)?\\s*(?<range>=)\\s*(?<range>[^;=]+);\n^\\s*(case|default)\\s*[^:]*(?<range>:)\\s*(?<range>[^;]+);";
-            fastColoredTextBox1.AutoScrollMinSize = new Size(2, 14);
-            fastColoredTextBox1.BackBrush = null;
-            fastColoredTextBox1.BorderStyle = BorderStyle.FixedSingle;
-            fastColoredTextBox1.CharHeight = 14;
-            fastColoredTextBox1.CharWidth = 8;
-            fastColoredTextBox1.DefaultMarkerSize = 8;
-            fastColoredTextBox1.DisabledColor = Color.FromArgb(100, 180, 180, 180);
-            fastColoredTextBox1.Hotkeys = "Tab=IndentIncrease";
-            fastColoredTextBox1.IsReplaceMode = false;
-            fastColoredTextBox1.Location = new Point(12, 35);
-            fastColoredTextBox1.Name = "fastColoredTextBox1";
-            fastColoredTextBox1.Paddings = new Padding(0);
-            fastColoredTextBox1.SelectionColor = Color.FromArgb(60, 0, 0, 255);
-            //fastColoredTextBox1.ServiceColors = (FastColoredTextBoxNS.ServiceColors)resources.GetObject("fastColoredTextBox1.ServiceColors");
-            fastColoredTextBox1.ShowLineNumbers = false;
-            fastColoredTextBox1.Size = new Size(776, 403);
-            fastColoredTextBox1.TabIndex = 0;
-            fastColoredTextBox1.Zoom = 100;
+            fctLog.AutoIndentCharsPatterns = "^\\s*[\\w\\.]+(\\s\\w+)?\\s*(?<range>=)\\s*(?<range>[^;=]+);\n^\\s*(case|default)\\s*[^:]*(?<range>:)\\s*(?<range>[^;]+);";
+            fctLog.AutoScrollMinSize = new Size(2, 14);
+            fctLog.BackBrush = null;
+            fctLog.BorderStyle = BorderStyle.FixedSingle;
+            fctLog.CharHeight = 14;
+            fctLog.CharWidth = 8;
+            fctLog.DefaultMarkerSize = 8;
+            fctLog.DisabledColor = Color.FromArgb(100, 180, 180, 180);
+            fctLog.Font = new Font("Courier New", 9.75F);
+            fctLog.Hotkeys = "Tab=IndentIncrease";
+            fctLog.IsReplaceMode = false;
+            fctLog.Location = new Point(12, 35);
+            fctLog.Name = "fctLog";
+            fctLog.Paddings = new Padding(0);
+            fctLog.SelectionColor = Color.FromArgb(60, 0, 0, 255);
+            fctLog.ServiceColors = (FastColoredTextBoxNS.ServiceColors)resources.GetObject("fctLog.ServiceColors");
+            fctLog.ShowLineNumbers = false;
+            fctLog.Size = new Size(776, 403);
+            fctLog.TabIndex = 0;
+            fctLog.Zoom = 100;
             // 
             // lblChannel
             // 
@@ -91,6 +92,8 @@
             cmbChannel.Size = new Size(340, 23);
             cmbChannel.TabIndex = 2;
             cmbChannel.SelectedIndexChanged += cmbChannel_SelectedIndexChanged;
+            cmbChannel.MouseClick += cmbChannel_MouseClick;
+            cmbChannel.MouseUp += cmbChannel_MouseUp;
             // 
             // ckbPause
             // 
@@ -101,6 +104,7 @@
             ckbPause.TabIndex = 3;
             ckbPause.Text = "Pause";
             ckbPause.UseVisualStyleBackColor = true;
+            ckbPause.CheckedChanged += ckbPause_CheckedChanged;
             // 
             // FrmLogs
             // 
@@ -110,19 +114,19 @@
             Controls.Add(ckbPause);
             Controls.Add(cmbChannel);
             Controls.Add(lblChannel);
-            Controls.Add(fastColoredTextBox1);
+            Controls.Add(fctLog);
             Name = "FrmLogs";
             Text = "Logs";
             FormClosing += FrmLogs_FormClosing;
             Load += FrmLogs_Load;
-            ((System.ComponentModel.ISupportInitialize)fastColoredTextBox1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)fctLog).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
 
-        private FastColoredTextBoxNS.FastColoredTextBox fastColoredTextBox1;
+        private FastColoredTextBoxNS.FastColoredTextBox fctLog;
         private Label lblChannel;
         private ComboBox cmbChannel;
         private CheckBox ckbPause;

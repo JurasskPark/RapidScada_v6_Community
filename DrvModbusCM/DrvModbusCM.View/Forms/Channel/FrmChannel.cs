@@ -1,4 +1,12 @@
-﻿using Microsoft.Win32;
+﻿using DrvModbusCM.Shared.Communication;
+using FastColoredTextBoxNS;
+using Microsoft.Win32;
+using System;
+using System.Data;
+using System.Net.Sockets;
+using System.Xml;
+using System.Xml.Linq;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Scada.Comm.Drivers.DrvModbusCM.View
 {
@@ -50,7 +58,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
                 this.FormBorderStyle = FormBorderStyle.None;
                 btnSave.Visible = true;
                 btnSaveOptions.Visible = true;
-                cmbType.Enabled = true;
+                cmbTypeClient.Enabled = true;
                 gpbSettingsСhannelNumError.Visible = true;
                 gpbSettingsChannelBufferSize.Visible = true;
                 gpbSettingsChannelTime.Visible = true;
@@ -58,7 +66,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
                 Dock = DockStyle.Left | DockStyle.Top;
                 TopLevel = false;
 
-                ToolTip t = new ToolTip();
+                System.Windows.Forms.ToolTip t = new System.Windows.Forms.ToolTip();
                 t.SetToolTip(btnChannelGatewayPortChecked, DriverPhrases.ChannelGatewayPortChecked);
             }
         }
@@ -75,7 +83,31 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             txtName.Text = currentChannel.Name;
 
             ckbEnabled.Checked = currentChannel.Enabled;
-            //cmbType.SelectedIndex = currentChannel.Type;
+
+            #region Combobox
+            DataTable dataTableChannels = new DataTable();
+            dataTableChannels.TableName = "Data";
+            dataTableChannels.Columns.Add("Id", typeof(int));
+            dataTableChannels.Columns.Add("Name", typeof(string));
+
+            foreach (string name in Enum.GetNames(typeof(CommunicationClient)))
+            {
+                dataTableChannels.Rows.Add((int)(CommunicationClient)Enum.Parse(typeof(CommunicationClient), name), DriverUtils.GetEnumDescription((CommunicationClient)Enum.Parse(typeof(CommunicationClient), name)));
+            }
+
+            cmbTypeClient.DataSource = dataTableChannels;
+            cmbTypeClient.ValueMember = "Id";
+            cmbTypeClient.DisplayMember = "Name";
+            cmbTypeClient.SelectedIndex = 0;
+
+            cmbTypeClient.SelectedIndex = (int)currentChannel.TypeClient;
+            #endregion Combobox
+
+
+            foreach (string name in Enum.GetNames(typeof(CommunicationClient)))
+                Console.WriteLine(name);
+
+            cmbTypeClient.SelectedIndex = cmbTypeClient.FindString(Enum.GetName(typeof(CommunicationClient), currentChannel.TypeClient));
 
             //cmbPortName.SelectedIndex = cmbPortName.FindString(currentChannel.SerialPortName);
             //cmbBaudRate.SelectedIndex = cmbBaudRate.FindString(currentChannel.SerialPortBaudRate);
@@ -107,7 +139,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             ////А вот потом говорим, что так делать нельзя :)
             //numChannelConnectedClientsMax.Minimum = 1;
 
-            if (cmbType.SelectedIndex == 0)
+            if (cmbTypeClient.SelectedIndex == 0)
             {
                 rchChannelInfo.Clear();
             }
@@ -221,16 +253,27 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
 
         #region Component
 
-        private void cmbType_SelectedIndexChanged(object sender, EventArgs e)
+        private void cmbTypeClient_SelectedIndexChanged(object sender, EventArgs e)
         {
-            int cur = cmbType.SelectedIndex;
-            if (cmbType.SelectedIndex == 0)
+            try
+            {
+                System.Data.DataRowView dataRowView = (DataRowView)cmbTypeClient.SelectedItem;
+                if (dataRowView != null)
+                {
+                    currentChannel.TypeClient = (CommunicationClient)dataRowView.Row.ItemArray[0];
+                    //nameServer = Convert.ToString(dataRowView.Row.ItemArray[1]).Trim();
+                }
+            }
+            catch { }
+
+
+            if (cmbTypeClient.SelectedIndex == 0)
             {
                 rchChannelInfo.Visible = true;
                 gpbSerialPort.Visible = false;
                 gpbTCPUDPClient.Visible = false;
             }
-            else if (cmbType.SelectedIndex == 1)
+            else if (cmbTypeClient.SelectedIndex == 1)
             {
                 rchChannelInfo.Visible = false;
                 gpbSerialPort.Visible = true;
@@ -248,7 +291,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
 
                 SerialPortParametrsRefresh();
             }
-            else if (cmbType.SelectedIndex == 2)
+            else if (cmbTypeClient.SelectedIndex == 2)
             {
                 gpbTCPUDPClient.Text = DriverDictonary.ClientTCP;
 
@@ -259,7 +302,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
                 //txtHost.Text = currentChannel.ClientHost;
                 //numPort.Value = currentChannel.ClientPort;
             }
-            else if (cmbType.SelectedIndex == 3)
+            else if (cmbTypeClient.SelectedIndex == 3)
             {
                 gpbTCPUDPClient.Text = DriverDictonary.ClientUDP;
 
