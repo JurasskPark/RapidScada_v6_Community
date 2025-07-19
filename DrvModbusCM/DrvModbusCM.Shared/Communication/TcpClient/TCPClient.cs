@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using DrvModbusCM.Shared.Communication;
+using Scada.Comm.Drivers.DrvModbusCM;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using System.Globalization;
-using System.Threading;
-using Scada.Comm.Drivers.DrvModbusCM;
 
 public class TCPClient : IDisposable
 {
@@ -16,8 +11,10 @@ public class TCPClient : IDisposable
     private Socket mSocket;
     private IPEndPoint server;
 
-    private string ipAddress;
+    private ExecutionMode mode = ExecutionMode.Synchronous;
+    private IPAddress ipAddress;
     private int port;
+
 
     private byte[] bufferSender = new byte[2048];
     private byte[] bufferReceiver = new byte[2048];
@@ -25,7 +22,7 @@ public class TCPClient : IDisposable
     private static int writeTimeout = 1000;
     private static int readTimeout = 1000;
 
-    private static bool _connected = false;
+    private static bool connected = false;
 
     public const byte excIllegalFunction = 1;
     public const byte excIllegalDataAdr = 2;
@@ -40,13 +37,42 @@ public class TCPClient : IDisposable
 
     public TCPClient()
     {
-
+        this.ipAddress = IPAddress.Loopback;
+        this.port = 502;
     }
 
-    public TCPClient(string ip = "127.0.0.1", int port = 502)
+    public TCPClient(string clientIp = "127.0.0.1", int clientPort = 502)
     {
-        this.ipAddress = ip;
-        this.port = port;
+        this.ipAddress = IPAddress.Parse(clientIp);
+        this.port = clientPort;
+    }
+
+    public TCPClient(IPAddress clientIp, int clientPort = 502)
+    {
+        this.ipAddress = clientIp;
+        this.port = clientPort;
+    }
+
+    public TCPClient(string clientIp = "127.0.0.1", int clientPort = 502, int clientWriteTimeout = 1000, int clientReadTimeout = 1000, int clientWriteBufferSize = 2048, int clientReadBufferSize = 2048, ExecutionMode clientMode = ExecutionMode.Synchronous)
+    {
+        this.mode = clientMode;
+        this.ipAddress = IPAddress.Parse(clientIp);
+        this.port = clientPort;
+        writeTimeout = clientWriteTimeout;
+        readTimeout = clientReadTimeout;
+        bufferSender = new byte[clientWriteBufferSize];
+        bufferReceiver = new byte[clientReadBufferSize];
+    }
+
+    public TCPClient(IPAddress clientIp, int clientPort = 502, int clientWriteTimeout = 1000, int clientReadTimeout = 1000, int clientWriteBufferSize = 2048, int clientReadBufferSize = 2048, ExecutionMode clientMode = ExecutionMode.Synchronous)
+    {
+        this.mode = clientMode;
+        this.ipAddress = clientIp;
+        this.port = clientPort;
+        writeTimeout = clientWriteTimeout;
+        readTimeout = clientReadTimeout;
+        bufferSender = new byte[clientWriteBufferSize];
+        bufferReceiver = new byte[clientReadBufferSize];
     }
 
     ~TCPClient()
@@ -61,29 +87,10 @@ public class TCPClient : IDisposable
             this.mSocket = (Socket)null;
         }
 
-        TCPClient._connected = false;
+        TCPClient.connected = false;
     }
 
     #region Connect
-
-    public void Connect(string deviceIPAddress, int devicePort, int writeTimeout, int readTimeout)
-    {
-        try
-        {
-            IPEndPoint server = new IPEndPoint(IPAddress.Parse(deviceIPAddress), devicePort);
-            mSocket = new Socket(server.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-            mSocket.Connect((EndPoint)server);
-            mSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.SendTimeout, (int)writeTimeout);
-            mSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReceiveTimeout, (int)readTimeout);
-            mSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Debug, 1);
-            TCPClient._connected = true;
-        }
-        catch
-        {
-            TCPClient._connected = false;
-        }
-    }
-
     public void Connect()
     {
         try
@@ -91,7 +98,7 @@ public class TCPClient : IDisposable
             this.mSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             this.mSocket.SendBufferSize = bufferSender.Length;
             this.mSocket.ReceiveBufferSize = bufferReceiver.Length;
-            IPEndPoint server = new IPEndPoint(IPAddress.Parse(this.ipAddress), this.port);
+            IPEndPoint server = new IPEndPoint(this.ipAddress, this.port);
             this.mSocket.Connect(server);
         }
         catch (SocketException ex)
@@ -100,19 +107,54 @@ public class TCPClient : IDisposable
         }
     }
 
-    public void Connect(string ipAddress, int port)
+    public void Connect(string clientIp, int clientPort)
+    {
+        try
+        {
+            Connect(IPAddress.Parse(clientIp), clientPort);
+        }
+        catch (SocketException ex)
+        {
+            throw ex;
+        }
+    }
+
+    public void Connect(IPAddress clientIp, int clientPort)
     {
         try
         {
             this.mSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             this.mSocket.SendBufferSize = bufferSender.Length;
             this.mSocket.ReceiveBufferSize = bufferReceiver.Length;
-            IPEndPoint server = new IPEndPoint(IPAddress.Parse(this.ipAddress), this.port);
+            IPEndPoint server = new IPEndPoint(this.ipAddress, this.port);
             this.mSocket.Connect(server);
         }
         catch (SocketException ex)
         {
             throw ex;
+        }
+    }
+
+    public void Connect(string clientIp, int clientPort = 502, int clientWriteTimeout = 1000, int clientReadTimeout = 1000)
+    {
+        Connect(IPAddress.Parse(clientIp), clientPort, clientWriteTimeout, clientReadTimeout);
+    }
+
+    public void Connect(IPAddress clientIp, int clientPort = 502, int clientWriteTimeout = 1000, int clientReadTimeout = 1000)
+    {
+        try
+        {
+            IPEndPoint server = new IPEndPoint(clientIp, clientPort);
+            mSocket = new Socket(server.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+            mSocket.Connect((EndPoint)server);
+            mSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.SendTimeout, (int)clientWriteTimeout);
+            mSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReceiveTimeout, (int)clientReadTimeout);
+            mSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Debug, 1);
+            TCPClient.connected = true;
+        }
+        catch
+        {
+            TCPClient.connected = false;
         }
     }
 
@@ -137,7 +179,7 @@ public class TCPClient : IDisposable
         }
 
         mSocket = (Socket)null;
-        TCPClient._connected = false;
+        TCPClient.connected = false;
     }
 
     #endregion Disconnect
@@ -163,49 +205,120 @@ public class TCPClient : IDisposable
     #endregion Timeout
 
     #region Status
+    public bool ConnectedStatus(string clientIp, int clientPort, int clientWriteTimeout, int clientReadTimeout)
+    {
+        return ConnectedStatus(IPAddress.Parse(clientIp), clientPort, clientWriteTimeout, clientReadTimeout);
+    }
 
-    public bool ConnectedStatus(string deviceIPAddress, int devicePort, int writeTimeout, int readTimeout)
+    public bool ConnectedStatus(IPAddress clientIp, int clientPort, int clientWriteTimeout, int clientReadTimeout)
     {
         try
         {
-            IPEndPoint server = new IPEndPoint(IPAddress.Parse(deviceIPAddress), devicePort);
+            IPEndPoint server = new IPEndPoint(clientIp, clientPort);
             mSocket = new Socket(server.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
             mSocket.Connect((EndPoint)server);
-            mSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.SendTimeout, (int)writeTimeout);
-            mSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReceiveTimeout, (int)readTimeout);
+            mSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.SendTimeout, clientWriteTimeout);
+            mSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReceiveTimeout, clientReadTimeout);
             mSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Debug, 1);
-            TCPClient._connected = true;
+            TCPClient.connected = true;
         }
         catch
         {
-            TCPClient._connected = false;
+            TCPClient.connected = false;
         }
-        return TCPClient._connected;
+        return TCPClient.connected;
     }
 
     #endregion Status
 
     #region Data
-    public void Data(int mode, string deviceIPAddress, int devicePort, int writeTimeout, int readTimeout, byte[] bufferSender, ref byte[] bufferReceiver, ref string errMsg)
+    public void Data(byte[] bufferSender, ref byte[] bufferReceiver, ref string errMsg)
     {
-        bufferReceiver = WriteData(mode, deviceIPAddress, devicePort, writeTimeout, readTimeout, bufferSender, ref errMsg);
+        bufferReceiver = WriteData(bufferSender, ref errMsg);
     }
 
-    private byte[] WriteData(int mode, string deviceIPAddress, int devicePort, int writeTimeout, int readTimeout, byte[] bufferSender, ref string errMsg)
+    private byte[] WriteData(byte[] bufferSender, ref string errMsg)
     {
         try
         {
             int countDeviceData = 0;
 
+            #region Опрос Синхронный
+            ///////////////////////////////////////////
+            if (mode == ExecutionMode.Synchronous)
+            {
+                try
+                {
+                    if (!ConnectedStatus(ipAddress, port, writeTimeout, readTimeout))
+                    {
+                        Connect(ipAddress, port, writeTimeout, readTimeout);
+                    }
+
+                    if (mSocket == null || !mSocket.Connected)
+                    {
+                        errMsg = "[Невозможно подключиться]";
+                        return (byte[])null;
+                    }
+
+                    if (mSocket.Connected)
+                    {
+                        //Отправка данных
+                        mSocket.Send(bufferSender, 0, bufferSender.Length, SocketFlags.None);
+
+                        //Получение данных
+                        //Количество полученных байт
+                        Byte[] readingData = new Byte[bufferReceiver.Length];
+                        String responseData = String.Empty;
+                        bufferReceiver = (byte[])null;
+                        countDeviceData = mSocket.Receive(readingData, 0, readingData.Length, SocketFlags.None);
+                        bufferReceiver = new byte[countDeviceData];
+                        Array.Copy((Array)readingData, (Array)bufferReceiver, countDeviceData);
+
+                        Disconnect();
+                    }
+                }
+                catch (SocketException)
+                {
+                    //Отдаём ошибку, что "Невозможно подключиться."
+                    errMsg = "[Невозможно подключиться]";
+                    return (byte[])null;
+                }
+                catch (TimeoutException)
+                {
+                    //Отдаём ошибку, что "Время ожидания истекло."
+                    errMsg = "[Время ожидания истекло]";
+                    return (byte[])null;
+                }
+                catch (FormatException)
+                {
+                    //Отдаём ошибку, что "Указан недопустимый IP-адрес."
+                    errMsg = "[Указан недопустимый IP-адрес]";
+                    return (byte[])null;
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    //Отдаём ошибку, что "Превышено значение порта."
+                    errMsg = "[Превышено значение порта]";
+                    return (byte[])null;
+                }
+                catch (Exception)
+                {
+                    //Отдаём ошибку, что "Невозможно подключиться."
+                    errMsg = "[Невозможно подключиться]";
+                    return (byte[])null;
+                }
+            }
+            ///////////////////////////////////////////
+            #endregion Опрос Синхронный
+
             #region Опрос Асинхроный
             ///////////////////////////////////////////
-            if (mode == 0)
+            if (mode == ExecutionMode.Asynchronous)
             {
                 try
                 {
                     TcpClient tcpClient = new TcpClient();
-                    IPAddress deviceipaddress = IPAddress.Parse(deviceIPAddress);
-                    IAsyncResult asyncResult = tcpClient.BeginConnect(deviceipaddress, devicePort, (AsyncCallback)null, (object)null);
+                    IAsyncResult asyncResult = tcpClient.BeginConnect(ipAddress, port, (AsyncCallback)null, (object)null);
                     WaitHandle asyncWaitHandle = asyncResult.AsyncWaitHandle;
 
                     if (!asyncResult.AsyncWaitHandle.WaitOne(TimeSpan.FromMilliseconds(readTimeout), false))
@@ -272,74 +385,6 @@ public class TCPClient : IDisposable
             }
             /////////////////////////////////////////////////
             #endregion Опрос Асинхроный
-
-            #region Опрос Синхронный
-            ///////////////////////////////////////////
-            if (mode == 1)
-            {
-                try
-                {
-                    if (!ConnectedStatus(deviceIPAddress, devicePort, writeTimeout, readTimeout))
-                    {
-                        Connect(deviceIPAddress, devicePort, writeTimeout, readTimeout);
-                    }
-
-                    if (mSocket == null || !mSocket.Connected)
-                    {
-                        errMsg = "[Невозможно подключиться]";
-                        return (byte[])null;
-                    }
-
-                    if (mSocket.Connected)
-                    {
-                        //Отправка данных
-                        mSocket.Send(bufferSender, 0, bufferSender.Length, SocketFlags.None);
-
-                        //Получение данных
-                        //Количество полученных байт
-                        Byte[] readingData = new Byte[bufferReceiver.Length];
-                        String responseData = String.Empty;
-                        bufferReceiver = (byte[])null;
-                        countDeviceData = mSocket.Receive(readingData, 0, readingData.Length, SocketFlags.None);
-                        bufferReceiver = new byte[countDeviceData];
-                        Array.Copy((Array)readingData, (Array)bufferReceiver, countDeviceData);
-
-                        Disconnect();
-                    }
-                }
-                catch (SocketException)
-                {
-                    //Отдаём ошибку, что "Невозможно подключиться."
-                    errMsg = "[Невозможно подключиться]";
-                    return (byte[])null;
-                }
-                catch (TimeoutException)
-                {
-                    //Отдаём ошибку, что "Время ожидания истекло."
-                    errMsg = "[Время ожидания истекло]";
-                    return (byte[])null;
-                }
-                catch (FormatException)
-                {
-                    //Отдаём ошибку, что "Указан недопустимый IP-адрес."
-                    errMsg = "[Указан недопустимый IP-адрес]";
-                    return (byte[])null;
-                }
-                catch (ArgumentOutOfRangeException)
-                {
-                    //Отдаём ошибку, что "Превышено значение порта."
-                    errMsg = "[Превышено значение порта]";
-                    return (byte[])null;
-                }
-                catch (Exception)
-                {
-                    //Отдаём ошибку, что "Невозможно подключиться."
-                    errMsg = "[Невозможно подключиться]";
-                    return (byte[])null;
-                }
-            }
-            ///////////////////////////////////////////
-            #endregion Опрос Синхронный
 
             return bufferReceiver;
         }

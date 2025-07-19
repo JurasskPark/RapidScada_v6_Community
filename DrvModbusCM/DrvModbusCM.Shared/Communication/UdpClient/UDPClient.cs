@@ -8,12 +8,21 @@ using System.Threading.Tasks;
 
 public class UDPClient : IDisposable
 {
+    UdpClient udpClientSender = new UdpClient();
+    UdpClient udpClientReceiver = new UdpClient();
 
     private Socket mSocket;
+
+    private IPAddress ipAddress;
+    private int port;
+
     private byte[] bufferSender = new byte[2048];
     private byte[] bufferReceiver = new byte[2048];
 
-    private static bool _connected = false;
+    private static int writeTimeout = 1000;
+    private static int readTimeout = 1000;
+
+    private static bool connected = false;
 
     public const byte excIllegalFunction = 1;
     public const byte excIllegalDataAdr = 2;
@@ -29,7 +38,55 @@ public class UDPClient : IDisposable
 
     public UDPClient()
     {
+        this.ipAddress = IPAddress.Loopback;
+        this.port = 502;
 
+        udpClientSender = new UdpClient();
+        udpClientReceiver = new UdpClient();
+    }
+
+    public UDPClient(string clientIp = "127.0.0.1", int clientPort = 502)
+    {
+        this.ipAddress = IPAddress.Parse(clientIp);
+        this.port = clientPort;
+
+        udpClientSender = new UdpClient();
+        udpClientReceiver = new UdpClient();
+    }
+
+    public UDPClient(IPAddress clientIp, int clientPort = 502)
+    {
+        this.ipAddress = clientIp;
+        this.port = clientPort;
+
+        udpClientSender = new UdpClient();
+        udpClientReceiver = new UdpClient();
+    }
+
+    public UDPClient(string clientIp = "127.0.0.1", int clientPort = 502, int clientWriteTimeout = 1000, int clientReadTimeout = 1000, int clientWriteBufferSize = 2048, int clientReadBufferSize = 2048)
+    {
+        this.ipAddress = IPAddress.Parse(clientIp);
+        this.port = clientPort;
+        writeTimeout = clientWriteTimeout;
+        readTimeout = clientReadTimeout;
+        bufferSender = new byte[clientWriteBufferSize];
+        bufferReceiver = new byte[clientReadBufferSize];
+
+        udpClientSender = new UdpClient();
+        udpClientReceiver = new UdpClient();
+    }
+
+    public UDPClient(IPAddress clientIp, int clientPort = 502, int clientWriteTimeout = 1000, int clientReadTimeout = 1000, int clientWriteBufferSize = 2048, int clientReadBufferSize = 2048)
+    {
+        this.ipAddress = clientIp;
+        this.port = clientPort;
+        writeTimeout = clientWriteTimeout;
+        readTimeout = clientReadTimeout;
+        bufferSender = new byte[clientWriteBufferSize];
+        bufferReceiver = new byte[clientReadBufferSize];
+
+        udpClientSender = new UdpClient();
+        udpClientReceiver = new UdpClient();
     }
 
     ~UDPClient()
@@ -44,63 +101,61 @@ public class UDPClient : IDisposable
             this.mSocket = (Socket)null;
         }
 
-        UDPClient._connected = false;
+        UDPClient.connected = false;
     }
 
-    public void Data(string DeviceIPAddress, int DevicePort, int WriteTimeout, int ReadTimeout, int Timeout, byte[] bufferSender, ref byte[] bufferReceiver, ref string MessageError)
+    public void Data(byte[] bufferSender, ref byte[] bufferReceiver, ref string errMsg)
     {
-        bufferReceiver = WriteData(DeviceIPAddress, DevicePort, WriteTimeout, ReadTimeout, Timeout, bufferSender, ref MessageError);
+        bufferReceiver = WriteData(bufferSender, ref errMsg);
     }
 
-    private byte[] WriteData(string DeviceIPAddress, int DevicePort, int WriteTimeout, int ReadTimeout, int Timeout, byte[] bufferSender, ref string MessageError)
+    private byte[] WriteData(byte[] bufferSender, ref string errMsg)
     {
         try
         {
-            UdpClient udpClient = new UdpClient(DevicePort);
+            udpClientSender = new UdpClient(this.port);
             try
             {
-                udpClient.Connect(DeviceIPAddress, DevicePort);
-                udpClient.Send(bufferSender, bufferSender.Length);
+                udpClientSender.Connect(this.ipAddress, this.port);
+                udpClientSender.Send(bufferSender, bufferSender.Length);
 
-                UdpClient udpClientB = new UdpClient();
-                
-                udpClientB.Send(bufferSender, bufferSender.Length, DeviceIPAddress, DevicePort);
+                udpClientReceiver = new UdpClient();
+                udpClientReceiver.Send(bufferSender, bufferSender.Length, this.ipAddress.ToString(), this.port);
 
-                IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, DevicePort);
+                IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, this.port);
                 byte[] bufferReceiver = (byte[])null;
 
+                bufferReceiver = udpClientSender.Receive(ref RemoteIpEndPoint);
 
-                bufferReceiver = udpClient.Receive(ref RemoteIpEndPoint);
-
-                udpClient.Close();
-                udpClientB.Close();
+                udpClientSender.Close();
+                udpClientReceiver.Close();
 
                 return bufferReceiver;
             }
             catch (SocketException)
             {
                 //Отдаём ошибку, что "Невозможно подключиться."
-                MessageError = "[Невозможно подключиться]";
+                errMsg = "[Невозможно подключиться]";
             }
             catch (TimeoutException)
             {
                 //Отдаём ошибку, что "Время ожидания истекло."
-                MessageError = "[Время ожидания истекло]";
+                errMsg = "[Время ожидания истекло]";
             }
             catch (FormatException)
             {
                 //Отдаём ошибку, что "Указан недопустимый IP-адрес."
-                MessageError = "[Указан недопустимый IP-адрес]";
+                errMsg = "[Указан недопустимый IP-адрес]";
             }
             catch (ArgumentOutOfRangeException)
             {
                 //Отдаём ошибку, что "Превышено значение порта."
-                MessageError = "[Превышено значение порта]";
+                errMsg = "[Превышено значение порта]";
             }
             catch (Exception)
             {
                 //Отдаём ошибку, что "Невозможно подключиться."
-                MessageError = "[Невозможно подключиться]";
+                errMsg = "[Невозможно подключиться]";
             }
 
             return (byte[])null;

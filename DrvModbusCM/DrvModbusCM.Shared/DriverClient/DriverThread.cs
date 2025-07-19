@@ -13,11 +13,14 @@ namespace Scada.Comm.Drivers.DrvModbusCM
     {
         public DriverThread()
         {
-
+            project = new Project();
+            clients = new List<DriverClient>();
         }
 
         public DriverThread(Project project)
         {
+            this.project = project;
+            this.clients = new List<DriverClient>();
             foreach (ProjectChannel channel in project.Driver.GroupChannel.Group)
             {
                 clients.Add(new DriverClient(channel));
@@ -25,7 +28,8 @@ namespace Scada.Comm.Drivers.DrvModbusCM
         }
 
         #region Variables
-        public List<DriverClient> clients = new List<DriverClient>();
+        public Project project { get; set; } 
+        public List<DriverClient> clients { get; set; }
         #endregion Variables
 
         public void ThreadsStart()

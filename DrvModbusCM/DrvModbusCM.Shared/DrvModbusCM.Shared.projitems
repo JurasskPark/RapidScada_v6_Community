@@ -37,7 +37,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Protocols\ProtocolModbus\_ModbusException\NegativeKnowledgementException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Protocols\ProtocolModbus\_ModbusException\SlaveDeviceBusyException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Protocols\ProtocolModbus\_ModbusException\SlaveDeviceFailureException.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Protocols\ProtocolVTD\VTD.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Communication\SerialPort\SerialPortClient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Communication\TcpClient\TCPClient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Communication\TcpServer\AsyncTCPServer.cs" />

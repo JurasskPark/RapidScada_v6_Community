@@ -22,7 +22,7 @@ public class SerialPortClient : IDisposable
     private static int writeTimeout = 1000;
     private static int readTimeout = 1000;
 
-    private static bool _connected = false;
+    private static bool connected = false;
 
     private const string NewLine = "\r\n";
 
@@ -47,6 +47,27 @@ public class SerialPortClient : IDisposable
         this.serialClient.DataReceived += new SerialDataReceivedEventHandler(DataReceivedHandler);
     }
 
+    public SerialPortClient(string serialPortName, int serialPortBaudRate, Parity serialPortParity, int serialPortDataBits, StopBits serialPortStopBits, Handshake serialPortHandshake = Handshake.None, bool serialPortDtrEnable = false, bool serialPortRtsEnable = false, int serialPortReceivedBytesThreshold = 1, int serialPortWriteTimeout = 1000, int serialPortReadTimeout = 1000, int serialPortWriteBufferSize = 2048, int serialPortReadBufferSize = 2048)
+    {
+        this.serialClient = new SerialPort(serialPortName, serialPortBaudRate, serialPortParity, serialPortDataBits, serialPortStopBits);
+        this.serialClient.NewLine = NewLine;
+        this.serialClient.Handshake = serialPortHandshake;
+        this.serialClient.DtrEnable = serialPortDtrEnable;
+        this.serialClient.RtsEnable = serialPortRtsEnable;
+        this.serialClient.ReceivedBytesThreshold = serialPortReceivedBytesThreshold;
+        this.serialClient.WriteTimeout = serialPortWriteTimeout;
+        this.serialClient.ReadTimeout = serialPortReadTimeout;
+        this.serialClient.WriteBufferSize = serialPortWriteBufferSize;
+        this.serialClient.ReadBufferSize = serialPortReadBufferSize;
+        this.serialClient.DataReceived += new SerialDataReceivedEventHandler(DataReceivedHandler);
+
+        writeTimeout = serialPortWriteTimeout;
+        readTimeout = serialPortReadTimeout;
+
+        bufferSender = new byte[serialPortWriteBufferSize];
+        bufferReceiver = new byte[serialPortReadBufferSize];
+     }
+
     ~SerialPortClient()
     {
         this.Dispose();
@@ -59,7 +80,7 @@ public class SerialPortClient : IDisposable
             this.serialClient = null;
         }
 
-        SerialPortClient._connected = false;
+        SerialPortClient.connected = false;
     }
 
     public void Connection()
@@ -84,7 +105,7 @@ public class SerialPortClient : IDisposable
 
     public bool StatusPort()
     {
-        return _connected = this.serialClient.IsOpen;
+        return connected = this.serialClient.IsOpen;
     }
 
     public int InfiniteTimeout
@@ -105,48 +126,34 @@ public class SerialPortClient : IDisposable
     }
 
     #region Data
-    public void Data(string serialPortName, int serialPortBaudRate, string serialPortParity, int serialPortDataBits, string serialPortStopBits, string serialPortHandshake, int serialPortReceivedBytesThreshold, bool serialPortDtrEnable, bool serialPortRtsEnable,  int writeTimeout, int readTimeout, byte[] bufferSender, ref byte[] bufferReceiver, ref string errMsg)
+    public void Data(byte[] bufferSender, ref byte[] bufferReceiver, ref string errMsg)
     {
-        bufferReceiver = WriteData(serialPortName, serialPortBaudRate, serialPortParity, serialPortDataBits, serialPortStopBits, serialPortHandshake, serialPortReceivedBytesThreshold, serialPortDtrEnable, serialPortRtsEnable, writeTimeout, readTimeout, bufferSender, ref errMsg);
+        bufferReceiver = WriteData(bufferSender, ref errMsg);
     }
 
-    private byte[] WriteData(string serialPortName, int serialPortBaudRate, string serialPortParity, int serialPortDataBits, string serialPortStopBits, string serialPortHandshake, int serialPortReceivedBytesThreshold, bool serialPortDtrEnable, bool serialPortRtsEnable, int writeTimeout, int readTimeout, byte[] bufferSender, ref string errMsg)
+    private byte[] WriteData(byte[] bufferSender, ref string errMsg)
     {
         try
         {
-            #region Конфигурирование последовательного порта
-            //Создаем последовательный порт и передаем ему настройки и параметры
-            serialClient = new SerialPort(serialPortName, serialPortBaudRate, (Parity)Enum.Parse(typeof(Parity), serialPortParity), serialPortDataBits, (StopBits)Enum.Parse(typeof(StopBits), serialPortStopBits));
-            serialClient.WriteTimeout = writeTimeout;
-            serialClient.ReadTimeout = readTimeout;
-            serialClient.Handshake = (Handshake)Enum.Parse(typeof(Handshake), serialPortHandshake);
-            serialClient.DtrEnable = serialPortDtrEnable;
-            serialClient.RtsEnable = serialPortRtsEnable;
-            serialClient.ReceivedBytesThreshold = serialPortReceivedBytesThreshold;
-
             if (!StatusPort())
             {
                 Connection();
             }
 
-            #endregion Конфигурирование последовательного порта
-
-            #region Отправка и получение данных
-
-
             if (StatusPort())
             {
                 serialClient.DiscardOutBuffer();
                 serialClient.DiscardInBuffer();
+
+                #region Отправка и получение данных
                 //Отправка запроса
                 serialClient.Write(bufferSender, 0, bufferSender.Length);
 
-
                 //Время ожидания запроса по таймауту
                 //Время начала ожидания
-                long timeout_start = Environment.TickCount;
+                long timeoutStart = Environment.TickCount;
                 //Время окончания ожидания
-                long timeout_stop = timeout_start + Convert.ToInt64(readTimeout);
+                long timeoutStop = timeoutStart + Convert.ToInt64(readTimeout);
                 // задали размер массива
                 byte[] readingData = new byte[bufferReceiver.Length];
                 int countDeviceData = 0;
@@ -154,7 +161,7 @@ public class SerialPortClient : IDisposable
                 bufferReceiver = (byte[])null;
                 
                 // Начинается цикл, который работает до тех пор пока: -не выйдет время
-                while (Environment.TickCount < timeout_stop)
+                while (Environment.TickCount < timeoutStop)
                 {
                     if (serialClient.BytesToRead > 0)
                     {
@@ -173,6 +180,7 @@ public class SerialPortClient : IDisposable
                 catch { }
                 Thread.Sleep(10);
                 #endregion Отправка и получение данных
+
                 return bufferReceiver;
             }
             else

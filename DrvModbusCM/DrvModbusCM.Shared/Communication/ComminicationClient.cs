@@ -7,8 +7,11 @@ namespace DrvModbusCM.Shared.Communication
 {
     public enum OperationMode : int
     {
+        [Description("Нет")]
         None = 0,
+        [Description("Мастер")]
         Master = 1,
+        [Description("Ведомый")]
         Slave = 2,
     }
 
@@ -22,5 +25,13 @@ namespace DrvModbusCM.Shared.Communication
         TcpClient = 2,
         [Description("Udp клиент")]
         UdpClient = 3,
+    }
+
+    public enum ExecutionMode : int
+    {
+        [Description("Cинхронный")]
+        Synchronous = 0,
+        [Description("Acинхронный")]
+        Asynchronous = 1,
     }
 }

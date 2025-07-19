@@ -383,7 +383,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
                         TreeNode nodeGroupTag = NodeGroupTagAdd(projectGroupTag, cmnuTagAppend, nodeDevice);
                     }
 
-                    
+
                 }
 
                 treeView.EndUpdate();
@@ -474,7 +474,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
 
                         #region Group Channel
                         if (prLevel01Node.NodeType == ProjectNodeType.GroupChannel)
-                        {               
+                        {
                             ProjectGroupChannel groupChannel = (ProjectGroupChannel)prLevel01Node.GroupChannel;
                             groupChannel.Group = new List<ProjectChannel>();
 
@@ -484,7 +484,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
                                 ProjectNodeData prLevel02Node = (ProjectNodeData)tnLevel02.Tag;
                                 if (prLevel02Node.NodeType == ProjectNodeType.Channel)
                                 {
-                                    
+
                                     ProjectChannel channel = (ProjectChannel)prLevel02Node.Channel;
                                     List<ProjectDevice> listDevices = new List<ProjectDevice>();
                                     foreach (TreeNode tnLevel03 in tnLevel02.Nodes)
@@ -502,7 +502,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
                                                 if (prLevel04Node.NodeType == ProjectNodeType.GroupCommand)
                                                 {
                                                     ProjectGroupCommand groupCommand = (ProjectGroupCommand)prLevel04Node.GroupCommand;
-
+                                                    List<ProjectCommand> listCommands = new List<ProjectCommand>();
                                                     foreach (TreeNode tnLevel05 in tnLevel04.Nodes)
                                                     {
                                                         ProjectNodeData prLevel05Node = (ProjectNodeData)tnLevel05.Tag;
@@ -510,11 +510,11 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
                                                         if (prLevel05Node.NodeType == ProjectNodeType.Command)
                                                         {
                                                             ProjectCommand command = (ProjectCommand)prLevel05Node.Command;
-                                                            groupCommand.ListCommands.Add(command);
+                                                            listCommands.Add(command);
                                                         }
                                                     }
 
-                                                    device.GroupCommand = groupCommand;
+                                                    device.GroupCommand.ListCommands = listCommands;
                                                 }
 
                                                 if (prLevel04Node.NodeType == ProjectNodeType.GroupTag)
@@ -527,12 +527,12 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
                                             listDevices.Add(device);
 
                                         }
-                                       
+
                                     }
                                     channel.Devices = listDevices;
                                     groupChannel.Group.Add(channel);
                                 }
-                                
+
                             }
                             #endregion Channel
 
@@ -1179,17 +1179,17 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
         /// </summary>
         public TreeNode NodeDeviceTagAdd(ProjectTag devTag, TreeNode ptn, ContextMenuStrip cms, TreeNode stn = null)
         {
-                TreeNode tn = new TreeNode(devTag.Name);
-                devTag.KeyImage = tn.ImageKey = tn.SelectedImageKey = ListImages.ImageKey.Tag;
-                ptn.Nodes.Add(tn);
-                tn.ContextMenuStrip = cms;
-                ProjectNodeData ProjectNodeData = new ProjectNodeData();
-                ProjectNodeData.Tag = ((ProjectNodeData)ptn.Tag).Tag;
-                ProjectNodeData.NodeType = ProjectNodeType.Tag;
-                ProjectNodeData.Tag = devTag;
-                tn.Tag = ProjectNodeData;
-                ptn.Expand();
-                return tn;
+            TreeNode tn = new TreeNode(devTag.Name);
+            devTag.KeyImage = tn.ImageKey = tn.SelectedImageKey = ListImages.ImageKey.Tag;
+            ptn.Nodes.Add(tn);
+            tn.ContextMenuStrip = cms;
+            ProjectNodeData ProjectNodeData = new ProjectNodeData();
+            ProjectNodeData.Tag = ((ProjectNodeData)ptn.Tag).Tag;
+            ProjectNodeData.NodeType = ProjectNodeType.Tag;
+            ProjectNodeData.Tag = devTag;
+            tn.Tag = ProjectNodeData;
+            ptn.Expand();
+            return tn;
         }
         #endregion Tag
 
@@ -1510,6 +1510,11 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             }
         }
 
+        private void cmnuCommandDelete_Click(object sender, EventArgs e)
+        {
+            ProjectNodeDelete();
+        }
+
         /// <summary>
         /// 
         /// <para></para>
@@ -1568,7 +1573,8 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
         #endregion Project
 
 
-       
+
+
 
 
 

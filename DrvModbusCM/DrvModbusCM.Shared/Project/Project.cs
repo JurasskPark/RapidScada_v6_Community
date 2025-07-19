@@ -802,7 +802,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
         {
             ID = Guid.NewGuid();
             Name = "";
-            IP = IPAddress.Parse("0.0.0.0");
+            Ip = IPAddress.Parse("0.0.0.0");
             Port = 0;
             Protocol = DriverProtocol.None;
             ConnectedClientsMax = 100;
@@ -822,7 +822,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
         /// <summary>
         /// Gets or sets the ip.
         /// </summary>
-        public IPAddress IP { get; set; }
+        public IPAddress Ip { get; set; }
 
         /// <summary>
         /// Gets or sets the port.
@@ -855,7 +855,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
 
             ID = Guid.Parse(xmlNode.GetChildAsString("ID"));
             Name = xmlNode.GetChildAsString("Name");
-            IP = IPAddress.Parse(xmlNode.GetChildAsString("IP"));
+            Ip = IPAddress.Parse(xmlNode.GetChildAsString("Ip"));
             Port = xmlNode.GetChildAsInt("Port");
             Protocol = (DriverProtocol)Enum.Parse(typeof(DriverProtocol), xmlNode.GetChildAsString("Protocol"));
             ConnectedClientsMax = xmlNode.GetChildAsInt("ConnectedClientsMax");
@@ -876,7 +876,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
 
             xmlElem.AppendElem("ID", ID);
             xmlElem.AppendElem("Name", Name);
-            xmlElem.AppendElem("IP", IP);
+            xmlElem.AppendElem("Ip", Ip);
             xmlElem.AppendElem("Port", Port);
             xmlElem.AppendElem("Protocol", Enum.GetName(typeof(DriverProtocol), Protocol));
             xmlElem.AppendElem("ConnectedClientsMax", ConnectedClientsMax);
@@ -1390,7 +1390,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
         [XmlIgnore]
         public ulong[] DataInputRegisters = new ulong[65535];                   //InputRegister устройства   (Функция 4) 
         [XmlIgnore]
-        public string[] DataBuffers = new string[65535];                      //Буфер устройства           (Фунция с 80 по 99)
+        public string[] DataBuffers = new string[65535];                        //Буфер устройства           (Фунция с 80 по 99)
 
 
         [XmlIgnore]
@@ -1402,7 +1402,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
         [XmlIgnore]
         public bool[] ExistInputRegisters = new bool[65535];                    //InputRegister устройства   (Функция 4)
         [XmlIgnore]
-        public bool[] ExistDataBuffers = new bool[65535];                     //Буфер устройства           (Фунция с 80 по 99)
+        public bool[] ExistDataBuffers = new bool[65535];                       //Буфер устройства           (Фунция с 80 по 99)
 
 
         #region Coils
