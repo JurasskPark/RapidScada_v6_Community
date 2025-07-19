@@ -76,24 +76,28 @@ namespace DrvModbusCM.View.Forms.Log
         /// </summary>
         public void ConfigToControls()
         {
-            #region Combobox
-            DataTable dataTableChannels = new DataTable();
-            dataTableChannels.TableName = "Data";
-            dataTableChannels.Columns.Add("Id", typeof(Guid));
-            dataTableChannels.Columns.Add("Name", typeof(string));
-
-            foreach (ProjectChannel channel in project.Driver.GroupChannel.Group)
-            {
-                dataTableChannels.Rows.Add(channel.ID, channel.Name.ToString());
-            }
-
-            cmbChannel.DataSource = dataTableChannels;
-            cmbChannel.ValueMember = "Id";
-            cmbChannel.DisplayMember = "Name";
-            cmbChannel.SelectedIndex = 0;
-            #endregion Combobox
-
             DriverClient.OnDebug = new DriverClient.DebugData(LogDriverClient);
+
+            #region Combobox
+            if (project.Driver.GroupChannel.Group != null && project.Driver.GroupChannel.Group.Count > 0)
+            {
+
+                DataTable dataTableChannels = new DataTable();
+                dataTableChannels.TableName = "Data";
+                dataTableChannels.Columns.Add("Id", typeof(Guid));
+                dataTableChannels.Columns.Add("Name", typeof(string));
+
+                foreach (ProjectChannel channel in project.Driver.GroupChannel.Group)
+                {
+                    dataTableChannels.Rows.Add(channel.ID, channel.Name.ToString());
+                }
+
+                cmbChannel.DataSource = dataTableChannels;
+                cmbChannel.ValueMember = "Id";
+                cmbChannel.DisplayMember = "Name";
+                cmbChannel.SelectedIndex = 0;
+                #endregion Combobox
+            }            
         }
 
         /// <summary>

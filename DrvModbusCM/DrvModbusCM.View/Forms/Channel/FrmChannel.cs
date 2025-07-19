@@ -3,6 +3,8 @@ using FastColoredTextBoxNS;
 using Microsoft.Win32;
 using System;
 using System.Data;
+using System.IO.Ports;
+using System.Net;
 using System.Net.Sockets;
 using System.Xml;
 using System.Xml.Linq;
@@ -15,6 +17,25 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
         public FrmChannel()
         {
             InitializeComponent();
+            InitializeTypeClient();
+        }
+
+        public FrmChannel(ProjectNodeData ProjectNodeData)
+        {
+            currentChannel = ProjectNodeData.Channel;
+
+            InitializeComponent();
+            InitializeTypeClient();
+            FormatWindow(true);
+        }
+
+        public FrmChannel(ref ProjectNodeData ProjectNodeData, bool hasParent = true)
+        {
+            currentChannel = ProjectNodeData.Channel;
+            boolParent = hasParent;
+            InitializeComponent();
+            InitializeTypeClient();
+            FormatWindow(boolParent);
         }
 
         #region Variables
@@ -35,21 +56,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
 
         #region Load
 
-        public FrmChannel(ProjectNodeData ProjectNodeData)
-        {
-            currentChannel = ProjectNodeData.Channel;
-
-            InitializeComponent();
-            FormatWindow(true);
-        }
-
-        public FrmChannel(ref ProjectNodeData ProjectNodeData, bool hasParent = true)
-        {
-            currentChannel = ProjectNodeData.Channel;
-            boolParent = hasParent;
-            InitializeComponent();
-            FormatWindow(boolParent);
-        }
+        
 
         private void FormatWindow(bool hasParent)
         {
@@ -77,6 +84,20 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             ConfigToControls();
         }
 
+        private void InitializeTypeClient()
+        {
+            // Получение отсортированного списка строк
+            List<string> sortedStrings = Enum.GetValues(typeof(CommunicationClient))
+                .Cast<CommunicationClient>()
+                .OrderBy(x => (int)(object)x)
+                .Select(x => x.ToString())
+                .ToList();
+
+            cmbTypeClient.Items.Clear();
+            cmbTypeClient.Items.AddRange(sortedStrings.ToArray());
+        }
+
+
         private void ConfigToControls()
         {
             txtСhannelID.Text = currentChannel.ID.ToString();
@@ -85,42 +106,43 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             ckbEnabled.Checked = currentChannel.Enabled;
 
             #region Combobox
-            DataTable dataTableChannels = new DataTable();
-            dataTableChannels.TableName = "Data";
-            dataTableChannels.Columns.Add("Id", typeof(int));
-            dataTableChannels.Columns.Add("Name", typeof(string));
+            //DataTable dataTableChannels = new DataTable();
+            //dataTableChannels.TableName = "Data";
+            //dataTableChannels.Columns.Add("Id", typeof(int));
+            //dataTableChannels.Columns.Add("Name", typeof(string));
 
-            foreach (string name in Enum.GetNames(typeof(CommunicationClient)))
-            {
-                dataTableChannels.Rows.Add((int)(CommunicationClient)Enum.Parse(typeof(CommunicationClient), name), DriverUtils.GetEnumDescription((CommunicationClient)Enum.Parse(typeof(CommunicationClient), name)));
-            }
+            //foreach (string name in Enum.GetNames(typeof(CommunicationClient)))
+            //{
+            //    dataTableChannels.Rows.Add((int)(CommunicationClient)Enum.Parse(typeof(CommunicationClient), name), DriverUtils.GetEnumDescription((CommunicationClient)Enum.Parse(typeof(CommunicationClient), name)));
+            //}
 
-            cmbTypeClient.DataSource = dataTableChannels;
-            cmbTypeClient.ValueMember = "Id";
-            cmbTypeClient.DisplayMember = "Name";
-            cmbTypeClient.SelectedIndex = 0;
+            //cmbTypeClient.DataSource = dataTableChannels;
+            //cmbTypeClient.ValueMember = "Id";
+            //cmbTypeClient.DisplayMember = "Name";
+            //cmbTypeClient.SelectedIndex = 0;
 
-            cmbTypeClient.SelectedIndex = (int)currentChannel.TypeClient;
+            //foreach (string name in Enum.GetNames(typeof(CommunicationClient)))
+            //    Console.WriteLine(name);
+
+            //cmbTypeClient.SelectedIndex = cmbTypeClient.FindString(Enum.GetName(typeof(CommunicationClient), currentChannel.TypeClient));
+
             #endregion Combobox
 
+            cmbTypeClient.SelectedIndex = (int)currentChannel.TypeClient;
 
-            foreach (string name in Enum.GetNames(typeof(CommunicationClient)))
-                Console.WriteLine(name);
 
-            cmbTypeClient.SelectedIndex = cmbTypeClient.FindString(Enum.GetName(typeof(CommunicationClient), currentChannel.TypeClient));
+            cmbPortName.SelectedIndex = cmbPortName.FindString(currentChannel.SerialPortSettings.SerialPortName);
+            cmbBaudRate.SelectedIndex = cmbBaudRate.FindString(currentChannel.SerialPortSettings.SerialPortBaudRate.ToString());
+            cmbDataBits.SelectedIndex = cmbDataBits.FindString(currentChannel.SerialPortSettings.SerialPortDataBits.ToString());
+            cmbParity.SelectedIndex = cmbParity.FindString(Enum.GetName(typeof(Parity), currentChannel.SerialPortSettings.SerialPortParity));
+            cmbStopBits.SelectedIndex = cmbStopBits.FindString(Enum.GetName(typeof(StopBits), currentChannel.SerialPortSettings.SerialPortStopBits));
+            cmbHandshake.SelectedIndex = cmbHandshake.FindString(Enum.GetName(typeof(Handshake), currentChannel.SerialPortSettings.SerialPortHandshake));
+            ckbDTR.Checked = currentChannel.SerialPortSettings.SerialPortDtrEnable;
+            ckbRTS.Checked = currentChannel.SerialPortSettings.SerialPortRtsEnable;
+            numSerialPortReceivedBytesThreshold.Value = currentChannel.SerialPortSettings.SerialPortReceivedBytesThreshold;
 
-            //cmbPortName.SelectedIndex = cmbPortName.FindString(currentChannel.SerialPortName);
-            //cmbBaudRate.SelectedIndex = cmbBaudRate.FindString(currentChannel.SerialPortBaudRate);
-            //cmbDataBits.SelectedIndex = cmbDataBits.FindString(currentChannel.SerialPortDataBits);
-            //cmbParity.SelectedIndex = cmbParity.FindString(currentChannel.SerialPortParity);
-            //cmbStopBits.SelectedIndex = cmbStopBits.FindString(currentChannel.SerialPortStopBits);
-            //cmbHandshake.SelectedIndex = cmbHandshake.FindString(currentChannel.SerialPortHandshake);
-            //ckbDTR.Checked = currentChannel.SerialPortDtrEnable;
-            //ckbRTS.Checked = currentChannel.SerialPortRtsEnable;
-            //numSerialPortReceivedBytesThreshold.Value = currentChannel.SerialPortReceivedBytesThreshold;
-
-            //txtHost.Text = currentChannel.ClientHost;
-            //numPort.Value = Convert.ToInt32(currentChannel.ClientPort);
+            txtHost.Text = currentChannel.EthernetClientSettings.ClientHost.ToString();
+            numPort.Value = Convert.ToDecimal(currentChannel.EthernetClientSettings.ClientPort);
 
             numChannelWriteTimeout.Value = currentChannel.WriteTimeout;
             numChannelReadTimeout.Value = currentChannel.ReadTimeout;
@@ -182,24 +204,24 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             string imageKey = stn.ImageKey;
             int imageIndex = stn.ImageIndex;
 
-            //switch (currentChannel.Type)
-            //{
-            //    case 0:
-            //        imageKey = ListImages.ImageKey.ChannelEmpty;
-            //        break;
-            //    case 1:
-            //        imageKey = ListImages.ImageKey.ChannelSerialPort;
-            //        break;
-            //    case 2:
-            //        imageKey = ListImages.ImageKey.ChannelEthernet;
-            //        break;
-            //    case 3:
-            //        imageKey = ListImages.ImageKey.ChannelEthernet;
-            //        break;
-            //    default:
-            //        imageKey = ListImages.ImageKey.ChannelEmpty;
-            //        break;
-            //}
+            switch (currentChannel.TypeClient)
+            {
+                case CommunicationClient.None:
+                    imageKey = ListImages.ImageKey.ChannelEmpty;
+                    break;
+                case CommunicationClient.SerialPort:
+                    imageKey = ListImages.ImageKey.ChannelSerialPort;
+                    break;
+                case CommunicationClient.TcpClient:
+                    imageKey = ListImages.ImageKey.ChannelEthernet;
+                    break;
+                case CommunicationClient.UdpClient:
+                    imageKey = ListImages.ImageKey.ChannelEthernet;
+                    break;
+                default:
+                    imageKey = ListImages.ImageKey.ChannelEmpty;
+                    break;
+            }
 
             currentChannel.KeyImage = imageKey;
             stn.ImageKey = imageKey;
@@ -218,33 +240,33 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             currentChannel.Description = "";
 
             currentChannel.Enabled = ckbEnabled.Checked;
-            //currentChannel.Type = cmbType.SelectedIndex;
+            currentChannel.TypeClient = (CommunicationClient)cmbTypeClient.SelectedIndex;
 
-            //currentChannel.WriteTimeout = Convert.ToInt32(numChannelWriteTimeout.Value);
-            //currentChannel.ReadTimeout = Convert.ToInt32(numChannelReadTimeout.Value);
-            //currentChannel.Timeout = Convert.ToInt32(numChannelTimeout.Value);
+            currentChannel.WriteTimeout = Convert.ToInt32(numChannelWriteTimeout.Value);
+            currentChannel.ReadTimeout = Convert.ToInt32(numChannelReadTimeout.Value);
+            currentChannel.Timeout = Convert.ToInt32(numChannelTimeout.Value);
 
-            //currentChannel.WriteBufferSize = Convert.ToInt32(numChannelWriteBufferSize.Value);
-            //currentChannel.ReadBufferSize = Convert.ToInt32(numChannelReadBufferSize.Value);
+            currentChannel.WriteBufferSize = Convert.ToInt32(numChannelWriteBufferSize.Value);
+            currentChannel.ReadBufferSize = Convert.ToInt32(numChannelReadBufferSize.Value);
 
-            //currentChannel.CountError = Convert.ToInt32(numChannelCountError.Value);
+            currentChannel.CountError = Convert.ToInt32(numChannelCountError.Value);
 
             //currentChannel.GatewayTypeProtocol = cmbChannelGatewayTypeProtocol.SelectedIndex;
             //currentChannel.GatewayPort = Convert.ToInt32(numChannelGatewayPort.Value);
             //currentChannel.GatewayConnectedClientsMax = Convert.ToInt32(numChannelConnectedClientsMax.Value);
 
-            //currentChannel.SerialPortName = cmbPortName.Text;
-            //currentChannel.SerialPortBaudRate = cmbBaudRate.Text;
-            //currentChannel.SerialPortDataBits = cmbDataBits.Text;
-            //currentChannel.SerialPortParity = cmbParity.Text;
-            //currentChannel.SerialPortStopBits = cmbStopBits.Text;
-            //currentChannel.SerialPortHandshake = cmbHandshake.Text;
-            //currentChannel.SerialPortDtrEnable = ckbDTR.Checked;
-            //currentChannel.SerialPortRtsEnable = ckbRTS.Checked;
-            //currentChannel.SerialPortReceivedBytesThreshold = Convert.ToInt32(numSerialPortReceivedBytesThreshold.Value);
+            currentChannel.SerialPortSettings.SerialPortName = cmbPortName.Text;
+            currentChannel.SerialPortSettings.SerialPortBaudRate = Convert.ToInt32(cmbBaudRate.Text);
+            currentChannel.SerialPortSettings.SerialPortDataBits = Convert.ToInt32(cmbDataBits.Text);
+            currentChannel.SerialPortSettings.SerialPortParity = (Parity)Enum.Parse(typeof(Parity), cmbParity.Text);
+            currentChannel.SerialPortSettings.SerialPortStopBits = (StopBits)Enum.Parse(typeof(StopBits), cmbStopBits.Text);
+            currentChannel.SerialPortSettings.SerialPortHandshake = (Handshake)Enum.Parse(typeof(Handshake), cmbHandshake.Text); 
+            currentChannel.SerialPortSettings.SerialPortDtrEnable = ckbDTR.Checked;
+            currentChannel.SerialPortSettings.SerialPortRtsEnable = ckbRTS.Checked;
+            currentChannel.SerialPortSettings.SerialPortReceivedBytesThreshold = Convert.ToInt32(numSerialPortReceivedBytesThreshold.Value);
 
-            //currentChannel.ClientHost = txtHost.Text;
-            //currentChannel.ClientPort = Convert.ToInt32(numPort.Value);
+            currentChannel.EthernetClientSettings.ClientHost = IPAddress.Parse(txtHost.Text.Trim());
+            currentChannel.EthernetClientSettings.ClientPort = Convert.ToInt32(numPort.Value);
 
 
         }

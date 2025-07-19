@@ -5,13 +5,7 @@ using System.Windows.Input;
 
 namespace Master
 {
-    public enum DriverProtocol : int
-    {
-        None = 0,
-        ModbusRTU = 1,
-        ModbusTCP = 2,
-        ModbusASCII = 3,
-    }
+
 
     public class Protocol
     {

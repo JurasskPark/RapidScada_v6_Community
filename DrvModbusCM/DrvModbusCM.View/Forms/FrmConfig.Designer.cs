@@ -374,14 +374,15 @@
             cmnuDeviceDelete.ImageScalingSize = new Size(24, 24);
             cmnuDeviceDelete.Items.AddRange(new ToolStripItem[] { cmnuDeviceDel });
             cmnuDeviceDelete.Name = "HMI_contextMenu";
-            cmnuDeviceDelete.Size = new Size(116, 34);
+            cmnuDeviceDelete.Size = new Size(189, 56);
             // 
             // cmnuDeviceDel
             // 
             cmnuDeviceDel.Image = (Image)resources.GetObject("cmnuDeviceDel.Image");
             cmnuDeviceDel.Name = "cmnuDeviceDel";
-            cmnuDeviceDel.Size = new Size(115, 30);
+            cmnuDeviceDel.Size = new Size(188, 30);
             cmnuDeviceDel.Text = "Delete";
+            cmnuDeviceDel.Click += cmnuDeviceDel_Click;
             // 
             // cmnuCommandAppend
             // 
@@ -478,7 +479,7 @@
             // cmnuDeviceOtherCommandAddRead99
             // 
             cmnuDeviceOtherCommandAddRead99.Name = "cmnuDeviceOtherCommandAddRead99";
-            cmnuDeviceOtherCommandAddRead99.Size = new Size(180, 22);
+            cmnuDeviceOtherCommandAddRead99.Size = new Size(143, 22);
             cmnuDeviceOtherCommandAddRead99.Tag = "ARBITRARY";
             cmnuDeviceOtherCommandAddRead99.Text = "Arbitrary (99)";
             // 
@@ -492,13 +493,13 @@
             // cmnuCommandImportSelect
             // 
             cmnuCommandImportSelect.Name = "cmnuCommandImportSelect";
-            cmnuCommandImportSelect.Size = new Size(180, 22);
+            cmnuCommandImportSelect.Size = new Size(140, 22);
             cmnuCommandImportSelect.Text = "Выбранную";
             // 
             // cmnuCommandImportAll
             // 
             cmnuCommandImportAll.Name = "cmnuCommandImportAll";
-            cmnuCommandImportAll.Size = new Size(180, 22);
+            cmnuCommandImportAll.Size = new Size(140, 22);
             cmnuCommandImportAll.Text = "Все";
             // 
             // cmnuCommandGenerate

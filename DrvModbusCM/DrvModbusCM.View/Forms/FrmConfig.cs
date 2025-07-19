@@ -1458,6 +1458,15 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
         /// 
         /// <para></para>
         /// </summary>
+        private void cmnuDeviceDel_Click(object sender, EventArgs e)
+        {
+            ProjectNodeDelete();
+        }
+
+        /// <summary>
+        /// 
+        /// <para></para>
+        /// </summary>
         private void cmnuCommandAdd_Click(object sender, EventArgs e)
         {
             switch (((ToolStripMenuItem)sender).Tag.ToString())
@@ -1571,6 +1580,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
         #endregion Menu
 
         #endregion Project
+
 
 
 

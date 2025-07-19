@@ -1,13 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
+﻿using System.Data;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace Scada.Comm.Drivers.DrvModbusCM.View
 {
@@ -16,6 +8,26 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
         public FrmDevice()
         {
             InitializeComponent();
+            InitializeTypeProtocol();
+        }
+
+        public FrmDevice(ProjectNodeData ProjectNodeData)
+        {
+            currentDevice = ProjectNodeData.Device;
+
+            InitializeComponent();
+            InitializeTypeProtocol();
+            FormatWindow(true);
+
+        }
+
+        public FrmDevice(ref ProjectNodeData ProjectNodeData, bool hasParent = true)
+        {
+            currentDevice = ProjectNodeData.Device;
+
+            InitializeComponent();
+            FormatWindow(hasParent);
+
         }
 
         #region Variables
@@ -49,23 +61,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
 
         #region Load
 
-        public FrmDevice(ProjectNodeData ProjectNodeData)
-        {
-            currentDevice = ProjectNodeData.Device;
-
-            InitializeComponent();
-            FormatWindow(true);
-
-        }
-
-        public FrmDevice(ref ProjectNodeData ProjectNodeData, bool hasParent = true)
-        {
-            currentDevice = ProjectNodeData.Device;
-
-            InitializeComponent();
-            FormatWindow(hasParent);
-
-        }
+       
 
         private void FormatWindow(bool hasParent)
         {
@@ -87,6 +83,19 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             ckbAutoRefreshListRegisters.Checked = true;
         }
 
+        private void InitializeTypeProtocol()
+        {
+            // Получение отсортированного списка строк
+            List<string> sortedStrings = Enum.GetValues(typeof(DriverProtocol))
+                .Cast<DriverProtocol>()
+                .OrderBy(x => (int)(object)x)
+                .Select(x => x.ToString())
+                .ToList();
+
+            cmbTypeProtocol.Items.Clear();
+            cmbTypeProtocol.Items.AddRange(sortedStrings.ToArray());
+        }
+
         private void ConfigToControls()
         {
             txtDeviceID.Text = currentDevice.ID.ToString();
@@ -102,7 +111,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             ckbPollingOnScheduleStatus.Checked = currentDevice.PollingOnScheduleStatus;
 
             numIntervalPool.Value = currentDevice.IntervalPool;
-            //cmbTypeProtocol.SelectedIndex = currentDevice.TypeProtocol;
+            cmbTypeProtocol.SelectedIndex = (int)currentDevice.Protocol;
 
             txtDateTimeLastSuccessfully.Text = currentDevice.DateTimeLastSuccessfully.ToString();
 
@@ -162,6 +171,10 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             Modified = false;
         }
 
+        /// <summary>
+        /// Transferring data from form controls to configuration (parameters).
+        /// <para>Передача данных из контролов формы в конфигурацию (параметры).</para>
+        /// </summary>
         private void ControlsToConfig()
         {
             currentDevice.Name = txtName.Text;
@@ -176,7 +189,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             currentDevice.Status = cmbStatus.SelectedIndex;
             currentDevice.PollingOnScheduleStatus = ckbPollingOnScheduleStatus.Checked;
             currentDevice.IntervalPool = Convert.ToInt32(numIntervalPool.Value);
-            //currentDevice.TypeProtocol = cmbTypeProtocol.SelectedIndex;
+            currentDevice.Protocol = (DriverProtocol)cmbTypeProtocol.SelectedIndex;
 
             currentDevice.DateTimeLastSuccessfully = DateTime.Parse(txtDateTimeLastSuccessfully.Text.Trim());
         }
