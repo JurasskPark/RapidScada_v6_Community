@@ -335,470 +335,410 @@ namespace Scada.Comm.Drivers.DrvModbusCM
                         goto WORKEND;
                     }
 
-                    List<ProjectGroupCommand> lstGroupCommnad = GroupCommands.Where(gc => gc.ParentID == Device.ID).ToList();
-                    for (int g = 0; g < lstGroupCommnad.Count; g++)
+                    ProjectGroupCommand groupCommnad = Device.GroupCommand;
+                    List<ProjectCommand> lstCommands = groupCommnad.ListCommands;
+                    for (int comi = 0; comi < lstCommands.Count; comi++)
                     {
-                        ProjectGroupCommand groupCommand = lstGroupCommnad[g];
-
-                        List<ProjectCommand> lstCommands = Commands.Where(c => c.ParentID == groupCommand.ID).ToList();
-                        for (int comi = 0; comi < lstCommands.Count; comi++)
+                        #region Команда
+                        ProjectCommand command = lstCommands[comi];
+                        //Если команда выключена, то пропускаем
+                        if (command.Enabled == false)
                         {
-                            #region Команда
-                            ProjectCommand command = lstCommands[comi];
-                            //Если команда выключена, то пропускаем
-                            if (command.Enabled == false)
-                            {
+                            continue;
+                        }
+
+                        //Передаём время опроса
+                        Device.DateTimeCommandLast = DateTime.Now;
+                        CountError = 0;
+                    #endregion Команда
+
+                    //Начало работы логики
+                    STEP_REPEAT_COMMAND:
+                        //Счетчик
+                        ++CountError;
+
+                        DebugerLog("[" + command.Name + "]");
+
+                        if (debug)
+                        {
+                            DebugerLog("[Debug]");
+                            DebugerLog("[FunctionCod][" + command.FunctionCode + "]");
+                            DebugerLog("[RegisterStartAddress][" + command.RegisterStartAddress + "]");
+                            DebugerLog("[RegisterCount][" + command.RegisterCount + "]");
+                        }
+
+                        #region Переменные
+                        //Лог
+                        string logText = string.Empty;
+                        //Сообщение ошибки
+                        errMsg = string.Empty;
+                        //Буфер данных запроса
+                        byte[] bufferSender = new byte[Channel.WriteBufferSize];
+                        //Буфер данных ответа
+                        byte[] bufferReceiver = new byte[Channel.ReadBufferSize];
+                        //Номер байта с объемом полученных данных
+                        int byteNumberFunctionReceived = 0;
+                        int byteNumberAmountDataReceived = 0;
+                        //Массив регистров для вставки в буфер
+                        byte[] numArrayRegisters = (byte[])null;
+                        //Сообщение о валидатности данных или ошибке
+                        string validateMessage = string.Empty;
+                        //Признак корректности полученных данных
+                        bool validate = true;
+                        //номер адреса регистра
+                        ulong regAddr = 0;
+                        string regAddrStr = string.Empty;
+                        //Количество регистров 2х байтные или 4х байтные
+                        ulong deviceRegistersBytes = (ulong)Device.DeviceRegistersBytes;
+                        DebugerLog("[RegistersBytes][" + deviceRegistersBytes + "]");
+
+                        #endregion Переменные
+
+                        #region Протокол
+
+                        //ModbusRTU
+                        ModbusRTU masterRTU = new ModbusRTU();
+                        //ModbusTCP
+                        ModbusTCP masterTCP = new ModbusTCP();
+                        //ModbusASCII
+                        ModbusASCII masterASCII = new ModbusASCII();
+
+                        switch (Device.Protocol)
+                        {
+                            case DriverProtocol.None:
+                                // Пусто
+                                DebugerLog(DriverPhrases.NoProtocol);
                                 continue;
-                            }
+                            case DriverProtocol.ModbusRTU:
+                                //Формирование буфера данных запроса
+                                bufferSender = masterRTU.CalculateSendData(Device.Address, (ushort)command.FunctionCode, (ushort)command.RegisterStartAddress, (ushort)command.RegisterCount, DriverUtils.ConvertUlongToUshort(command.RegisterWriteData));
+                                byteNumberFunctionReceived = masterRTU.byteNumberFunctionReceived;
+                                byteNumberAmountDataReceived = masterRTU.byteNumberAmountDataReceived;
+                                DebugerLog(DriverPhrases.Request + "[" + HEX_STRING.BYTEARRAY_TO_HEXSTRING(bufferSender) + "]");
+                                break;
+                            case DriverProtocol.ModbusTCP:
+                                //Формирование буфера данных запроса
+                                bufferSender = masterTCP.CalculateSendData(Device.Address, (ushort)command.FunctionCode, (ushort)command.RegisterStartAddress, (ushort)command.RegisterCount, DriverUtils.ConvertUlongToUshort(command.RegisterWriteData));
+                                byteNumberFunctionReceived = masterTCP.byteNumberFunctionReceived;
+                                byteNumberAmountDataReceived = masterTCP.byteNumberAmountDataReceived;
+                                DebugerLog(DriverPhrases.Request + "[" + HEX_STRING.BYTEARRAY_TO_HEXSTRING(bufferSender) + "]");
+                                break;
+                            case DriverProtocol.ModbusASCII:
+                                //Формирование буфера данных запроса
+                                bufferSender = masterASCII.CalculateSendData(Device.Address, (ushort)command.FunctionCode, (ushort)command.RegisterStartAddress, (ushort)command.RegisterCount, DriverUtils.ConvertUlongToUshort(command.RegisterWriteData));
+                                byteNumberFunctionReceived = masterASCII.byteNumberFunctionReceived;
+                                byteNumberAmountDataReceived = masterASCII.byteNumberAmountDataReceived;
+                                DebugerLog(DriverPhrases.Request + "[ASCII][" + HEX_STRING.BYTEARRAY_TO_HEXSTRING(bufferSender) + "][HEX][" + HEX_STRING.BYTEARRAY_TO_HEXSTRING(HEX_ASCII.ASCIIBYTEARRAY_TO_BYTEARRAY(bufferSender)) + "]");
+                                break;
+                            default:
+                                continue;
+                        }
 
-                            //Передаём время опроса
-                            Device.DateTimeCommandLast = DateTime.Now;
-                            CountError = 0;
-                        #endregion Команда
+                        #endregion Протокол
 
-                        //Начало работы логики
-                        STEP_REPEAT_COMMAND:
-                            //Счетчик
-                            ++CountError;
+                        #region Тип канала (отправка и получение данных)
 
-                            DebugerLog("[" + command.Name + "]");
+                        switch (Channel.TypeClient)
+                        {
+                            case CommunicationClient.None:
+                                //Пусто
+                                DebugerLog(DriverPhrases.NoType);
+                                continue;
+                            case CommunicationClient.SerialPort:
+                                // Последовательный порт
+                                using (SerialPortClient serialClient = new SerialPortClient(
+                                    Channel.SerialPortSettings.SerialPortName,
+                                    Channel.SerialPortSettings.SerialPortBaudRate,
+                                    Channel.SerialPortSettings.SerialPortParity,
+                                    Channel.SerialPortSettings.SerialPortDataBits,
+                                    Channel.SerialPortSettings.SerialPortStopBits,
+                                    Channel.SerialPortSettings.SerialPortHandshake,
+                                    Channel.SerialPortSettings.SerialPortDtrEnable,
+                                    Channel.SerialPortSettings.SerialPortRtsEnable,
+                                    Channel.SerialPortSettings.SerialPortReceivedBytesThreshold,
+                                    Channel.WriteTimeout,
+                                    Channel.ReadTimeout,
+                                    Channel.WriteBufferSize,
+                                    Channel.ReadBufferSize
+                                    ))
+                                {
+                                    //Отправка команды
+                                    serialClient.Data(bufferSender, ref bufferReceiver, ref errMsg);
+                                }
+                                break;
+                            case CommunicationClient.TcpClient:
+                                // TCP клиент
+                                using (TCPClient tcpclient = new TCPClient(Channel.EthernetClientSettings.ClientHost, Channel.EthernetClientSettings.ClientPort, Channel.WriteTimeout, Channel.ReadTimeout, Channel.WriteBufferSize, Channel.ReadBufferSize, ExecutionMode.Synchronous))
+                                {
+                                    //Отправка команды
+                                    tcpclient.Data(bufferSender, ref bufferReceiver, ref errMsg);
+                                }
+                                break;
+                            case CommunicationClient.UdpClient:
+                                // UDP клиент
+                                using (UDPClient udpclient = new UDPClient(Channel.EthernetClientSettings.ClientHost, Channel.EthernetClientSettings.ClientPort, Channel.WriteTimeout, Channel.ReadTimeout))
+                                {
+                                    //Отправка команды
+                                    udpclient.Data(bufferSender, ref bufferReceiver, ref errMsg);
+                                }
+                                break;
+                            default:
+                                continue;
+                        }
 
-                            if (debug)
-                            {
-                                DebugerLog("[Debug]");
-                                DebugerLog("[FunctionCod][" + command.FunctionCode + "]");
-                                DebugerLog("[RegisterStartAddress][" + command.RegisterStartAddress + "]");
-                                DebugerLog("[RegisterCount][" + command.RegisterCount + "]");
-                            }
+                        if (errMsg != string.Empty)
+                        {
+                            DebugerLog(errMsg);
+                            goto ERROR;
+                        }
 
-                            #region Переменные
-                            //Лог
-                            string logText = string.Empty;
-                            //Сообщение ошибки
-                            errMsg = string.Empty;
-                            //Буфер данных запроса
-                            byte[] bufferSender = new byte[Channel.WriteBufferSize];
-                            //Буфер данных ответа
-                            byte[] bufferReceiver = new byte[Channel.ReadBufferSize];
-                            //Номер байта с объемом полученных данных
-                            int byteNumberFunctionReceived = 0;
-                            int byteNumberAmountDataReceived = 0;
-                            //Массив регистров для вставки в буфер
-                            byte[] numArrayRegisters = (byte[])null;
-                            //Сообщение о валидатности данных или ошибке
-                            string validateMessage = string.Empty;
-                            //Признак корректности полученных данных
-                            bool validate = true;
-                            //номер адреса регистра
-                            ulong regAddr = 0;
-                            string regAddrStr = string.Empty;
-                            //Количество регистров 2х байтные или 4х байтные
-                            ulong deviceRegistersBytes = (ulong)Device.DeviceRegistersBytes;
-                            DebugerLog("[RegistersBytes][" + deviceRegistersBytes + "]");
+                        #endregion Тип канала (отправка и получение данных)
 
-                            #endregion Переменные
+                        #region Протокол
 
-                            #region Протокол
+                        switch (Device.Protocol)
+                        {
+                            case DriverProtocol.None:
 
-                            //ModbusRTU
-                            ModbusRTU masterRTU = new ModbusRTU();
-                            //ModbusTCP
-                            ModbusTCP masterTCP = new ModbusTCP();
-                            //ModbusASCII
-                            ModbusASCII masterASCII = new ModbusASCII();
+                                continue;
 
-                            switch (Device.Protocol)
-                            {
-                                case DriverProtocol.None:
-                                    // Пусто
-                                    DebugerLog(DriverPhrases.NoProtocol);
-                                    continue;
-                                case DriverProtocol.ModbusRTU:
-                                    //Формирование буфера данных запроса
-                                    bufferSender = masterRTU.CalculateSendData(Device.Address, (ushort)command.FunctionCode, (ushort)command.RegisterStartAddress, (ushort)command.RegisterCount, DriverUtils.ConvertUlongToUshort(command.RegisterWriteData));
-                                    byteNumberFunctionReceived = masterRTU.byteNumberFunctionReceived;
-                                    byteNumberAmountDataReceived = masterRTU.byteNumberAmountDataReceived;
-                                    DebugerLog(DriverPhrases.Request + "[" + HEX_STRING.BYTEARRAY_TO_HEXSTRING(bufferSender) + "]");
-                                    break;
-                                case DriverProtocol.ModbusTCP:
-                                    //Формирование буфера данных запроса
-                                    bufferSender = masterTCP.CalculateSendData(Device.Address, (ushort)command.FunctionCode, (ushort)command.RegisterStartAddress, (ushort)command.RegisterCount, DriverUtils.ConvertUlongToUshort(command.RegisterWriteData));
-                                    byteNumberFunctionReceived = masterTCP.byteNumberFunctionReceived;
-                                    byteNumberAmountDataReceived = masterTCP.byteNumberAmountDataReceived;
-                                    DebugerLog(DriverPhrases.Request + "[" + HEX_STRING.BYTEARRAY_TO_HEXSTRING(bufferSender) + "]");
-                                    break;
-                                case DriverProtocol.ModbusASCII:
-                                    //Формирование буфера данных запроса
-                                    bufferSender = masterASCII.CalculateSendData(Device.Address, (ushort)command.FunctionCode, (ushort)command.RegisterStartAddress, (ushort)command.RegisterCount, DriverUtils.ConvertUlongToUshort(command.RegisterWriteData));
-                                    byteNumberFunctionReceived = masterASCII.byteNumberFunctionReceived;
-                                    byteNumberAmountDataReceived = masterASCII.byteNumberAmountDataReceived;
-                                    DebugerLog(DriverPhrases.Request + "[ASCII][" + HEX_STRING.BYTEARRAY_TO_HEXSTRING(bufferSender) + "][HEX][" + HEX_STRING.BYTEARRAY_TO_HEXSTRING(HEX_ASCII.ASCIIBYTEARRAY_TO_BYTEARRAY(bufferSender)) + "]");
-                                    break;
-                                default:
-                                    continue;
-                            }
+                            case DriverProtocol.ModbusRTU:
 
-                            #endregion Протокол
-
-                            #region Тип канала (отправка и получение данных)
-
-                            switch (Channel.TypeClient)
-                            {
-                                case CommunicationClient.None:
-                                    //Пусто
-                                    DebugerLog(DriverPhrases.NoType);
-                                    continue;
-                                case CommunicationClient.SerialPort:
-                                    // Последовательный порт
-                                    using (SerialPortClient serialClient = new SerialPortClient(
-                                        Channel.SerialPortSettings.SerialPortName,
-                                        Channel.SerialPortSettings.SerialPortBaudRate,
-                                        Channel.SerialPortSettings.SerialPortParity,
-                                        Channel.SerialPortSettings.SerialPortDataBits,
-                                        Channel.SerialPortSettings.SerialPortStopBits,
-                                        Channel.SerialPortSettings.SerialPortHandshake,
-                                        Channel.SerialPortSettings.SerialPortDtrEnable,
-                                        Channel.SerialPortSettings.SerialPortRtsEnable,
-                                        Channel.SerialPortSettings.SerialPortReceivedBytesThreshold,
-                                        Channel.WriteTimeout,
-                                        Channel.ReadTimeout,
-                                        Channel.WriteBufferSize,
-                                        Channel.ReadBufferSize
-                                        ))
+                                #region Проверка валидатности данных
+                                //Проверка корректности поступленных данных
+                                try
+                                {
+                                    if (bufferReceiver == null)
                                     {
-                                        //Отправка команды
-                                        serialClient.Data(bufferSender, ref bufferReceiver, ref errMsg);
-                                    }
-                                    break;
-                                case CommunicationClient.TcpClient:
-                                    // TCP клиент
-                                    using (TCPClient tcpclient = new TCPClient(Channel.TcpServerSettings.Ip, Channel.TcpServerSettings.Port, Channel.WriteTimeout, Channel.ReadTimeout, Channel.WriteBufferSize, Channel.ReadBufferSize, ExecutionMode.Synchronous))
-                                    {
-                                        //Отправка команды
-                                        tcpclient.Data(bufferSender, ref bufferReceiver, ref errMsg);
-                                    }
-                                    break;
-                                case CommunicationClient.UdpClient:
-                                    // UDP клиент
-                                    using (UDPClient udpclient = new UDPClient(Channel.TcpServerSettings.Ip, Channel.TcpServerSettings.Port, Channel.WriteTimeout, Channel.ReadTimeout))
-                                    {
-                                        //Отправка команды
-                                        udpclient.Data(bufferSender, ref bufferReceiver, ref errMsg);
-                                    }
-                                    break;
-                                default:
-                                    continue;
-                            }
-
-                            if (errMsg != string.Empty)
-                            {
-                                DebugerLog(errMsg);
-                                goto ERROR;
-                            }
-
-                            #endregion Тип канала (отправка и получение данных)
-
-                            #region Протокол
-
-                            switch (Device.Protocol)
-                            {
-                                case DriverProtocol.None:
-
-                                    continue;
-
-                                case DriverProtocol.ModbusRTU:
-
-                                    #region Проверка валидатности данных
-                                    //Проверка корректности поступленных данных
-                                    try
-                                    {
-                                        if (bufferReceiver == null)
-                                        {
-                                            Device.Status = 2;
-                                            goto ERROR;
-                                        }
-
-                                        validate = masterRTU.ValidateData(bufferSender, bufferReceiver, ref validateMessage);
-                                        DebugerLog(DriverPhrases.Response + "[" + HEX_STRING.BYTEARRAY_TO_HEXSTRING(bufferReceiver) + "]" + validateMessage + "");
-
-                                        if (validate)
-                                        {
-                                            numArrayRegisters = masterRTU.DecodeData(bufferReceiver);
-                                            if (debug)
-                                            {
-                                                DebugerLog("[NumArrayRegisters][" + HEX_STRING.BYTEARRAY_TO_HEXSTRING(numArrayRegisters) + "]");
-                                            }
-                                        }
-                                        else
-                                        {
-                                            Device.Status = 2;
-                                            goto ERROR;
-                                        }
-                                    }
-                                    catch
-                                    {
+                                        Device.Status = 2;
                                         goto ERROR;
                                     }
-                                    #endregion Проверка валидатности данных
 
-                                    break;
-                                case DriverProtocol.ModbusTCP:
+                                    validate = masterRTU.ValidateData(bufferSender, bufferReceiver, ref validateMessage);
+                                    DebugerLog(DriverPhrases.Response + "[" + HEX_STRING.BYTEARRAY_TO_HEXSTRING(bufferReceiver) + "]" + validateMessage + "");
 
-                                    #region Проверка валидатности данных
-                                    //Проверка корректности поступленны данных  
-                                    try
+                                    if (validate)
                                     {
-                                        if (bufferReceiver == null)
+                                        numArrayRegisters = masterRTU.DecodeData(bufferReceiver);
+                                        if (debug)
                                         {
-                                            Device.Status = 2;
-                                            goto ERROR;
-                                        }
-
-                                        validate = masterTCP.ValidateData(bufferSender, bufferReceiver, ref validateMessage);
-                                        DebugerLog(DriverPhrases.Response + "[" + HEX_STRING.BYTEARRAY_TO_HEXSTRING(bufferReceiver) + "]" + validateMessage + "");
-
-                                        if (validate)
-                                        {
-                                            numArrayRegisters = masterTCP.DecodeData(bufferReceiver);
-                                            if (debug)
-                                            {
-                                                DebugerLog("[NumArrayRegisters][" + HEX_STRING.BYTEARRAY_TO_HEXSTRING(numArrayRegisters) + "]");
-                                            }
-                                        }
-                                        else
-                                        {
-                                            Device.Status = 2;
-                                            goto ERROR;
+                                            DebugerLog("[NumArrayRegisters][" + HEX_STRING.BYTEARRAY_TO_HEXSTRING(numArrayRegisters) + "]");
                                         }
                                     }
-                                    catch
+                                    else
                                     {
+                                        Device.Status = 2;
                                         goto ERROR;
                                     }
-                                    #endregion Проверка валидатности данных
+                                }
+                                catch
+                                {
+                                    goto ERROR;
+                                }
+                                #endregion Проверка валидатности данных
 
-                                    break;
-                                case DriverProtocol.ModbusASCII:
+                                break;
+                            case DriverProtocol.ModbusTCP:
 
-                                    #region Проверка валидатности данных
-                                    try
+                                #region Проверка валидатности данных
+                                //Проверка корректности поступленны данных  
+                                try
+                                {
+                                    if (bufferReceiver == null)
                                     {
-                                        //Проверка корректности поступленны данных
-                                        if (bufferReceiver == null)
-                                        {
-                                            Device.Status = 2;
-                                            goto ERROR;
-                                        }
-
-                                        validate = masterASCII.ValidateData(bufferSender, bufferReceiver, ref validateMessage);
-                                        DebugerLog(DriverPhrases.Response + "[ASCII][" + HEX_STRING.BYTEARRAY_TO_HEXSTRING(bufferReceiver) + "][HEX][" + HEX_STRING.BYTEARRAY_TO_HEXSTRING(HEX_ASCII.ASCIIBYTEARRAY_TO_BYTEARRAY(bufferReceiver)) + "]" + validateMessage + "");
-                                        bufferReceiver = HEX_ASCII.ASCIIBYTEARRAY_TO_BYTEARRAY(bufferReceiver);
-
-                                        if (validate)
-                                        {
-                                            numArrayRegisters = masterASCII.DecodeData(bufferReceiver);
-                                            if (debug)
-                                            {
-                                                DebugerLog("[NumArrayRegisters][" + HEX_STRING.BYTEARRAY_TO_HEXSTRING(numArrayRegisters) + "]");
-                                            }
-                                        }
-                                        else
-                                        {
-                                            Device.Status = 2;
-                                            goto ERROR;
-                                        }
-                                    }
-                                    catch
-                                    {
+                                        Device.Status = 2;
                                         goto ERROR;
                                     }
-                                    #endregion Проверка валидатности данных
 
-                                    break;
-                                default:
-                                    continue;
+                                    validate = masterTCP.ValidateData(bufferSender, bufferReceiver, ref validateMessage);
+                                    DebugerLog(DriverPhrases.Response + "[" + HEX_STRING.BYTEARRAY_TO_HEXSTRING(bufferReceiver) + "]" + validateMessage + "");
 
-                            }
-
-                            #endregion Протокол
-
-                            #region Качество (статус)
-                            //Записываем данные
-                            //Если данные не получили
-                            if (numArrayRegisters == null)
-                            {
-                                //Переводим в Offline
-                                Device.Status = 2;
-                            }
-                            else if (numArrayRegisters != null)
-                            {
-                                //Переводим в Online
-                                Device.Status = 1;
-                                //Передаём дату успешного опроса
-                                Device.DateTimeCommandLastGood = DateTime.Now;
-                                Device.DateTimeLastSuccessfully = DateTime.Now;
-                            }
-                            #endregion Качество (статус)
-
-                            #region Расшифровка
-
-                            switch (command.FunctionCode)
-                            {
-                                case 0:
-                                    continue;
-                                case 1:
-
-                                    #region Write Data Coils
-                                    bool[] Coils = HEX_BOOLEAN.ToArray(numArrayRegisters);
-                                    for (int index = 0; index < Coils.Length; ++index)
+                                    if (validate)
                                     {
-                                        Device.SetCoil((ulong)((ulong)command.RegisterStartAddress + (ulong)index), Coils[index]);
+                                        numArrayRegisters = masterTCP.DecodeData(bufferReceiver);
+                                        if (debug)
+                                        {
+                                            DebugerLog("[NumArrayRegisters][" + HEX_STRING.BYTEARRAY_TO_HEXSTRING(numArrayRegisters) + "]");
+                                        }
                                     }
-                                    #endregion Write Data Coils
-
-                                    break;
-                                case 2:
-
-                                    #region Write Data DiscreteInput
-                                    bool[] DiscreteInputs = HEX_BOOLEAN.ToArray(numArrayRegisters);
-
-                                    for (int index = 0; index < DiscreteInputs.Length; ++index)
+                                    else
                                     {
-                                        Device.SetDiscreteInput((ulong)(ulong)(command.RegisterStartAddress + (ulong)index), DiscreteInputs[index]);
+                                        Device.Status = 2;
+                                        goto ERROR;
                                     }
-                                    #endregion Write Data DiscreteInput
+                                }
+                                catch
+                                {
+                                    goto ERROR;
+                                }
+                                #endregion Проверка валидатности данных
 
-                                    break;
-                                case 3:
+                                break;
+                            case DriverProtocol.ModbusASCII:
 
-                                    #region Write Data HoldingRegister
-
-                                    for (ulong index = 0; (ulong)index < (ulong)numArrayRegisters.Length / deviceRegistersBytes; ++index)
+                                #region Проверка валидатности данных
+                                try
+                                {
+                                    //Проверка корректности поступленны данных
+                                    if (bufferReceiver == null)
                                     {
-                                        ulong RegAddr = ((ulong)command.RegisterStartAddress + (ulong)index);
-                                        byte[] ArrData = HEX_OPERATION.BYTEARRAY_SEARCH(numArrayRegisters, (int)index * (int)deviceRegistersBytes, (int)deviceRegistersBytes);
-                                        Device.SetHoldingRegister(ArrData, RegAddr, deviceRegistersBytes);
+                                        Device.Status = 2;
+                                        goto ERROR;
                                     }
 
-                                    #endregion Write Data HoldingRegister
+                                    validate = masterASCII.ValidateData(bufferSender, bufferReceiver, ref validateMessage);
+                                    DebugerLog(DriverPhrases.Response + "[ASCII][" + HEX_STRING.BYTEARRAY_TO_HEXSTRING(bufferReceiver) + "][HEX][" + HEX_STRING.BYTEARRAY_TO_HEXSTRING(HEX_ASCII.ASCIIBYTEARRAY_TO_BYTEARRAY(bufferReceiver)) + "]" + validateMessage + "");
+                                    bufferReceiver = HEX_ASCII.ASCIIBYTEARRAY_TO_BYTEARRAY(bufferReceiver);
 
-                                    break;
-                                case 4:
-
-                                    #region Write Data InputRegister
-
-                                    for (ulong index = 0; (ulong)index < (ulong)numArrayRegisters.Length / deviceRegistersBytes; ++index)
+                                    if (validate)
                                     {
-                                        ulong RegAddr = ((ulong)command.RegisterStartAddress + (ulong)index);
-                                        byte[] ArrData = HEX_OPERATION.BYTEARRAY_SEARCH(numArrayRegisters, (int)index * (int)deviceRegistersBytes, (int)deviceRegistersBytes);
-                                        Device.SetInputRegister(ArrData, RegAddr, deviceRegistersBytes);
+                                        numArrayRegisters = masterASCII.DecodeData(bufferReceiver);
+                                        if (debug)
+                                        {
+                                            DebugerLog("[NumArrayRegisters][" + HEX_STRING.BYTEARRAY_TO_HEXSTRING(numArrayRegisters) + "]");
+                                        }
                                     }
+                                    else
+                                    {
+                                        Device.Status = 2;
+                                        goto ERROR;
+                                    }
+                                }
+                                catch
+                                {
+                                    goto ERROR;
+                                }
+                                #endregion Проверка валидатности данных
 
-                                    #endregion Write Data InputRegister
+                                break;
+                            default:
+                                continue;
 
-                                    break;
-                                default:
-                                    continue;
-                            }
+                        }
 
-                            if (Device.Status == 1)
-                            {
-                                goto NEXTCOMMAND;
-                            }
+                        #endregion Протокол
+
+                        #region Качество (статус)
+                        //Записываем данные
+                        //Если данные не получили
+                        if (numArrayRegisters == null)
+                        {
+                            //Переводим в Offline
+                            Device.Status = 2;
+                        }
+                        else if (numArrayRegisters != null)
+                        {
+                            //Переводим в Online
+                            Device.Status = 1;
+                            //Передаём дату успешного опроса
+                            Device.DateTimeCommandLastGood = DateTime.Now;
+                            Device.DateTimeLastSuccessfully = DateTime.Now;
+                        }
+                        #endregion Качество (статус)
+
+                        #region Расшифровка
+
+                        switch (command.FunctionCode)
+                        {
+                            case 0:
+                                continue;
+                            case 1:
+
+                                #region Write Data Coils
+                                bool[] Coils = HEX_BOOLEAN.ToArray(numArrayRegisters);
+                                for (int index = 0; index < Coils.Length; ++index)
+                                {
+                                    Device.SetCoil((ulong)((ulong)command.RegisterStartAddress + (ulong)index), Coils[index]);
+                                }
+                                #endregion Write Data Coils
+
+                                break;
+                            case 2:
+
+                                #region Write Data DiscreteInput
+                                bool[] DiscreteInputs = HEX_BOOLEAN.ToArray(numArrayRegisters);
+
+                                for (int index = 0; index < DiscreteInputs.Length; ++index)
+                                {
+                                    Device.SetDiscreteInput((ulong)(ulong)(command.RegisterStartAddress + (ulong)index), DiscreteInputs[index]);
+                                }
+                                #endregion Write Data DiscreteInput
+
+                                break;
+                            case 3:
+
+                                #region Write Data HoldingRegister
+
+                                for (ulong index = 0; (ulong)index < (ulong)numArrayRegisters.Length / deviceRegistersBytes; ++index)
+                                {
+                                    ulong RegAddr = ((ulong)command.RegisterStartAddress + (ulong)index);
+                                    byte[] ArrData = HEX_OPERATION.BYTEARRAY_SEARCH(numArrayRegisters, (int)index * (int)deviceRegistersBytes, (int)deviceRegistersBytes);
+                                    Device.SetHoldingRegister(ArrData, RegAddr, deviceRegistersBytes);
+                                }
+
+                                #endregion Write Data HoldingRegister
+
+                                break;
+                            case 4:
+
+                                #region Write Data InputRegister
+
+                                for (ulong index = 0; (ulong)index < (ulong)numArrayRegisters.Length / deviceRegistersBytes; ++index)
+                                {
+                                    ulong RegAddr = ((ulong)command.RegisterStartAddress + (ulong)index);
+                                    byte[] ArrData = HEX_OPERATION.BYTEARRAY_SEARCH(numArrayRegisters, (int)index * (int)deviceRegistersBytes, (int)deviceRegistersBytes);
+                                    Device.SetInputRegister(ArrData, RegAddr, deviceRegistersBytes);
+                                }
+
+                                #endregion Write Data InputRegister
+
+                                break;
+                            default:
+                                continue;
+                        }
 
 
-                        #region Old
-                        //case ulong n when (n >= 80 && n <= 96):
-                        //    #region Data Buffer
-                        //    if (numArrayRegisters == null)
-                        //    {
-                        //        goto ERROR;
-                        //    }
-
-                        //// write data
-                        //regAddr = masterVTD.GenerateRegisterAddress(command.FunctionCode, command.Parametr, command.RegisterStartAddress);
-                        //device.SetDataBuffer(HEX_STRING.BYTEARRAY_TO_HEXSTRING(numArrayRegisters), regAddr, deviceRegistersBytes);
-
-                        //if (debug)
-                        //{
-                        //    DebugerLog("Tag Address = " + regAddr.ToString() + "");
-                        //}
-
-                        //// read data
-                        //for (ulong index = 0; (ulong)index < (ulong)numArrayRegisters.Length / deviceRegistersBytes; ++index)
-                        //{
-                        //    regAddrStr = DriverUtils.NullToString(regAddr + index);
-
-                        //    List<ProjectTag> findTags = tags.Where(r => r.ID == device.ID && r.Address.StartsWith(regAddrStr)).ToList();
-                        //    if (findTags == null || findTags.Count == 0)
-                        //    {
-                        //        goto NEXTCOMMAND;
-                        //    }
-
-
-                        //if (command.CurrentValue)
-                        //{
-                        //    float[] arrValue = HEX_FLOAT.BYTEARRAY_TO_FLOATARRAY(numArrayRegisters, "");
-                        //    float value = 0f;
-                        //    if (command.FunctionCode == 84)
-                        //    {
-                        //        int indArrValue = arrValue.Length - 1;
-                        //        if (indArrValue <= 0)
-                        //        {
-                        //            value = arrValue[indArrValue];
-                        //        }
-                        //        else
-                        //        {
-                        //            value = arrValue[indArrValue - 1];
-                        //        }
-                        //    }
-                        //    else
-                        //    {
-                        //        value = arrValue[arrValue.Length - 1];
-                        //    }
-
-                        //    DebugerLog("Tag Address Current = " + regAddrStr + "");
-
-                        //    for (int t = 0; t < findTags.Count; t++)
-                        //    {
-                        //        ServerSendValue(findTags[t].Code, value, 1);
-                        //    }
-                        //    goto NEXTCOMMAND;
-                        //}
-
-                        //            for (int t = 0; t < findTags.Count; t++)
-                        //            {
-                        //                ulong countReg = (ulong)ProjectTag.DeviceTagFormatDataRegisterCount(findTags[t], (int)deviceRegistersBytes);
-                        //                byte[] buffer = device.GetByteDataBuffer(Convert.ToUInt64(regAddr + index), countReg);
-
-                        //                if (debug)
-                        //                {
-                        //                    DebugerLog("findTagAddress = " + regAddrStr + " countReg = " + countReg + " deviceRegistersBytes = " + (int)deviceRegistersBytes + " hex = " + HEX_STRING.BYTEARRAY_TO_HEXSTRING(buffer));
-                        //                }
-
-                        //                byte[] bufferOrder = HEX_ARRAY.ArrayByteOrder(buffer, findTags[t].Sorting);
-
-                        //                if (debug)
-                        //                {
-                        //                    DebugerLog("Order by [" + findTags[t].Sorting + "]= " + HEX_STRING.BYTEARRAY_TO_HEXSTRING(bufferOrder));
-                        //                }
-
-                        //                findTags[t].DataValue = ProjectTag.GetValue(findTags[t], bufferOrder);
-
-                        //                if (debug)
-                        //                {
-                        //                    DebugerLog("[" + findTags[t].Name.PadRight(32) + "][" + findTags[t].Address.PadRight(14) + "][" + findTags[t].TagType.ToString().PadRight(6) + "][" + HEX_STRING.BYTEARRAY_TO_HEXSTRING(bufferOrder).PadRight(24) + "][" + countReg + "][" + findTags[t].DataValue.ToString() + "]");
-                        //                }
-
-                        //                ServerSendValue(findTags[t].Code, findTags[t].DataValue, 1);
-                        //            }
-                        //        }
-                        //        #endregion Data Buffer
-                        //        break;
-
-                        #endregion Old
 
                         #endregion Расшифровка
+
+                        #region  Поиск тегов
+
+                        for (ushort i = (ushort)command.RegisterStartAddress; i < (ushort)command.RegisterCount - (ushort)command.RegisterStartAddress; i++)
+                        {
+                            byte[] bytes = new byte[0];
+                            ulong addressRegister = command.RegisterStartAddress + (ulong)i;
+                            string addressTag = ((ushort)command.FunctionCode).ToString() + ((ushort)command.RegisterStartAddress + (ushort)i).ToString("00000");
+                            Tag = Device.GroupTag.ListTags.Where(t => t.Address.StartsWith(addressTag)).FirstOrDefault();
+                                     
+                            if(Tag != null)
+                            {
+                                ulong countRegisterTypeData = (ulong)ProjectTag.FormatDataRegisterCount(Tag, (int)deviceRegistersBytes);
+
+                                switch ((ushort)command.FunctionCode)
+                                {
+                                    case (ushort)1:
+                                       bool coil = Device.GetBooleanCoil(addressRegister);
+                                        bytes = HEX_BOOLEAN.ToArray(coil);
+                                    break;
+                                    case (ushort)2:
+                                        bool discreteInput = Device.GetBooleanDiscreteInput(addressRegister);
+                                        bytes = HEX_BOOLEAN.ToArray(discreteInput);
+                                        break;
+                                    case (ushort)3:
+                                        bytes = Device.GetUlongHoldingRegister(addressRegister, countRegisterTypeData);
+                                        break;
+                                    case (ushort)4:
+                                        bytes = Device.GetUlongInputRegister(addressRegister, countRegisterTypeData);
+                                        break;
+                                }
+
+                               Tag.DataValue = ProjectTag.GetValue(Tag, bytes);
+                            }
+                        }
+
+
+
+                        #endregion Поиск тегов
 
                         #region Запись данных
 
@@ -806,65 +746,70 @@ namespace Scada.Comm.Drivers.DrvModbusCM
 
                         #endregion Запись данных
 
-                        #region Обработка ошибок
-                        ERROR:
-
-                            if (CountError == Channel.CountError)
-                            {
-                                CountError = 0;
-
-                                DebugerLog(DriverPhrases.ExecutedError);
-
-                                #region Old
-                                //switch (command.FunctionCode)
-                                //{
-                                //    case 0:
-                                //        continue;
-                                //    case ulong n when (n >= 1 && n <= 16):
-
-
-
-                                //        break;
-                                //    case ulong n when (n >= 80 && n <= 96):
-
-                                //        List<ProjectTag> findTags = tags.Where(r => r.CommandID == command.ID).ToList();
-                                //        if (findTags != null && findTags.Count > 0)
-                                //        {
-                                //            for (int t = 0; t < findTags.Count; t++)
-                                //            {
-                                //                if (debug)
-                                //                {
-                                //                    DebugerLog("[" + findTags[t].Code + "][Bad]");
-                                //                }
-
-                                //                ServerSendValue(findTags[t].Code, 0, 0);
-                                //            }
-                                //        }
-
-                                //        break;
-                                //    default:
-                                //        continue;
-                                //}
-                                #endregion Old
-
-                                continue;
-                            }
-                            else
-                            {
-                                goto STEP_REPEAT_COMMAND;
-                            }
-                        #endregion Обработка ошибок
-
-                        NEXTCOMMAND:
-                            try { } catch { }
+                        if (Device.Status == 1)
+                        {
+                            goto NEXTCOMMAND;
                         }
-                       
+
+                    #region Обработка ошибок
+                    ERROR:
+
+                        if (CountError == Channel.CountError)
+                        {
+                            CountError = 0;
+
+                            DebugerLog(DriverPhrases.ExecutedError);
+
+                            #region Old
+                            //switch (command.FunctionCode)
+                            //{
+                            //    case 0:
+                            //        continue;
+                            //    case ulong n when (n >= 1 && n <= 16):
+
+
+
+                            //        break;
+                            //    case ulong n when (n >= 80 && n <= 96):
+
+                            //        List<ProjectTag> findTags = tags.Where(r => r.CommandID == command.ID).ToList();
+                            //        if (findTags != null && findTags.Count > 0)
+                            //        {
+                            //            for (int t = 0; t < findTags.Count; t++)
+                            //            {
+                            //                if (debug)
+                            //                {
+                            //                    DebugerLog("[" + findTags[t].Code + "][Bad]");
+                            //                }
+
+                            //                ServerSendValue(findTags[t].Code, 0, 0);
+                            //            }
+                            //        }
+
+                            //        break;
+                            //    default:
+                            //        continue;
+                            //}
+                            #endregion Old
+
+                            continue;
+                        }
+                        else
+                        {
+                            goto STEP_REPEAT_COMMAND;
+                        }
+                    #endregion Обработка ошибок
+
+                    NEXTCOMMAND:
+                        try { } catch { }
                     }
 
-                NEXTDEVICE:
-                    try { } catch { }
                 }
-                     
+
+            NEXTDEVICE:
+                try { } catch { }
+
+
             }
             catch (Exception ex)
             {

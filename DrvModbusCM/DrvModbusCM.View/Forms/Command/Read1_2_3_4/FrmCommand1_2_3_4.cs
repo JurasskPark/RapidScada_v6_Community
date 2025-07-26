@@ -88,6 +88,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
         private void ConfigToControls()
         {
             txtName.Text = currentCommand.Name;
+            txtCode.Text = currentCommand.Code;
             ckbEnabled.Checked = currentCommand.Enabled;
 
             nudRegisterStartAddress.Value = currentCommand.RegisterStartAddress;
@@ -169,6 +170,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
         private void ControlsToConfig()
         {
             currentCommand.Name = txtName.Text;
+            currentCommand.Code = txtCode.Text;
             currentCommand.Enabled = ckbEnabled.Checked;
             //Код функции
             try

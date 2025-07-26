@@ -26,6 +26,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             currentDevice = ProjectNodeData.Device;
 
             InitializeComponent();
+            InitializeTypeProtocol();
             FormatWindow(hasParent);
 
         }

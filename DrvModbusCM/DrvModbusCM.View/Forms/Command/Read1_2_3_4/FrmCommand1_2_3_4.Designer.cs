@@ -31,6 +31,8 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
         {
             ckbEnabled = new CheckBox();
             gpbGroup = new GroupBox();
+            txtCode = new TextBox();
+            lblCode = new Label();
             lblName = new Label();
             txtName = new TextBox();
             btnSave = new Button();
@@ -57,52 +59,72 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             // ckbEnabled
             // 
             ckbEnabled.AutoSize = true;
-            ckbEnabled.Location = new Point(470, 58);
-            ckbEnabled.Margin = new Padding(6, 5, 6, 5);
+            ckbEnabled.Location = new Point(329, 35);
+            ckbEnabled.Margin = new Padding(4, 3, 4, 3);
             ckbEnabled.Name = "ckbEnabled";
-            ckbEnabled.Size = new Size(101, 29);
+            ckbEnabled.Size = new Size(68, 19);
             ckbEnabled.TabIndex = 13;
             ckbEnabled.Text = "Enabled";
             ckbEnabled.UseVisualStyleBackColor = true;
             // 
             // gpbGroup
             // 
+            gpbGroup.Controls.Add(txtCode);
+            gpbGroup.Controls.Add(lblCode);
             gpbGroup.Controls.Add(ckbEnabled);
             gpbGroup.Controls.Add(lblName);
             gpbGroup.Controls.Add(txtName);
-            gpbGroup.Location = new Point(20, 23);
-            gpbGroup.Margin = new Padding(6, 5, 6, 5);
+            gpbGroup.Location = new Point(14, 14);
+            gpbGroup.Margin = new Padding(4, 3, 4, 3);
             gpbGroup.Name = "gpbGroup";
-            gpbGroup.Padding = new Padding(6, 5, 6, 5);
-            gpbGroup.Size = new Size(627, 112);
+            gpbGroup.Padding = new Padding(4, 3, 4, 3);
+            gpbGroup.Size = new Size(439, 108);
             gpbGroup.TabIndex = 18;
             gpbGroup.TabStop = false;
+            // 
+            // txtCode
+            // 
+            txtCode.Location = new Point(7, 77);
+            txtCode.Margin = new Padding(6, 5, 6, 5);
+            txtCode.Name = "txtCode";
+            txtCode.Size = new Size(314, 23);
+            txtCode.TabIndex = 22;
+            // 
+            // lblCode
+            // 
+            lblCode.AutoSize = true;
+            lblCode.Location = new Point(7, 57);
+            lblCode.Margin = new Padding(6, 0, 6, 0);
+            lblCode.Name = "lblCode";
+            lblCode.Size = new Size(93, 15);
+            lblCode.TabIndex = 23;
+            lblCode.Text = "Command code";
             // 
             // lblName
             // 
             lblName.AutoSize = true;
-            lblName.Location = new Point(10, 22);
-            lblName.Margin = new Padding(6, 0, 6, 0);
+            lblName.Location = new Point(7, 13);
+            lblName.Margin = new Padding(4, 0, 4, 0);
             lblName.Name = "lblName";
-            lblName.Size = new Size(59, 25);
+            lblName.Size = new Size(39, 15);
             lblName.TabIndex = 2;
             lblName.Text = "Name";
             // 
             // txtName
             // 
-            txtName.Location = new Point(10, 52);
-            txtName.Margin = new Padding(6, 5, 6, 5);
+            txtName.Location = new Point(7, 31);
+            txtName.Margin = new Padding(4, 3, 4, 3);
             txtName.Name = "txtName";
-            txtName.Size = new Size(447, 31);
+            txtName.Size = new Size(314, 23);
             txtName.TabIndex = 1;
             txtName.TextChanged += control_Changed;
             // 
             // btnSave
             // 
-            btnSave.Location = new Point(659, 35);
-            btnSave.Margin = new Padding(6, 5, 6, 5);
+            btnSave.Location = new Point(461, 21);
+            btnSave.Margin = new Padding(4, 3, 4, 3);
             btnSave.Name = "btnSave";
-            btnSave.Size = new Size(153, 45);
+            btnSave.Size = new Size(107, 27);
             btnSave.TabIndex = 20;
             btnSave.Text = "Save";
             btnSave.UseVisualStyleBackColor = true;
@@ -122,11 +144,11 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             gpbOptions.Controls.Add(nudRegisterCount);
             gpbOptions.Controls.Add(lblRegisterStartAddress);
             gpbOptions.Controls.Add(nudRegisterStartAddress);
-            gpbOptions.Location = new Point(20, 147);
-            gpbOptions.Margin = new Padding(6, 5, 6, 5);
+            gpbOptions.Location = new Point(14, 128);
+            gpbOptions.Margin = new Padding(4, 3, 4, 3);
             gpbOptions.Name = "gpbOptions";
-            gpbOptions.Padding = new Padding(6, 5, 6, 5);
-            gpbOptions.Size = new Size(627, 392);
+            gpbOptions.Padding = new Padding(4, 3, 4, 3);
+            gpbOptions.Size = new Size(439, 235);
             gpbOptions.TabIndex = 21;
             gpbOptions.TabStop = false;
             gpbOptions.Text = "Options";
@@ -134,22 +156,22 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             // lblRegisterCountWrite
             // 
             lblRegisterCountWrite.AutoSize = true;
-            lblRegisterCountWrite.Location = new Point(10, 327);
-            lblRegisterCountWrite.Margin = new Padding(6, 0, 6, 0);
+            lblRegisterCountWrite.Location = new Point(7, 196);
+            lblRegisterCountWrite.Margin = new Padding(4, 0, 4, 0);
             lblRegisterCountWrite.Name = "lblRegisterCountWrite";
-            lblRegisterCountWrite.Size = new Size(298, 25);
+            lblRegisterCountWrite.Size = new Size(196, 15);
             lblRegisterCountWrite.TabIndex = 25;
             lblRegisterCountWrite.Text = "Number of registers for writing data";
             lblRegisterCountWrite.Visible = false;
             // 
             // nudRegisterCountWrite
             // 
-            nudRegisterCountWrite.Location = new Point(459, 320);
-            nudRegisterCountWrite.Margin = new Padding(6, 5, 6, 5);
+            nudRegisterCountWrite.Location = new Point(321, 192);
+            nudRegisterCountWrite.Margin = new Padding(4, 3, 4, 3);
             nudRegisterCountWrite.Maximum = new decimal(new int[] { 127, 0, 0, 0 });
             nudRegisterCountWrite.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             nudRegisterCountWrite.Name = "nudRegisterCountWrite";
-            nudRegisterCountWrite.Size = new Size(157, 31);
+            nudRegisterCountWrite.Size = new Size(110, 23);
             nudRegisterCountWrite.TabIndex = 24;
             nudRegisterCountWrite.TextAlign = HorizontalAlignment.Center;
             nudRegisterCountWrite.Value = new decimal(new int[] { 1, 0, 0, 0 });
@@ -158,10 +180,10 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             // lblRegisterStartAddressWrite
             // 
             lblRegisterStartAddressWrite.AutoSize = true;
-            lblRegisterStartAddressWrite.Location = new Point(10, 278);
-            lblRegisterStartAddressWrite.Margin = new Padding(6, 0, 6, 0);
+            lblRegisterStartAddressWrite.Location = new Point(7, 167);
+            lblRegisterStartAddressWrite.Margin = new Padding(4, 0, 4, 0);
             lblRegisterStartAddressWrite.Name = "lblRegisterStartAddressWrite";
-            lblRegisterStartAddressWrite.Size = new Size(383, 25);
+            lblRegisterStartAddressWrite.Size = new Size(251, 15);
             lblRegisterStartAddressWrite.TabIndex = 23;
             lblRegisterStartAddressWrite.Text = "Starting address of the register for writing data";
             lblRegisterStartAddressWrite.Visible = false;
@@ -173,20 +195,20 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             cmbFunctionCodeWrite.FlatStyle = FlatStyle.Flat;
             cmbFunctionCodeWrite.FormattingEnabled = true;
             cmbFunctionCodeWrite.Items.AddRange(new object[] { "(01) — Coils", "(02) — Discrete Inputs", "(03) — Holding Registers", "(04) — Input Registers" });
-            cmbFunctionCodeWrite.Location = new Point(10, 223);
-            cmbFunctionCodeWrite.Margin = new Padding(6, 5, 6, 5);
+            cmbFunctionCodeWrite.Location = new Point(7, 134);
+            cmbFunctionCodeWrite.Margin = new Padding(4, 3, 4, 3);
             cmbFunctionCodeWrite.Name = "cmbFunctionCodeWrite";
-            cmbFunctionCodeWrite.Size = new Size(604, 33);
+            cmbFunctionCodeWrite.Size = new Size(424, 23);
             cmbFunctionCodeWrite.TabIndex = 23;
             cmbFunctionCodeWrite.Visible = false;
             // 
             // nudRegisterStartAddressWrite
             // 
-            nudRegisterStartAddressWrite.Location = new Point(459, 272);
-            nudRegisterStartAddressWrite.Margin = new Padding(6, 5, 6, 5);
+            nudRegisterStartAddressWrite.Location = new Point(321, 163);
+            nudRegisterStartAddressWrite.Margin = new Padding(4, 3, 4, 3);
             nudRegisterStartAddressWrite.Maximum = new decimal(new int[] { 65535, 0, 0, 0 });
             nudRegisterStartAddressWrite.Name = "nudRegisterStartAddressWrite";
-            nudRegisterStartAddressWrite.Size = new Size(157, 31);
+            nudRegisterStartAddressWrite.Size = new Size(110, 23);
             nudRegisterStartAddressWrite.TabIndex = 22;
             nudRegisterStartAddressWrite.TextAlign = HorizontalAlignment.Center;
             nudRegisterStartAddressWrite.Visible = false;
@@ -194,10 +216,10 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             // ckbWriteDataOther
             // 
             ckbWriteDataOther.AutoSize = true;
-            ckbWriteDataOther.Location = new Point(10, 182);
-            ckbWriteDataOther.Margin = new Padding(6, 5, 6, 5);
+            ckbWriteDataOther.Location = new Point(7, 109);
+            ckbWriteDataOther.Margin = new Padding(4, 3, 4, 3);
             ckbWriteDataOther.Name = "ckbWriteDataOther";
-            ckbWriteDataOther.Size = new Size(261, 29);
+            ckbWriteDataOther.Size = new Size(172, 19);
             ckbWriteDataOther.TabIndex = 22;
             ckbWriteDataOther.Text = "Write data to other registers";
             ckbWriteDataOther.UseVisualStyleBackColor = true;
@@ -210,31 +232,31 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             cmbFunctionCode.FlatStyle = FlatStyle.Flat;
             cmbFunctionCode.FormattingEnabled = true;
             cmbFunctionCode.Items.AddRange(new object[] { "(01) — Read Coils", "(02) — Read Discrete Inputs", "(03) — Read Holding Registers", "(04) — Read Input Registers" });
-            cmbFunctionCode.Location = new Point(10, 37);
-            cmbFunctionCode.Margin = new Padding(6, 5, 6, 5);
+            cmbFunctionCode.Location = new Point(7, 22);
+            cmbFunctionCode.Margin = new Padding(4, 3, 4, 3);
             cmbFunctionCode.Name = "cmbFunctionCode";
-            cmbFunctionCode.Size = new Size(604, 33);
+            cmbFunctionCode.Size = new Size(424, 23);
             cmbFunctionCode.TabIndex = 22;
             cmbFunctionCode.SelectedIndexChanged += cmb_FunctionCode_SelectedIndexChanged;
             // 
             // lblRegisterCount
             // 
             lblRegisterCount.AutoSize = true;
-            lblRegisterCount.Location = new Point(10, 140);
-            lblRegisterCount.Margin = new Padding(6, 0, 6, 0);
+            lblRegisterCount.Location = new Point(7, 84);
+            lblRegisterCount.Margin = new Padding(4, 0, 4, 0);
             lblRegisterCount.Name = "lblRegisterCount";
-            lblRegisterCount.Size = new Size(171, 25);
+            lblRegisterCount.Size = new Size(112, 15);
             lblRegisterCount.TabIndex = 6;
             lblRegisterCount.Text = "Number of registers";
             // 
             // nudRegisterCount
             // 
-            nudRegisterCount.Location = new Point(459, 133);
-            nudRegisterCount.Margin = new Padding(6, 5, 6, 5);
+            nudRegisterCount.Location = new Point(321, 80);
+            nudRegisterCount.Margin = new Padding(4, 3, 4, 3);
             nudRegisterCount.Maximum = new decimal(new int[] { 127, 0, 0, 0 });
             nudRegisterCount.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             nudRegisterCount.Name = "nudRegisterCount";
-            nudRegisterCount.Size = new Size(157, 31);
+            nudRegisterCount.Size = new Size(110, 23);
             nudRegisterCount.TabIndex = 3;
             nudRegisterCount.TextAlign = HorizontalAlignment.Center;
             nudRegisterCount.Value = new decimal(new int[] { 1, 0, 0, 0 });
@@ -243,35 +265,35 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             // lblRegisterStartAddress
             // 
             lblRegisterStartAddress.AutoSize = true;
-            lblRegisterStartAddress.Location = new Point(10, 92);
-            lblRegisterStartAddress.Margin = new Padding(6, 0, 6, 0);
+            lblRegisterStartAddress.Location = new Point(7, 55);
+            lblRegisterStartAddress.Margin = new Padding(4, 0, 4, 0);
             lblRegisterStartAddress.Name = "lblRegisterStartAddress";
-            lblRegisterStartAddress.Size = new Size(256, 25);
+            lblRegisterStartAddress.Size = new Size(167, 15);
             lblRegisterStartAddress.TabIndex = 3;
             lblRegisterStartAddress.Text = "Starting address of the register";
             // 
             // nudRegisterStartAddress
             // 
-            nudRegisterStartAddress.Location = new Point(459, 85);
-            nudRegisterStartAddress.Margin = new Padding(6, 5, 6, 5);
+            nudRegisterStartAddress.Location = new Point(321, 51);
+            nudRegisterStartAddress.Margin = new Padding(4, 3, 4, 3);
             nudRegisterStartAddress.Maximum = new decimal(new int[] { 65535, 0, 0, 0 });
             nudRegisterStartAddress.Name = "nudRegisterStartAddress";
-            nudRegisterStartAddress.Size = new Size(157, 31);
+            nudRegisterStartAddress.Size = new Size(110, 23);
             nudRegisterStartAddress.TabIndex = 2;
             nudRegisterStartAddress.TextAlign = HorizontalAlignment.Center;
             nudRegisterStartAddress.ValueChanged += nud_RegisterStartAddress_ValueChanged;
             // 
             // FrmCommand1_2_3_4
             // 
-            AutoScaleDimensions = new SizeF(10F, 25F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(830, 622);
+            ClientSize = new Size(574, 387);
             ControlBox = false;
             Controls.Add(gpbOptions);
             Controls.Add(gpbGroup);
             Controls.Add(btnSave);
             FormBorderStyle = FormBorderStyle.FixedSingle;
-            Margin = new Padding(6, 5, 6, 5);
+            Margin = new Padding(4, 3, 4, 3);
             MaximizeBox = false;
             MinimizeBox = false;
             Name = "FrmCommand1_2_3_4";
@@ -310,5 +332,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
         private NumericUpDown nudRegisterStartAddressWrite;
         private Label lblRegisterCountWrite;
         private NumericUpDown nudRegisterCountWrite;
+        private TextBox txtCode;
+        private Label lblCode;
     }
 }

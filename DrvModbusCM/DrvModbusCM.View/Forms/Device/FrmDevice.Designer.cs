@@ -293,7 +293,6 @@
             // 
             cmbTypeProtocol.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbTypeProtocol.FormattingEnabled = true;
-            cmbTypeProtocol.Items.AddRange(new object[] { "", "Modbus RTU", "Modbus TCP", "Modbus ASCII", "VTD" });
             cmbTypeProtocol.Location = new Point(243, 105);
             cmbTypeProtocol.Margin = new Padding(4, 3, 4, 3);
             cmbTypeProtocol.Name = "cmbTypeProtocol";

@@ -14,16 +14,16 @@ class ModbusTCP
     #region Формирование запроса по протоколу Modbus TCP
     public byte[] CalculateSendData(ushort Address, ushort FunctionCode, ushort RegisterStartAddress, ushort RegisterCount, ushort[] Value)
     {
-        byte[] byte_Frame = new byte[0];
+        byte[] byteFrame = new byte[0];
         if (FunctionCode == 1 || FunctionCode == 2 || FunctionCode == 3 || FunctionCode == 4)
         {
-            byte_Frame = Read(FunctionCode, Address, FunctionCode, RegisterStartAddress, RegisterCount);
-            return byte_Frame;
+            byteFrame = Read(FunctionCode, Address, FunctionCode, RegisterStartAddress, RegisterCount);
+            return byteFrame;
         }
         else if (FunctionCode == 5 || FunctionCode == 6)
         {
-            byte_Frame = Write(FunctionCode, Address, FunctionCode, RegisterStartAddress, HEX_WORD.ToByteArray(Value));
-            return byte_Frame;
+            byteFrame = Write(FunctionCode, Address, FunctionCode, RegisterStartAddress, HEX_WORD.ToByteArray(Value));
+            return byteFrame;
         }
         else if (FunctionCode == 15)
         {
@@ -42,20 +42,20 @@ class ModbusTCP
                 }
             }
             byte[] tmp_Values = HEX_BOOLEAN.ToByteArray(tmp_Buffer);
-            byte_Frame = WriteMultipleCoils(FunctionCode, Address, FunctionCode, RegisterStartAddress, RegisterCount, tmp_Values);
-            return byte_Frame;
+            byteFrame = WriteMultipleCoils(FunctionCode, Address, FunctionCode, RegisterStartAddress, RegisterCount, tmp_Values);
+            return byteFrame;
         }
         else if (FunctionCode == 16)
         {
-            byte_Frame = WriteAll(FunctionCode, Address, FunctionCode, RegisterStartAddress, HEX_WORD.ToByteArray(Value));
-            return byte_Frame;
+            byteFrame = WriteAll(FunctionCode, Address, FunctionCode, RegisterStartAddress, HEX_WORD.ToByteArray(Value));
+            return byteFrame;
         }
         else if (FunctionCode == 99)
         {
-            byte_Frame = HEX_WORD.ToByteArray(Value);
-            return byte_Frame;
+            byteFrame = HEX_WORD.ToByteArray(Value);
+            return byteFrame;
         }
-        return byte_Frame;
+        return byteFrame;
     }
 
     private byte[] Read(ushort ID, ushort Address, ushort FunctionCode, ushort RegisterStartAddress, ushort RegisterCount)
@@ -762,17 +762,9 @@ class ModbusTCP
     {
         byte[] NumArrayRegisters = null;
 
-        switch ((int)bufferReceiver[7])
-        {
-            case 1:
-            case 2:
-            case 3:
-            case 4:
-                NumArrayRegisters = new byte[(int)bufferReceiver[8]];
-                Array.Copy((Array)bufferReceiver, 9, (Array)NumArrayRegisters, 0, (int)bufferReceiver[8]);
-                break;
-        }
-
+        NumArrayRegisters = new byte[(int)bufferReceiver[8]];
+        Array.Copy((Array)bufferReceiver, 9, (Array)NumArrayRegisters, 0, (int)bufferReceiver[8]);
+         
         return NumArrayRegisters;
     }
 

@@ -790,17 +790,9 @@ public partial class ModbusRTU
     {
         byte[] NumArrayRegisters = null;
 
-        switch ((int)bufferReceiver[1])
-        {
-            case 1:
-                case 2:
-                case 3:
-                case 4:
-                NumArrayRegisters = new byte[(int)bufferReceiver[2]];
-                Array.Copy((Array)bufferReceiver, 3, (Array)NumArrayRegisters, 0, (int)bufferReceiver[2]);
-                break;
-        }
-
+        NumArrayRegisters = new byte[(int)bufferReceiver[2]];
+        Array.Copy((Array)bufferReceiver, 3, (Array)NumArrayRegisters, 0, (int)bufferReceiver[2]);
+     
         return NumArrayRegisters;
     }
 

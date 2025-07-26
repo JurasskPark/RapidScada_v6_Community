@@ -13,14 +13,14 @@ public class UDPClient : IDisposable
 
     private Socket mSocket;
 
-    private IPAddress ipAddress;
-    private int port;
+    public IPAddress ipAddress { get; set; }
+    public int port { get; set; }
 
-    private byte[] bufferSender = new byte[2048];
-    private byte[] bufferReceiver = new byte[2048];
+    public byte[] bufferSender { get; set; }
+    public byte[] bufferReceiver { get; set; }
 
-    private static int writeTimeout = 1000;
-    private static int readTimeout = 1000;
+    public int writeTimeout { get; set; }
+    public int readTimeout { get; set; }
 
     private static bool connected = false;
 
@@ -40,6 +40,10 @@ public class UDPClient : IDisposable
     {
         this.ipAddress = IPAddress.Loopback;
         this.port = 502;
+        this.bufferSender = new byte[2048];
+        this.bufferReceiver = new byte[2048];
+        this.writeTimeout = 1000;
+        this.readTimeout = 1000;    
 
         udpClientSender = new UdpClient();
         udpClientReceiver = new UdpClient();
@@ -49,6 +53,10 @@ public class UDPClient : IDisposable
     {
         this.ipAddress = IPAddress.Parse(clientIp);
         this.port = clientPort;
+        this.bufferSender = new byte[2048];
+        this.bufferReceiver = new byte[2048];
+        this.writeTimeout = 1000;
+        this.readTimeout = 1000;
 
         udpClientSender = new UdpClient();
         udpClientReceiver = new UdpClient();
@@ -58,6 +66,10 @@ public class UDPClient : IDisposable
     {
         this.ipAddress = clientIp;
         this.port = clientPort;
+        this.bufferSender = new byte[2048];
+        this.bufferReceiver = new byte[2048];
+        this.writeTimeout = 1000;
+        this.readTimeout = 1000;
 
         udpClientSender = new UdpClient();
         udpClientReceiver = new UdpClient();
@@ -67,10 +79,10 @@ public class UDPClient : IDisposable
     {
         this.ipAddress = IPAddress.Parse(clientIp);
         this.port = clientPort;
-        writeTimeout = clientWriteTimeout;
-        readTimeout = clientReadTimeout;
-        bufferSender = new byte[clientWriteBufferSize];
-        bufferReceiver = new byte[clientReadBufferSize];
+        this.writeTimeout = clientWriteTimeout;
+        this.readTimeout = clientReadTimeout;
+        this.bufferSender = new byte[clientWriteBufferSize];
+        this.bufferReceiver = new byte[clientReadBufferSize];
 
         udpClientSender = new UdpClient();
         udpClientReceiver = new UdpClient();
@@ -80,10 +92,10 @@ public class UDPClient : IDisposable
     {
         this.ipAddress = clientIp;
         this.port = clientPort;
-        writeTimeout = clientWriteTimeout;
-        readTimeout = clientReadTimeout;
-        bufferSender = new byte[clientWriteBufferSize];
-        bufferReceiver = new byte[clientReadBufferSize];
+        this.writeTimeout = clientWriteTimeout;
+        this.readTimeout = clientReadTimeout;
+        this.bufferSender = new byte[clientWriteBufferSize];
+        this.bufferReceiver = new byte[clientReadBufferSize];
 
         udpClientSender = new UdpClient();
         udpClientReceiver = new UdpClient();

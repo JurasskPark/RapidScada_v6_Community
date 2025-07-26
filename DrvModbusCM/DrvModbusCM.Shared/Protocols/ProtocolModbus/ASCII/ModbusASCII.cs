@@ -851,16 +851,8 @@ public partial class ModbusASCII
     {
         byte[] NumArrayRegisters = null;
 
-        switch ((int)bufferReceiver[2])
-        {
-            case 1:
-            case 2:
-            case 3:
-            case 4:
-                NumArrayRegisters = new byte[(int)bufferReceiver[3]];
-                Array.Copy(bufferReceiver, 4, NumArrayRegisters, 0, (int)bufferReceiver[3]);
-                break;
-        }
+        NumArrayRegisters = new byte[(int)bufferReceiver[3]];
+        Array.Copy(bufferReceiver, 4, NumArrayRegisters, 0, (int)bufferReceiver[3]);
 
         return NumArrayRegisters;
     }
