@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Scada.Data.Entities;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
+using static Scada.Comm.Drivers.DrvModbusCM.ProjectTag;
 
 namespace Scada.Comm.Drivers.DrvModbusCM
 {
@@ -15,7 +17,11 @@ namespace Scada.Comm.Drivers.DrvModbusCM
         {
             RegAddr = 0;
             RegName = string.Empty;
-            RegValue = 0;
+            RegDescription = string.Empty;
+            RegData = string.Empty;
+            RegFormat = FormatData.NONE;
+            RegValue = new byte[0];
+            Sorting = string.Empty;
         }
 
         #region Variables
@@ -35,12 +41,44 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             set { regName = value; }
         }
 
-        private ulong regValue;
+        private string regDescription;
         [XmlAttribute]
-        public ulong RegValue
+        public string RegDescription
+        {
+            get { return regDescription; }
+            set { regDescription = value; }
+        }
+
+        private FormatData regFormat;
+        [XmlAttribute]
+        public FormatData RegFormat
+        {
+            get { return regFormat; }
+            set { regFormat = value; }
+        }
+
+        private string regData;
+        [XmlAttribute]
+        public string RegData
+        {
+            get { return regData; }
+            set { regData = value; }
+        }
+
+        private byte[] regValue;
+        [XmlAttribute]
+        public byte[] RegValue
         {
             get { return regValue; }
             set { regValue = value; }
+        }
+
+        private string sorting;
+        [XmlAttribute]
+        public string Sorting
+        {
+            set { sorting = value; }
+            get { return sorting; }
         }
         #endregion Variables
 
@@ -58,7 +96,11 @@ namespace Scada.Comm.Drivers.DrvModbusCM
 
             RegAddr = xmlNode.GetChildAsInt("RegAddr");
             RegName = xmlNode.GetChildAsString("RegName");
-            RegValue = Convert.ToUInt64(xmlNode.GetChildAsString("RegValue"));
+            RegDescription = xmlNode.GetChildAsString("RegDescription");
+            RegData = xmlNode.GetChildAsString("RegData");
+            RegFormat = (FormatData)Enum.Parse(typeof(FormatData), xmlNode.GetChildAsString("RegFormat"));
+            RegValue = HEX_STRING.HEXSTRING_TO_BYTEARRAY(xmlNode.GetChildAsString("RegValue"));
+            Sorting = xmlNode.GetChildAsString("RegSorting");
         }
         #endregion Load
 
@@ -76,7 +118,11 @@ namespace Scada.Comm.Drivers.DrvModbusCM
 
             xmlElem.AppendElem("RegAddr", RegAddr);
             xmlElem.AppendElem("RegName", RegName);
-            xmlElem.AppendElem("RegValue", RegValue);
+            xmlElem.AppendElem("RegDescription", RegDescription);
+            xmlElem.AppendElem("RegData", RegData);
+            xmlElem.AppendElem("RegFormat", Enum.GetName(typeof(FormatData), RegFormat));
+            xmlElem.AppendElem("RegValue", HEX_STRING.BYTEARRAY_TO_HEXSTRING(RegValue));
+            xmlElem.AppendElem("RegSorting", Sorting);
         }
         #endregion Save
     }

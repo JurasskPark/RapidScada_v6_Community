@@ -1,4 +1,6 @@
 ﻿
+using BrightIdeasSoftware;
+
 namespace Scada.Comm.Drivers.DrvModbusCM.View
 {
     partial class FrmCommand5_6_15_16
@@ -31,11 +33,20 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
         {
             ckbEnabled = new CheckBox();
             gpbGroup = new GroupBox();
+            txtCode = new TextBox();
+            lblCode = new Label();
             lblName = new Label();
             txtName = new TextBox();
             btnSave = new Button();
             gpbOptions = new GroupBox();
-            dgvRegisterValue = new DataGridView();
+            txtRegistersWriteData = new TextBox();
+            lblRegistersWriteData = new Label();
+            olvRegistersWrite = new ObjectListView();
+            olvColumnNumber = new OLVColumn();
+            olvColumnRegister = new OLVColumn();
+            olvColumnDescription = new OLVColumn();
+            olvColumnFormatData = new OLVColumn();
+            olvColumnValue = new OLVColumn();
             cmbFunctionCode = new ComboBox();
             lblRegisterCount = new Label();
             nudRegisterCount = new NumericUpDown();
@@ -43,7 +54,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             nudRegisterStartAddress = new NumericUpDown();
             gpbGroup.SuspendLayout();
             gpbOptions.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dgvRegisterValue).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)olvRegistersWrite).BeginInit();
             ((System.ComponentModel.ISupportInitialize)nudRegisterCount).BeginInit();
             ((System.ComponentModel.ISupportInitialize)nudRegisterStartAddress).BeginInit();
             SuspendLayout();
@@ -61,16 +72,36 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             // 
             // gpbGroup
             // 
+            gpbGroup.Controls.Add(txtCode);
             gpbGroup.Controls.Add(ckbEnabled);
+            gpbGroup.Controls.Add(lblCode);
             gpbGroup.Controls.Add(lblName);
             gpbGroup.Controls.Add(txtName);
             gpbGroup.Location = new Point(14, 14);
             gpbGroup.Margin = new Padding(4, 3, 4, 3);
             gpbGroup.Name = "gpbGroup";
             gpbGroup.Padding = new Padding(4, 3, 4, 3);
-            gpbGroup.Size = new Size(439, 67);
+            gpbGroup.Size = new Size(439, 109);
             gpbGroup.TabIndex = 18;
             gpbGroup.TabStop = false;
+            // 
+            // txtCode
+            // 
+            txtCode.Location = new Point(10, 77);
+            txtCode.Margin = new Padding(6, 5, 6, 5);
+            txtCode.Name = "txtCode";
+            txtCode.Size = new Size(314, 23);
+            txtCode.TabIndex = 24;
+            // 
+            // lblCode
+            // 
+            lblCode.AutoSize = true;
+            lblCode.Location = new Point(10, 57);
+            lblCode.Margin = new Padding(6, 0, 6, 0);
+            lblCode.Name = "lblCode";
+            lblCode.Size = new Size(93, 15);
+            lblCode.TabIndex = 25;
+            lblCode.Text = "Command code";
             // 
             // lblName
             // 
@@ -104,35 +135,123 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             // 
             // gpbOptions
             // 
-            gpbOptions.Controls.Add(dgvRegisterValue);
+            gpbOptions.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            gpbOptions.Controls.Add(txtRegistersWriteData);
+            gpbOptions.Controls.Add(lblRegistersWriteData);
+            gpbOptions.Controls.Add(olvRegistersWrite);
             gpbOptions.Controls.Add(cmbFunctionCode);
             gpbOptions.Controls.Add(lblRegisterCount);
             gpbOptions.Controls.Add(nudRegisterCount);
             gpbOptions.Controls.Add(lblRegisterStartAddress);
             gpbOptions.Controls.Add(nudRegisterStartAddress);
-            gpbOptions.Location = new Point(14, 88);
+            gpbOptions.Location = new Point(13, 129);
             gpbOptions.Margin = new Padding(4, 3, 4, 3);
             gpbOptions.Name = "gpbOptions";
             gpbOptions.Padding = new Padding(4, 3, 4, 3);
-            gpbOptions.Size = new Size(439, 235);
+            gpbOptions.Size = new Size(816, 413);
             gpbOptions.TabIndex = 21;
             gpbOptions.TabStop = false;
             gpbOptions.Text = "Options";
             // 
-            // dgvRegisterValue
+            // txtRegistersWriteData
             // 
-            dgvRegisterValue.AllowUserToAddRows = false;
-            dgvRegisterValue.AllowUserToResizeColumns = false;
-            dgvRegisterValue.AllowUserToResizeRows = false;
-            dgvRegisterValue.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvRegisterValue.Location = new Point(7, 115);
-            dgvRegisterValue.Margin = new Padding(4, 3, 4, 3);
-            dgvRegisterValue.Name = "dgvRegisterValue";
-            dgvRegisterValue.Size = new Size(425, 106);
-            dgvRegisterValue.TabIndex = 23;
-            dgvRegisterValue.CellContentClick += dgv_RegisterValue_CellContentClick;
-            dgvRegisterValue.CellValueChanged += dgv_RegisterValue_CellValueChanged;
-            dgvRegisterValue.EditingControlShowing += dgv_RegisterValue_EditingControlShowing;
+            txtRegistersWriteData.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            txtRegistersWriteData.Location = new Point(7, 131);
+            txtRegistersWriteData.Margin = new Padding(6, 5, 6, 5);
+            txtRegistersWriteData.Multiline = true;
+            txtRegistersWriteData.Name = "txtRegistersWriteData";
+            txtRegistersWriteData.Size = new Size(799, 53);
+            txtRegistersWriteData.TabIndex = 27;
+            // 
+            // lblRegistersWriteData
+            // 
+            lblRegistersWriteData.AutoSize = true;
+            lblRegistersWriteData.Location = new Point(11, 111);
+            lblRegistersWriteData.Margin = new Padding(4, 0, 4, 0);
+            lblRegistersWriteData.Name = "lblRegistersWriteData";
+            lblRegistersWriteData.Size = new Size(112, 15);
+            lblRegistersWriteData.TabIndex = 26;
+            lblRegistersWriteData.Text = "Registers Write Data";
+            // 
+            // olvRegistersWrite
+            // 
+            olvRegistersWrite.AllColumns.Add(olvColumnNumber);
+            olvRegistersWrite.AllColumns.Add(olvColumnRegister);
+            olvRegistersWrite.AllColumns.Add(olvColumnDescription);
+            olvRegistersWrite.AllColumns.Add(olvColumnFormatData);
+            olvRegistersWrite.AllColumns.Add(olvColumnValue);
+            olvRegistersWrite.AllowColumnReorder = true;
+            olvRegistersWrite.AllowDrop = true;
+            olvRegistersWrite.AlternateRowBackColor = Color.FromArgb(137, 180, 213);
+            olvRegistersWrite.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            olvRegistersWrite.CellEditUseWholeCell = false;
+            olvRegistersWrite.CheckedAspectName = "";
+            olvRegistersWrite.Columns.AddRange(new ColumnHeader[] { olvColumnNumber, olvColumnRegister, olvColumnDescription, olvColumnFormatData, olvColumnValue });
+            olvRegistersWrite.EmptyListMsg = "";
+            olvRegistersWrite.ForeColor = SystemColors.WindowText;
+            olvRegistersWrite.FullRowSelect = true;
+            olvRegistersWrite.GridLines = true;
+            olvRegistersWrite.GroupWithItemCountFormat = "{0} ({1} people)";
+            olvRegistersWrite.GroupWithItemCountSingularFormat = "{0} ({1} person)";
+            olvRegistersWrite.HeaderStyle = ColumnHeaderStyle.Nonclickable;
+            olvRegistersWrite.Location = new Point(8, 192);
+            olvRegistersWrite.Margin = new Padding(7, 3, 4, 3);
+            olvRegistersWrite.Name = "olvRegistersWrite";
+            olvRegistersWrite.OverlayText.Alignment = ContentAlignment.BottomLeft;
+            olvRegistersWrite.OverlayText.Text = "";
+            olvRegistersWrite.SelectColumnsOnRightClickBehaviour = ObjectListView.ColumnSelectBehaviour.Submenu;
+            olvRegistersWrite.SelectedBackColor = Color.FromArgb(70, 138, 189);
+            olvRegistersWrite.SelectedColumnTint = Color.FromArgb(254, 70, 138, 189);
+            olvRegistersWrite.SelectedForeColor = Color.White;
+            olvRegistersWrite.ShowCommandMenuOnRightClick = true;
+            olvRegistersWrite.ShowGroups = false;
+            olvRegistersWrite.ShowHeaderInAllViews = false;
+            olvRegistersWrite.ShowImagesOnSubItems = true;
+            olvRegistersWrite.ShowItemToolTips = true;
+            olvRegistersWrite.Size = new Size(798, 215);
+            olvRegistersWrite.TabIndex = 25;
+            olvRegistersWrite.UnfocusedSelectedBackColor = Color.FromArgb(70, 138, 189);
+            olvRegistersWrite.UnfocusedSelectedForeColor = Color.FromArgb(70, 138, 189);
+            olvRegistersWrite.UseAlternatingBackColors = true;
+            olvRegistersWrite.UseCompatibleStateImageBehavior = false;
+            olvRegistersWrite.UseFiltering = true;
+            olvRegistersWrite.UseHotItem = true;
+            olvRegistersWrite.View = System.Windows.Forms.View.Details;
+            // 
+            // olvColumnNumber
+            // 
+            olvColumnNumber.AspectName = "RegAddr";
+            olvColumnNumber.MinimumWidth = 80;
+            olvColumnNumber.Text = "Number";
+            olvColumnNumber.Width = 80;
+            // 
+            // olvColumnRegister
+            // 
+            olvColumnRegister.AspectName = "RegName";
+            olvColumnRegister.MinimumWidth = 100;
+            olvColumnRegister.Text = "Register";
+            olvColumnRegister.Width = 100;
+            // 
+            // olvColumnDescription
+            // 
+            olvColumnDescription.AspectName = "RegDescription";
+            olvColumnDescription.MinimumWidth = 100;
+            olvColumnDescription.Text = "Description";
+            olvColumnDescription.Width = 250;
+            // 
+            // olvColumnFormatData
+            // 
+            olvColumnFormatData.AspectName = "RegFormat";
+            olvColumnFormatData.MinimumWidth = 100;
+            olvColumnFormatData.Text = "FormatData";
+            olvColumnFormatData.Width = 150;
+            // 
+            // olvColumnValue
+            // 
+            olvColumnValue.AspectName = "RegValue";
+            olvColumnValue.MinimumWidth = 100;
+            olvColumnValue.Text = "Value";
+            olvColumnValue.Width = 200;
             // 
             // cmbFunctionCode
             // 
@@ -140,13 +259,13 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             cmbFunctionCode.DropDownWidth = 350;
             cmbFunctionCode.FlatStyle = FlatStyle.Flat;
             cmbFunctionCode.FormattingEnabled = true;
-            cmbFunctionCode.Items.AddRange(new object[] { "(01) — Чтение регистров флагов (Read Coils) ", "(02) — Чтение дискретных входов (Read Discrete Inputs)", "(03) — Чтение регистров хранения (Read Holding Registers)", "(04) — Чтение регистров ввода (Read Input Registers)", "(05) — Запись одного флага (Force Single Coil)", "(06) — Запись регистр хранения (Preset Single Register)", "(07) — Чтение сигналов состояния (Read Exception Status)", "(08) — Диагностика (Diagnostic)", "(11) — Чтение счетчика событий (Get Com Event Counter)", "(12) — Чтение журнала событий (Get Com Event Log)", "(15) — Запись регистров флагов (Write Multiple Coils)", "(16) — Запись регистров хранения (Write Multiple Holding Registers)", "(17) — Чтение информации об устройстве (Report Slave ID)", "(20) — Чтение из файла (Read File Record)", "(21) — Запись в файл (Write File Record)", "(22) — Запись в один регистр хранения (Mask Write Register)", "(24) — Чтение данных из очереди (Read FIFO Queue)", "(43) — Encapsulated Interface Transport", "(99) — Произвольная команда" });
+            cmbFunctionCode.Items.AddRange(new object[] { "(05) — Запись одного флага (Force Single Coil)", "(06) — Запись регистр хранения (Preset Single Register)", "(15) — Запись регистров флагов (Write Multiple Coils)", "(16) — Запись регистров хранения (Write Multiple Holding Registers)" });
             cmbFunctionCode.Location = new Point(7, 22);
             cmbFunctionCode.Margin = new Padding(4, 3, 4, 3);
             cmbFunctionCode.Name = "cmbFunctionCode";
             cmbFunctionCode.Size = new Size(424, 23);
             cmbFunctionCode.TabIndex = 22;
-            cmbFunctionCode.SelectedIndexChanged += cmb_FunctionCode_SelectedIndexChanged;
+            cmbFunctionCode.SelectedIndexChanged += cmbFunctionCode_SelectedIndexChanged;
             // 
             // lblRegisterCount
             // 
@@ -169,7 +288,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             nudRegisterCount.TabIndex = 3;
             nudRegisterCount.TextAlign = HorizontalAlignment.Center;
             nudRegisterCount.Value = new decimal(new int[] { 1, 0, 0, 0 });
-            nudRegisterCount.ValueChanged += nud_RegisterCount_ValueChanged;
+            nudRegisterCount.ValueChanged += nudRegisterCount_ValueChanged;
             // 
             // lblRegisterStartAddress
             // 
@@ -190,13 +309,13 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             nudRegisterStartAddress.Size = new Size(110, 23);
             nudRegisterStartAddress.TabIndex = 2;
             nudRegisterStartAddress.TextAlign = HorizontalAlignment.Center;
-            nudRegisterStartAddress.ValueChanged += nud_RegisterStartAddress_ValueChanged;
+            nudRegisterStartAddress.ValueChanged += nudRegisterStartAddress_ValueChanged;
             // 
             // FrmCommand5_6_15_16
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(581, 389);
+            ClientSize = new Size(826, 530);
             ControlBox = false;
             Controls.Add(gpbOptions);
             Controls.Add(gpbGroup);
@@ -214,7 +333,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             gpbGroup.PerformLayout();
             gpbOptions.ResumeLayout(false);
             gpbOptions.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)dgvRegisterValue).EndInit();
+            ((System.ComponentModel.ISupportInitialize)olvRegistersWrite).EndInit();
             ((System.ComponentModel.ISupportInitialize)nudRegisterCount).EndInit();
             ((System.ComponentModel.ISupportInitialize)nudRegisterStartAddress).EndInit();
             ResumeLayout(false);
@@ -234,6 +353,15 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
         private System.Windows.Forms.Label lblRegisterStartAddress;
         private System.Windows.Forms.NumericUpDown nudRegisterStartAddress;
         private System.Windows.Forms.ComboBox cmbFunctionCode;
-        private System.Windows.Forms.DataGridView dgvRegisterValue;
+        private System.Windows.Forms.TextBox txtCode;
+        private System.Windows.Forms.Label lblCode;
+        private BrightIdeasSoftware.ObjectListView olvRegistersWrite;
+        private BrightIdeasSoftware.OLVColumn olvColumnNumber;
+        private BrightIdeasSoftware.OLVColumn olvColumnRegister;
+        private BrightIdeasSoftware.OLVColumn olvColumnFormatData;
+        private BrightIdeasSoftware.OLVColumn olvColumnDescription;
+        private BrightIdeasSoftware.OLVColumn olvColumnValue;
+        private Label lblRegistersWriteData;
+        private TextBox txtRegistersWriteData;
     }
 }

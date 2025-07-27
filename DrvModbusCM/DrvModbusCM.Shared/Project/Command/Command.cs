@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
+using System.Xml.Linq;
 using System.Xml.Serialization;
 
 namespace Scada.Comm.Drivers.DrvModbusCM
@@ -29,8 +30,8 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             RegisterCount = 1;
             RegisterCountWrite = 1;
 
-            RegisterNameWriteData = new string[1];
-            RegisterWriteData = new ulong[1];
+            ListRegistersWriteData = new List<ProjectRegisterWriteData>();
+            RegisterWriteData = new byte[0];
 
             WriteDataOther = false;
         }
@@ -316,17 +317,17 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             set { registerCountWrite = value; }
         }
 
-        private string[] registerNameWriteData;
+        private List<ProjectRegisterWriteData> listRegistersWriteData;
         [XmlAttribute]
-        public string[] RegisterNameWriteData
+        public List<ProjectRegisterWriteData> ListRegistersWriteData
         {
-            get { return registerNameWriteData; }
-            set { registerNameWriteData = value; }
+            get { return listRegistersWriteData; }
+            set { listRegistersWriteData = value; }
         }
 
-        private ulong[] registerWriteData;
+        private byte[] registerWriteData;
         [XmlAttribute]
-        public ulong[] RegisterWriteData
+        public byte[] RegisterWriteData
         {
             get { return registerWriteData; }
             set { registerWriteData = value; }
@@ -361,49 +362,33 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             Enabled = xmlNode.GetChildAsBool("Enabled");
 
             FunctionCode = Convert.ToUInt64(xmlNode.GetChildAsString("FunctionCode"));
-            FunctionCodeWrite = Convert.ToUInt64(xmlNode.GetChildAsString("FunctionCodeWrite"));
-
             RegisterStartAddress = Convert.ToUInt64(xmlNode.GetChildAsString("RegisterStartAddress"));
-            RegisterStartAddressWrite = Convert.ToUInt64(xmlNode.GetChildAsString("RegisterStartAddressWrite"));
-
             RegisterCount = Convert.ToUInt64(xmlNode.GetChildAsString("RegisterCount"));
-            RegisterCountWrite = Convert.ToUInt64(xmlNode.GetChildAsString("RegisterCountWrite"));
+            
+            WriteDataOther = xmlNode.GetChildAsBool("WriteDataOther");
+            if (WriteDataOther)
+            {
+                FunctionCodeWrite = Convert.ToUInt64(xmlNode.GetChildAsString("FunctionCodeWrite"));
+                RegisterStartAddressWrite = Convert.ToUInt64(xmlNode.GetChildAsString("RegisterStartAddressWrite"));
+                RegisterCountWrite = Convert.ToUInt64(xmlNode.GetChildAsString("RegisterCountWrite"));
+            }
 
             try
             {
                 if (xmlNode.SelectSingleNode("ListRegistersWriteData") is XmlNode listRegistersWriteDataNode)
                 {
-                    List<ProjectRegisterWriteData> ListRegistersWriteData = new List<ProjectRegisterWriteData>();
+                    ListRegistersWriteData = new List<ProjectRegisterWriteData>();
                     foreach (XmlNode registerWriteDataNode in listRegistersWriteDataNode.SelectNodes("RegisterWriteData"))
                     {
                         ProjectRegisterWriteData registerWriteData = new ProjectRegisterWriteData();
                         registerWriteData.LoadFromXml(registerWriteDataNode);
                         ListRegistersWriteData.Add(registerWriteData);
                     }
-
-                    RegisterNameWriteData = new string[ListRegistersWriteData.Count];
-                    RegisterWriteData = new ulong[ListRegistersWriteData.Count];
-                    for (int i = 0; i < ListRegistersWriteData.Count; i++)
-                    {
-                        int regAddr = ListRegistersWriteData[i].RegAddr;
-                        RegisterNameWriteData[regAddr] = ListRegistersWriteData[i].RegName;
-                        RegisterWriteData[regAddr] = ListRegistersWriteData[i].RegValue;
-                    }
                 }
             }
-            catch
-            {
-                RegisterNameWriteData = new string[1];
-                RegisterWriteData = new ulong[1];
-            }
+            catch { }
 
-            for (ulong i = 0; i < RegisterCount; i++)
-            {
-                RegisterNameWriteData = new string[1];
-                RegisterWriteData = new ulong[1];
-            }
-
-            WriteDataOther = xmlNode.GetChildAsBool("WriteDataOther");
+            RegisterWriteData = HEX_STRING.HEXSTRING_TO_BYTEARRAY(xmlNode.GetChildAsString("RegisterWriteData"));
         }
         #endregion Load
 
@@ -430,27 +415,25 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             xmlElem.AppendElem("RegisterStartAddress", RegisterStartAddress);
             xmlElem.AppendElem("RegisterCount", RegisterCount);
 
+            xmlElem.AppendElem("WriteDataOther", WriteDataOther);
+            if(WriteDataOther)
+            {
+                xmlElem.AppendElem("FunctionCodeWrite", FunctionCodeWrite);
+                xmlElem.AppendElem("RegisterStartAddressWrite", RegisterStartAddressWrite);
+                xmlElem.AppendElem("RegisterCountWrite", RegisterCountWrite);
+            }
+
             try
             {
-                if (RegisterCount == Convert.ToUInt64(RegisterWriteData.Length))
+                XmlElement listRegistersElem = xmlElem.AppendElem("ListRegistersWriteData");
+                foreach (ProjectRegisterWriteData register in ListRegistersWriteData)
                 {
-                    XmlElement listRegistersWriteDataElem = xmlElem.AppendElem("ListRegistersWriteData");
-                    for (int i = 0; i < Convert.ToInt32(RegisterCount); i++)
-                    {
-                        ProjectRegisterWriteData projectRegisterWriteData = new ProjectRegisterWriteData();
-                        projectRegisterWriteData.RegAddr = i;
-                        projectRegisterWriteData.RegName = RegisterNameWriteData[i];
-                        projectRegisterWriteData.RegValue = RegisterWriteData[i];
-                        projectRegisterWriteData.SaveToXml(listRegistersWriteDataElem.AppendElem("RegisterWriteData"));
-                    }
+                    register.SaveToXml(listRegistersElem.AppendElem("RegistersWriteData"));
                 }
             }
             catch { }
 
-            xmlElem.AppendElem("WriteDataOther", WriteDataOther);
-            xmlElem.AppendElem("FunctionCodeWrite", FunctionCodeWrite);
-            xmlElem.AppendElem("RegisterStartAddressWrite", RegisterStartAddressWrite);
-            xmlElem.AppendElem("RegisterCountWrite", RegisterCountWrite);
+            xmlElem.AppendElem("RegisterWriteData", HEX_STRING.BYTEARRAY_TO_HEXSTRING(RegisterWriteData));
         }
         #endregion Save
     }

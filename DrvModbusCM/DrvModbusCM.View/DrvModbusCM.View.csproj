@@ -32,6 +32,7 @@
   <ItemGroup>
     <ProjectReference Include="..\DrvModbusCM.Log\DrvModbusCM.ViewData.csproj" />
     <ProjectReference Include="..\DrvModbusCM.Utils\DrvModbusCM.Utils.csproj" />
+    <ProjectReference Include="..\ObjectListView\ObjectListView.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1367,6 +1367,12 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
                         frmPropertyForm = new Form();
                         frmPropertyForm = frmCommand;
                         break;
+                    case ulong n when (n >= 5 && n <= 6) || (n >= 15 && n <= 16):
+                        FrmCommand5_6_15_16 frmCommandWrite = new FrmCommand5_6_15_16(ref mtNodeData, true);
+                        frmCommandWrite.frmParentGloabal = this;
+                        frmPropertyForm = new Form();
+                        frmPropertyForm = frmCommandWrite;
+                        break;
                 }
             }
             else if (mtNodeData.NodeType == ProjectNodeType.GroupTag && mtNodeData.GroupTag != null)

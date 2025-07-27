@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrvModbusCM.Utils", "DrvMod
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrvModbusCM.ViewData", "DrvModbusCM.Log\DrvModbusCM.ViewData.csproj", "{E4088DC1-8548-4E31-BC3A-DF7BCD15D5BC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectListView", "ObjectListView\ObjectListView.csproj", "{73B4F2BA-23D5-7756-62E2-446CE5FDF217}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,10 @@ Global
 		{E4088DC1-8548-4E31-BC3A-DF7BCD15D5BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E4088DC1-8548-4E31-BC3A-DF7BCD15D5BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E4088DC1-8548-4E31-BC3A-DF7BCD15D5BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{73B4F2BA-23D5-7756-62E2-446CE5FDF217}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73B4F2BA-23D5-7756-62E2-446CE5FDF217}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73B4F2BA-23D5-7756-62E2-446CE5FDF217}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73B4F2BA-23D5-7756-62E2-446CE5FDF217}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

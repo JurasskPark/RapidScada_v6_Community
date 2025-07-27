@@ -34,7 +34,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
 
         #region Command
 
-        ProjectCommand currentCommand;
+        ProjectCommand currentCommand = new ProjectCommand();
         //Таблица, где находятся поля DeviceCommandRegisterWriteData
         DataTable dtRegisterWriteData = new DataTable();
 
@@ -186,6 +186,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
                 }
             }
             catch { }
+
             currentCommand.RegisterStartAddress = Convert.ToUInt64(nudRegisterStartAddress.Value);
             currentCommand.RegisterCount = Convert.ToUInt64(nudRegisterCount.Value);
 
@@ -310,9 +311,6 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
         }
 
         #endregion Генерация имени команды
-
-
-
 
         private void ckbWriteDataOther_CheckedChanged(object sender, EventArgs e)
         {

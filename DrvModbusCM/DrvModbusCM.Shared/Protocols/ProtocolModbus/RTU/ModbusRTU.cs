@@ -12,50 +12,50 @@ public partial class ModbusRTU
     #endregion Переменные
 
     #region Формирование запроса по протоколу Modbus RTU
-    public byte[] CalculateSendData(ushort Address, ushort FunctionCode, ushort RegisterStartAddress, ushort RegisterCount, ushort[] Value)
+    public byte[] CalculateSendData(ushort Address, ushort FunctionCode, ushort RegisterStartAddress, ushort RegisterCount, byte[] Values)
     {
-        byte[] byte_Frame = new byte[0];
+        byte[] frame = new byte[0];
         if (FunctionCode == 1 || FunctionCode == 2 || FunctionCode == 3 || FunctionCode == 4)
         {
-            byte_Frame = Read(Address, FunctionCode, RegisterStartAddress, RegisterCount);
-            return byte_Frame;
+            frame = Read(Address, FunctionCode, RegisterStartAddress, RegisterCount);
+            return frame;
         }
         else if (FunctionCode == 5 || FunctionCode == 6)
         {
-            byte_Frame = Write(Address, FunctionCode, RegisterStartAddress, HEX_WORD.ToByteArray(Value));
-            return byte_Frame;
+            frame = Write(Address, FunctionCode, RegisterStartAddress, Values);
+            return frame;
         }
         else if (FunctionCode == 15)
         {
-            //Сколько в массиве переменых
-            bool[] tmp_Buffer = new bool[Value.Length];
-            //Жирный костыль... Ну  получается, что регистр True = 65280 (FF00), а нам нужно теперь обратно получить True
-            for (int i = 0; i < Value.Length; i++)
-            {
-                if (Value[i] == 65280)
-                {
-                    tmp_Buffer[i] = true;
-                }
-                else
-                {
-                    tmp_Buffer[i] = false;
-                }
-            }
-            byte[] tmp_Values = HEX_BOOLEAN.ToByteArray(tmp_Buffer);
-            byte_Frame = WriteMultipleCoils(Address, FunctionCode, RegisterStartAddress, RegisterCount, tmp_Values);
-            return byte_Frame;
+            ////Сколько в массиве переменых
+            //bool[] tmp_Buffer = new bool[Values.Length];
+            ////Жирный костыль... Ну  получается, что регистр True = 65280 (FF00), а нам нужно теперь обратно получить True
+            //for (int i = 0; i < Values.Length; i++)
+            //{
+            //    if (Values[i] == 65280)
+            //    {
+            //        tmp_Buffer[i] = true;
+            //    }
+            //    else
+            //    {
+            //        tmp_Buffer[i] = false;
+            //    }
+            //}
+            //byte[] tmp_Values = HEX_BOOLEAN.ToByteArray(tmp_Buffer);
+            frame = WriteMultipleCoils(Address, FunctionCode, RegisterStartAddress, RegisterCount, Values);
+            return frame;
         }
         else if (FunctionCode == 16)
         {
-            byte_Frame = WriteAll(Address, FunctionCode, RegisterStartAddress, HEX_WORD.ToByteArray(Value));
-            return byte_Frame;
+            frame = WriteAll(Address, FunctionCode, RegisterStartAddress, Values);
+            return frame;
         }
         else if (FunctionCode == 99)
         {
-            byte_Frame = HEX_WORD.ToByteArray(Value);
-            return byte_Frame;
+            frame = Values;
+            return frame;
         }
-        return byte_Frame;
+        return frame;
     }
 
     private byte[] Read(ushort Address, ushort FunctionCode, ushort RegisterStartAddress, ushort RegisterCount)

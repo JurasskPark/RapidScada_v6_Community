@@ -143,12 +143,20 @@
             imgList.Images.SetKeyName(18, "cmd_03_off_16.png");
             imgList.Images.SetKeyName(19, "cmd_04_16.png");
             imgList.Images.SetKeyName(20, "cmd_04_off_16.png");
-            imgList.Images.SetKeyName(21, "tag_group_16.png");
-            imgList.Images.SetKeyName(22, "tag_group_off_16.png");
-            imgList.Images.SetKeyName(23, "tag_16.png");
-            imgList.Images.SetKeyName(24, "tag_add_16.png");
-            imgList.Images.SetKeyName(25, "tag_edit_16.png");
-            imgList.Images.SetKeyName(26, "tag_delete_16.png");
+            imgList.Images.SetKeyName(21, "cmd_05_16.png");
+            imgList.Images.SetKeyName(22, "cmd_05_off_16.png");
+            imgList.Images.SetKeyName(23, "cmd_06_16.png");
+            imgList.Images.SetKeyName(24, "cmd_06_off_16.png");
+            imgList.Images.SetKeyName(25, "cmd_15_16.png");
+            imgList.Images.SetKeyName(26, "cmd_15_off_16.png");
+            imgList.Images.SetKeyName(27, "cmd_16_16.png");
+            imgList.Images.SetKeyName(28, "cmd_16_off_16.png");
+            imgList.Images.SetKeyName(29, "tag_group_16.png");
+            imgList.Images.SetKeyName(30, "tag_group_off_16.png");
+            imgList.Images.SetKeyName(31, "tag_16.png");
+            imgList.Images.SetKeyName(32, "tag_add_16.png");
+            imgList.Images.SetKeyName(33, "tag_edit_16.png");
+            imgList.Images.SetKeyName(34, "tag_delete_16.png");
             // 
             // tabControl
             // 
@@ -374,13 +382,13 @@
             cmnuDeviceDelete.ImageScalingSize = new Size(24, 24);
             cmnuDeviceDelete.Items.AddRange(new ToolStripItem[] { cmnuDeviceDel });
             cmnuDeviceDelete.Name = "HMI_contextMenu";
-            cmnuDeviceDelete.Size = new Size(189, 56);
+            cmnuDeviceDelete.Size = new Size(116, 34);
             // 
             // cmnuDeviceDel
             // 
             cmnuDeviceDel.Image = (Image)resources.GetObject("cmnuDeviceDel.Image");
             cmnuDeviceDel.Name = "cmnuDeviceDel";
-            cmnuDeviceDel.Size = new Size(188, 30);
+            cmnuDeviceDel.Size = new Size(115, 30);
             cmnuDeviceDel.Text = "Delete";
             cmnuDeviceDel.Click += cmnuDeviceDel_Click;
             // 

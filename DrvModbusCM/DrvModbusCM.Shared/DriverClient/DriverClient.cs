@@ -411,21 +411,21 @@ namespace Scada.Comm.Drivers.DrvModbusCM
                                 continue;
                             case DriverProtocol.ModbusRTU:
                                 //Формирование буфера данных запроса
-                                bufferSender = masterRTU.CalculateSendData(Device.Address, (ushort)command.FunctionCode, (ushort)command.RegisterStartAddress, (ushort)command.RegisterCount, DriverUtils.ConvertUlongToUshort(command.RegisterWriteData));
+                                bufferSender = masterRTU.CalculateSendData(Device.Address, (ushort)command.FunctionCode, (ushort)command.RegisterStartAddress, (ushort)command.RegisterCount, command.RegisterWriteData);
                                 byteNumberFunctionReceived = masterRTU.byteNumberFunctionReceived;
                                 byteNumberAmountDataReceived = masterRTU.byteNumberAmountDataReceived;
                                 DebugerLog(DriverPhrases.Request + "[" + HEX_STRING.BYTEARRAY_TO_HEXSTRING(bufferSender) + "]");
                                 break;
                             case DriverProtocol.ModbusTCP:
                                 //Формирование буфера данных запроса
-                                bufferSender = masterTCP.CalculateSendData(Device.Address, (ushort)command.FunctionCode, (ushort)command.RegisterStartAddress, (ushort)command.RegisterCount, DriverUtils.ConvertUlongToUshort(command.RegisterWriteData));
+                                bufferSender = masterTCP.CalculateSendData(Device.Address, (ushort)command.FunctionCode, (ushort)command.RegisterStartAddress, (ushort)command.RegisterCount, command.RegisterWriteData);
                                 byteNumberFunctionReceived = masterTCP.byteNumberFunctionReceived;
                                 byteNumberAmountDataReceived = masterTCP.byteNumberAmountDataReceived;
                                 DebugerLog(DriverPhrases.Request + "[" + HEX_STRING.BYTEARRAY_TO_HEXSTRING(bufferSender) + "]");
                                 break;
                             case DriverProtocol.ModbusASCII:
                                 //Формирование буфера данных запроса
-                                bufferSender = masterASCII.CalculateSendData(Device.Address, (ushort)command.FunctionCode, (ushort)command.RegisterStartAddress, (ushort)command.RegisterCount, DriverUtils.ConvertUlongToUshort(command.RegisterWriteData));
+                                bufferSender = masterASCII.CalculateSendData(Device.Address, (ushort)command.FunctionCode, (ushort)command.RegisterStartAddress, (ushort)command.RegisterCount, command.RegisterWriteData);
                                 byteNumberFunctionReceived = masterASCII.byteNumberFunctionReceived;
                                 byteNumberAmountDataReceived = masterASCII.byteNumberAmountDataReceived;
                                 DebugerLog(DriverPhrases.Request + "[ASCII][" + HEX_STRING.BYTEARRAY_TO_HEXSTRING(bufferSender) + "][HEX][" + HEX_STRING.BYTEARRAY_TO_HEXSTRING(HEX_ASCII.ASCIIBYTEARRAY_TO_BYTEARRAY(bufferSender)) + "]");
