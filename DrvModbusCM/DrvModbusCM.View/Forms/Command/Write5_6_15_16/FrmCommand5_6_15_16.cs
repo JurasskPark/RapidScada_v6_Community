@@ -294,7 +294,12 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
 
         private void GenerateRegistersWriteData()
         {
+            for(int i = 0; i < currentCommand.ListRegistersWriteData.Count; i++)
+            {
+                ProjectRegisterWriteData register = currentCommand.ListRegistersWriteData[i];
 
+                //ProjectTag.GetBytes();
+            }
         }
 
         private void RegistersWriteDataAdd()

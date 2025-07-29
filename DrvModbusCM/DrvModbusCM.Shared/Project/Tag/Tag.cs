@@ -520,7 +520,9 @@ namespace Scada.Comm.Drivers.DrvModbusCM
                     {
                         value = HEX_DATETIME.DateTimeFromByteArray6(bytes);
                     }
-                    else if (bytes.Length == 8)
+                    break;
+                case ProjectTag.FormatData.DATETIME8:
+                    if (bytes.Length == 8)
                     {
                         value = HEX_DATETIME.DateTimeFromByteArray8(bytes);
                     }
@@ -620,6 +622,82 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             }
 
             return value;
+        }
+
+        public static byte[] GetBytes(ProjectTag tag, object value)
+        {
+            byte[] bytes = new byte[0];
+            FormatData format = tag.Format;
+            int startBit = 0;
+            int endBit = 0;
+            int countBit = 0;
+            int address = DriverUtils.FloatToFractionalNumber(tag.address, out startBit, out endBit, out countBit);
+
+            switch (format)
+            {
+                case ProjectTag.FormatData.BIT:
+                    bytes = BitConverter.GetBytes((bool)value);
+                    break;
+                case ProjectTag.FormatData.BIT32:
+                    
+                    break;
+                case ProjectTag.FormatData.BIT64:
+                    
+                    break;
+                case ProjectTag.FormatData.BYTE:
+                    
+                    break;
+                case ProjectTag.FormatData.DATETIME6:
+                    
+                    break;
+                case ProjectTag.FormatData.DATETIME8:
+                    
+                    break;
+                case ProjectTag.FormatData.DOUBLE:
+                    bytes = BitConverter.GetBytes((double)value);
+                    break;
+                case ProjectTag.FormatData.FLOAT:
+                    bytes = BitConverter.GetBytes((float)value);
+                    break;
+                case ProjectTag.FormatData.HEX:
+                    
+                    break;
+                case ProjectTag.FormatData.INT:
+                    bytes = BitConverter.GetBytes((int)value);
+                    break;
+                case ProjectTag.FormatData.INT_HI:
+                    
+                    break;
+                case ProjectTag.FormatData.INT_LO:
+                    
+                    break;
+                case ProjectTag.FormatData.LONG:
+                    bytes = BitConverter.GetBytes((long)value);
+                    break;
+                case ProjectTag.FormatData.SBYTE:
+                    
+                    break;
+                case ProjectTag.FormatData.SHORT:
+                    bytes = BitConverter.GetBytes((short)value);
+                    break;
+                case ProjectTag.FormatData.UINT:
+                    bytes = BitConverter.GetBytes((uint)value);
+                    break;
+                case ProjectTag.FormatData.ULONG:
+                    bytes = BitConverter.GetBytes((ulong)value);
+                    break;
+                case ProjectTag.FormatData.USHORT:
+                    bytes = BitConverter.GetBytes((ushort)value);
+                    break;
+            }
+
+            
+
+            
+
+            
+
+            return bytes;
         }
 
         #region Scaled

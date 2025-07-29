@@ -129,5 +129,4 @@ namespace Scada.Comm.Drivers.DrvModbusCM
 
     #endregion Project Register Write Data
 
-
 }
