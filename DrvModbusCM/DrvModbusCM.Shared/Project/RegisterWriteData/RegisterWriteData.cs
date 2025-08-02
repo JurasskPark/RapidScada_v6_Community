@@ -25,9 +25,9 @@ namespace Scada.Comm.Drivers.DrvModbusCM
         }
 
         #region Variables
-        private int regAddr;
+        private ulong regAddr;
         [XmlAttribute]
-        public int RegAddr
+        public ulong RegAddr
         {
             get { return regAddr; }
             set { regAddr = value; }
@@ -110,7 +110,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
                 throw new ArgumentNullException("xmlNode");
             }
 
-            RegAddr = xmlNode.GetChildAsInt("RegAddr");
+            RegAddr = Convert.ToUInt64(xmlNode.GetChildAsString("RegAddr"));
             RegName = xmlNode.GetChildAsString("RegName");
             RegDescription = xmlNode.GetChildAsString("RegDescription");
             RegData = xmlNode.GetChildAsString("RegData");

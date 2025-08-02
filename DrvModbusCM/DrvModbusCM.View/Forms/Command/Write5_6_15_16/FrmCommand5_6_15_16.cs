@@ -180,20 +180,9 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
         {
             currentCommand.Name = txtName.Text;
             currentCommand.Enabled = ckbEnabled.Checked;
-            //Код функции
-            try
-            {
-                string permennaya = cmbFunctionCode.Items[cmbFunctionCode.SelectedIndex].ToString().Trim();
-                //Ищем последовательность в цифрах
-                Regex regex = new Regex(@"([A-Fa-f0-9][A-Fa-f0-9])");
-                Match match = regex.Match(permennaya);
-                if (match.Success)
-                {
-                    //Получили match.Value со значением
-                    currentCommand.FunctionCode = Convert.ToUInt16(match.Value);
-                }
-            }
-            catch { }
+
+            currentCommand.FunctionCode = FunctionCode();
+
             currentCommand.RegisterStartAddress = Convert.ToUInt16(nudRegisterStartAddress.Value);
             currentCommand.RegisterCount = Convert.ToUInt16(nudRegisterCount.Value);
         }
@@ -231,25 +220,45 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
         #region Изменение Функции
         private void cmbFunctionCode_SelectedIndexChanged(object sender, EventArgs e)
         {
-            //Код функции
+            currentCommand.FunctionCode = FunctionCode();
+
+            GenerateName();
+            GenerateRegistersWriteData();
+        }
+
+        private ulong FunctionCode()
+        {
+            ulong result = 0;
             try
             {
-                string permennaya = cmbFunctionCode.Items[cmbFunctionCode.SelectedIndex].ToString().Trim();
-                //Ищем последовательность в цифрах
                 Regex regex = new Regex(@"([A-Fa-f0-9][A-Fa-f0-9])");
-                Match match = regex.Match(permennaya);
+                Match match = regex.Match(cmbFunctionCode.Items[cmbFunctionCode.SelectedIndex].ToString().Trim());
                 if (match.Success)
                 {
-                    //Получили match.Value со значением
-                    currentCommand.FunctionCode = Convert.ToUInt16(match.Value);
+                    switch (Convert.ToUInt16(match.Value))
+                    {
+                        case 5:
+                        case 6:
+                            nudRegisterCount.Value = Convert.ToUInt64(1);
+                            nudRegisterCount.Enabled = false;
+                            return Convert.ToUInt16(match.Value);
+                        case 15:
+                        case 16:
+                            nudRegisterCount.Enabled = true;
+                            return Convert.ToUInt16(match.Value);
+                    }
+
+                    return Convert.ToUInt16(match.Value);
                 }
+
+                return result;
             }
-            catch { }
-
-
-            //Генерация имени
-            GenerateName();
+            catch 
+            {
+                return result;
+            }
         }
+
         #endregion Изменение Функции
 
         #region Изменение Начального адреса регистра
@@ -320,10 +329,39 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
                         RegistersWriteDataDelete();
                     }
                 }
-                else if (currentCommand.RegisterCount == (ulong)currentCommand.ListRegistersWriteData.Count())
+                
+            }
+            else if (currentCommand.RegisterCount == (ulong)currentCommand.ListRegistersWriteData.Count())
+            {
+                currentCommand.FunctionCode = FunctionCode();
+                for (ulong i = 0; i < (ulong)currentCommand.ListRegistersWriteData.Count(); i++)
                 {
-
+                    ProjectRegisterWriteData register = currentCommand.ListRegistersWriteData[(int)i];
+                    
+                    switch (currentCommand.FunctionCode)
+                    {
+                        case 5:
+                            register.RegAddr = ((ulong)100000 + Convert.ToUInt64(nudRegisterStartAddress.Value)) + Convert.ToUInt64((ulong)i);
+                            register.RegName = "Coil";
+                            break;
+                        case 6:
+                            register.RegAddr = ((ulong)300000 + Convert.ToUInt64(nudRegisterStartAddress.Value)) + Convert.ToUInt64((ulong)i);
+                            register.RegName = "Holding";
+                            break;
+                        case 15:
+                            register.RegAddr = ((ulong)100000 + Convert.ToUInt64(nudRegisterStartAddress.Value)) + Convert.ToUInt64((ulong)i);
+                            register.RegName = "Coil";
+                            break;
+                        case 16:
+                            register.RegAddr = ((ulong)300000 + Convert.ToUInt64(nudRegisterStartAddress.Value)) + Convert.ToUInt64((ulong)i);
+                            register.RegName = "Holding";
+                            break;
+                    }
                 }
+
+                olvRegistersWrite.Objects = this.currentCommand.ListRegistersWriteData;
+                olvRegistersWrite.AutoResizeColumns();
+                olvRegistersWrite.BuildList();
             }
         }
 
@@ -332,6 +370,24 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             if (this.currentCommand.ListRegistersWriteData != null)
             {
                 ProjectRegisterWriteData register = new ProjectRegisterWriteData();
+                currentCommand.FunctionCode = FunctionCode();
+                switch (currentCommand.FunctionCode)
+                {
+                    case 5:
+                        register.RegAddr = ((ulong)100000 + Convert.ToUInt64(nudRegisterStartAddress.Value)) + Convert.ToUInt64(this.currentCommand.ListRegistersWriteData.Count());
+                        register.RegName = "Coil";
+                        break;
+                    case 6:
+                        register.RegName = "Holding";
+                        break;
+                    case 15:
+                        register.RegName = "Coil";
+                        break;
+                    case 16:
+                        register.RegName = "Holding";
+                        break;
+                }
+
                 this.currentCommand.ListRegistersWriteData.Add(register);
             }
 
@@ -376,7 +432,6 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
                         olvRegistersWrite.SelectedObject = register;
                         olvRegistersWrite.BuildList();
                         e.NewValue = selectedValue;
-                        //olvRegistersWrite.RefreshObject(register); // Обновляем отображение для конкретного объекта
                     }
                 };
 
