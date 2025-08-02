@@ -1,21 +1,8 @@
 ﻿using BrightIdeasSoftware;
 using Microsoft.Win32;
-using Scada.Comm.Drivers.DrvModbusCM;
-using Scada.Comm.Drivers.DrvModbusCM.View;
-using Scada.Data.Entities;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
-using System.Xml.Serialization;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Xml;
+using static Scada.Comm.Drivers.DrvModbusCM.ProjectTag;
 
 namespace Scada.Comm.Drivers.DrvModbusCM.View
 {
@@ -24,9 +11,22 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
         public FrmCommand5_6_15_16()
         {
             InitializeComponent();
+            InitializeObjectListView();
         }
 
         #region Variables
+
+        private void InitializeObjectListView()
+        {
+            // Инициализация OLV
+            olvRegistersWrite.OwnerDraw = true;
+
+            // Обработка изменения размера
+            olvRegistersWrite.Resize += (sender, e) =>
+            {
+                olvRegistersWrite.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+            };
+        }
 
         #region Form
 
@@ -43,6 +43,12 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
         Decimal RegisterCountOldValue = new Decimal(0);
 
         #endregion Command
+
+        #region Controls
+
+        private ComboBox currentCombobox;
+
+        #endregion Controls
 
         #endregion Variables
 
@@ -101,15 +107,15 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             nudRegisterCount.Minimum = 0;
             nudRegisterCount.Value = currentCommand.RegisterCount;
             //А вот потом говорим, что так делать нельзя :)
-            nudRegisterCount.Minimum = 1; 
+            nudRegisterCount.Minimum = 1;
 
             //Сначала подставляем значения, а потом делаем поиск по index 
             try
             {
                 cmbFunctionCode.SelectedIndex = cmbFunctionCode.FindString("(" + currentCommand.FunctionCode.ToString().PadLeft(2, '0') + ")");
             }
-            catch 
-            { 
+            catch
+            {
                 cmbFunctionCode.SelectedIndex = 0;
             }
 
@@ -121,6 +127,8 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
                 this.olvRegistersWrite.AddObjects(currentCommand.ListRegistersWriteData);
                 this.olvRegistersWrite.AutoResizeColumns();
             }
+
+            GenerateRegistersWriteData();
         }
 
         #endregion Load
@@ -164,7 +172,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             frmParentGloabal.trvProject.LabelEdit = false;
 
             Modified = false;
- 
+
         }
 
         //Сохранение данных
@@ -233,12 +241,12 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
                 if (match.Success)
                 {
                     //Получили match.Value со значением
-                     currentCommand.FunctionCode = Convert.ToUInt16(match.Value);
+                    currentCommand.FunctionCode = Convert.ToUInt16(match.Value);
                 }
             }
             catch { }
 
- 
+
             //Генерация имени
             GenerateName();
         }
@@ -251,6 +259,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             currentCommand.RegisterStartAddress = Convert.ToUInt64(nudRegisterStartAddress.Value);
             currentCommand.RegisterCount = Convert.ToUInt64(nudRegisterCount.Value);
             GenerateName();
+            GenerateRegistersWriteData();
         }
 
         #endregion Изменение Начального адреса регистра
@@ -265,13 +274,11 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             if (RegisterCountOldValue > newValue)
             {
                 // Значение уменьшилось (нажата стрелка вниз)
-                // MessageBox.Show("Значение уменьшилось");
                 RegistersWriteDataDelete();
             }
             else if (RegisterCountOldValue < newValue)
             {
                 // Значение увеличилось (нажата стрелка вверх)
-                // MessageBox.Show("Значение увеличилось");
                 RegistersWriteDataAdd();
             }
 
@@ -281,6 +288,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             currentCommand.RegisterStartAddress = Convert.ToUInt64(nudRegisterStartAddress.Value);
             currentCommand.RegisterCount = Convert.ToUInt64(nudRegisterCount.Value);
             GenerateName();
+            GenerateRegistersWriteData();
         }
         #endregion Изменение количества регистров
 
@@ -294,11 +302,28 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
 
         private void GenerateRegistersWriteData()
         {
-            for(int i = 0; i < currentCommand.ListRegistersWriteData.Count; i++)
+            if ((ulong)currentCommand.ListRegistersWriteData.Count() != currentCommand.RegisterCount)
             {
-                ProjectRegisterWriteData register = currentCommand.ListRegistersWriteData[i];
+                if (currentCommand.RegisterCount > (ulong)currentCommand.ListRegistersWriteData.Count())
+                {
+                    ulong difference = currentCommand.RegisterCount - (ulong)currentCommand.ListRegistersWriteData.Count();
+                    for (ulong i = 0; i < difference; i++)
+                    {
+                        RegistersWriteDataAdd();
+                    }
+                }
+                else if (currentCommand.RegisterCount < (ulong)currentCommand.ListRegistersWriteData.Count())
+                {
+                    ulong difference = (ulong)currentCommand.ListRegistersWriteData.Count() - (ulong)currentCommand.RegisterCount;
+                    for (ulong i = 0; i < difference; i++)
+                    {
+                        RegistersWriteDataDelete();
+                    }
+                }
+                else if (currentCommand.RegisterCount == (ulong)currentCommand.ListRegistersWriteData.Count())
+                {
 
-                //ProjectTag.GetBytes();
+                }
             }
         }
 
@@ -323,7 +348,79 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             }
 
             olvRegistersWrite.Objects = this.currentCommand.ListRegistersWriteData;
+            olvRegistersWrite.AutoResizeColumns();
+            olvRegistersWrite.BuildList();
         }
+
+        private void olvRegistersWrite_CellEditStarting(object sender, CellEditEventArgs e)
+        {
+            if (e.Column == olvColumnFormatData)
+            {
+                // Создаем ComboBox
+                ComboBox comboBox = new ComboBox();
+                comboBox.Bounds = e.CellBounds;
+                comboBox.Font = ((ObjectListView)sender).Font;
+                comboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+                comboBox.Items.AddRange(Enum.GetNames(typeof(FormatData)));
+
+                ProjectRegisterWriteData register = (ProjectRegisterWriteData)e.RowObject;
+                comboBox.SelectedIndex = comboBox.FindString(Enum.GetName(typeof(FormatData), register.RegFormat));
+
+                // Подписываемся на событие, чтобы обновить значение
+                comboBox.SelectedIndexChanged += (s, args) =>
+                {
+                    if (comboBox.SelectedItem != null)
+                    {
+                        FormatData selectedValue = (FormatData)Enum.Parse(typeof(FormatData), comboBox.SelectedItem.ToString());
+                        register.RegFormat = selectedValue; // Обновляем значение в объекте
+                        olvRegistersWrite.SelectedObject = register;
+                        olvRegistersWrite.BuildList();
+                        e.NewValue = selectedValue;
+                        //olvRegistersWrite.RefreshObject(register); // Обновляем отображение для конкретного объекта
+                    }
+                };
+
+                e.Control = comboBox;
+
+                // Одновременно гарантируем, что ComboBox будет уничтожен после закрытия
+                comboBox.LostFocus += (s, args) =>
+                {
+                    comboBox.Dispose();
+                };
+            }
+        }
+
+        private void olvRegistersWrite_CellEditFinishing(object sender, CellEditEventArgs e)
+        {
+            if (e.Column == olvColumnFormatData)
+            {
+                ProjectRegisterWriteData register = (ProjectRegisterWriteData)e.RowObject;
+
+                // Убедитесь, что значение было изменено и требуется сохранение
+                if (e.NewValue != e.Control.Text)
+                {
+                    // Здесь можно добавить дополнительную логику, если это необходимо
+                    FormatData selectedValue = (FormatData)Enum.Parse(typeof(FormatData), e.Control.Text);
+                    register.RegFormat = selectedValue; // Обновляем значение в объекте
+                    olvRegistersWrite.SelectedObject = register;
+                    olvRegistersWrite.BuildList();
+                    e.NewValue = selectedValue;
+                }
+
+                olvRegistersWrite.RefreshObject(e.RowObject);
+            }
+        }
+
+        private void olvRegistersWrite_CellEditFinished(object sender, CellEditEventArgs e)
+        {
+            if (e.Column == olvColumnFormatData)
+            {
+
+            }
+        }
+
+
+
     }
 
 }

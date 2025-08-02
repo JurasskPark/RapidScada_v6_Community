@@ -70,7 +70,23 @@ namespace Scada.Comm.Drivers.DrvModbusCM
         public byte[] RegValue
         {
             get { return regValue; }
-            set { regValue = value; }
+            set 
+            { 
+                regValue = value; 
+                regValueString = HEX_STRING.BYTEARRAY_TO_HEXSTRING(regValue);
+            }
+        }
+
+        private string regValueString;
+        [XmlAttribute]
+        public string RegValueString
+        {
+            get { return regValueString; }
+            set 
+            { 
+                regValueString = value;
+                regValue = HEX_STRING.HEXSTRING_TO_BYTEARRAY(regValueString);
+            }
         }
 
         private string sorting;

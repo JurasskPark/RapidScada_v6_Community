@@ -148,7 +148,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             gpbOptions.Margin = new Padding(4, 3, 4, 3);
             gpbOptions.Name = "gpbOptions";
             gpbOptions.Padding = new Padding(4, 3, 4, 3);
-            gpbOptions.Size = new Size(816, 413);
+            gpbOptions.Size = new Size(832, 404);
             gpbOptions.TabIndex = 21;
             gpbOptions.TabStop = false;
             gpbOptions.Text = "Options";
@@ -160,7 +160,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             txtRegistersWriteData.Margin = new Padding(6, 5, 6, 5);
             txtRegistersWriteData.Multiline = true;
             txtRegistersWriteData.Name = "txtRegistersWriteData";
-            txtRegistersWriteData.Size = new Size(799, 53);
+            txtRegistersWriteData.Size = new Size(815, 53);
             txtRegistersWriteData.TabIndex = 27;
             // 
             // lblRegistersWriteData
@@ -180,10 +180,12 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             olvRegistersWrite.AllColumns.Add(olvColumnDescription);
             olvRegistersWrite.AllColumns.Add(olvColumnFormatData);
             olvRegistersWrite.AllColumns.Add(olvColumnValue);
-            olvRegistersWrite.AllowColumnReorder = true;
-            olvRegistersWrite.AllowDrop = true;
             olvRegistersWrite.AlternateRowBackColor = Color.FromArgb(137, 180, 213);
             olvRegistersWrite.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            olvRegistersWrite.AutoArrange = false;
+            olvRegistersWrite.CellEditActivation = ObjectListView.CellEditActivateMode.DoubleClick;
+            olvRegistersWrite.CellEditEnterChangesRows = true;
+            olvRegistersWrite.CellEditTabChangesRows = true;
             olvRegistersWrite.CellEditUseWholeCell = false;
             olvRegistersWrite.CheckedAspectName = "";
             olvRegistersWrite.Columns.AddRange(new ColumnHeader[] { olvColumnNumber, olvColumnRegister, olvColumnDescription, olvColumnFormatData, olvColumnValue });
@@ -194,29 +196,32 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             olvRegistersWrite.GroupWithItemCountFormat = "{0} ({1} people)";
             olvRegistersWrite.GroupWithItemCountSingularFormat = "{0} ({1} person)";
             olvRegistersWrite.HeaderStyle = ColumnHeaderStyle.Nonclickable;
+            olvRegistersWrite.HeaderUsesThemes = true;
+            olvRegistersWrite.HeaderWordWrap = true;
+            olvRegistersWrite.HideSelection = true;
+            olvRegistersWrite.LabelEdit = true;
             olvRegistersWrite.Location = new Point(8, 192);
             olvRegistersWrite.Margin = new Padding(7, 3, 4, 3);
+            olvRegistersWrite.MultiSelect = false;
             olvRegistersWrite.Name = "olvRegistersWrite";
             olvRegistersWrite.OverlayText.Alignment = ContentAlignment.BottomLeft;
             olvRegistersWrite.OverlayText.Text = "";
-            olvRegistersWrite.SelectColumnsOnRightClickBehaviour = ObjectListView.ColumnSelectBehaviour.Submenu;
             olvRegistersWrite.SelectedBackColor = Color.FromArgb(70, 138, 189);
             olvRegistersWrite.SelectedColumnTint = Color.FromArgb(254, 70, 138, 189);
             olvRegistersWrite.SelectedForeColor = Color.White;
-            olvRegistersWrite.ShowCommandMenuOnRightClick = true;
             olvRegistersWrite.ShowGroups = false;
             olvRegistersWrite.ShowHeaderInAllViews = false;
-            olvRegistersWrite.ShowImagesOnSubItems = true;
-            olvRegistersWrite.ShowItemToolTips = true;
-            olvRegistersWrite.Size = new Size(798, 215);
+            olvRegistersWrite.Size = new Size(814, 206);
+            olvRegistersWrite.SortGroupItemsByPrimaryColumn = false;
             olvRegistersWrite.TabIndex = 25;
             olvRegistersWrite.UnfocusedSelectedBackColor = Color.FromArgb(70, 138, 189);
             olvRegistersWrite.UnfocusedSelectedForeColor = Color.FromArgb(70, 138, 189);
             olvRegistersWrite.UseAlternatingBackColors = true;
             olvRegistersWrite.UseCompatibleStateImageBehavior = false;
-            olvRegistersWrite.UseFiltering = true;
-            olvRegistersWrite.UseHotItem = true;
             olvRegistersWrite.View = System.Windows.Forms.View.Details;
+            olvRegistersWrite.CellEditFinished += olvRegistersWrite_CellEditFinished;
+            olvRegistersWrite.CellEditFinishing += olvRegistersWrite_CellEditFinishing;
+            olvRegistersWrite.CellEditStarting += olvRegistersWrite_CellEditStarting;
             // 
             // olvColumnNumber
             // 
@@ -245,10 +250,12 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             olvColumnFormatData.MinimumWidth = 100;
             olvColumnFormatData.Text = "FormatData";
             olvColumnFormatData.Width = 150;
+            olvColumnFormatData.WordWrap = true;
             // 
             // olvColumnValue
             // 
-            olvColumnValue.AspectName = "RegValue";
+            olvColumnValue.AspectName = "RegValueString";
+            olvColumnValue.CellEditUseWholeCell = true;
             olvColumnValue.MinimumWidth = 100;
             olvColumnValue.Text = "Value";
             olvColumnValue.Width = 200;
@@ -315,7 +322,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(826, 530);
+            ClientSize = new Size(854, 541);
             ControlBox = false;
             Controls.Add(gpbOptions);
             Controls.Add(gpbGroup);
