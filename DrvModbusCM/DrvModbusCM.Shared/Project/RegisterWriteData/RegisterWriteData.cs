@@ -1,4 +1,5 @@
-﻿using Scada.Data.Entities;
+﻿using DrvModbusCM.Shared.Project.Tag;
+using Scada.Data.Entities;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -18,9 +19,10 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             RegAddr = 0;
             RegName = string.Empty;
             RegDescription = string.Empty;
-            RegData = string.Empty;
+            RegData = new byte[0];
+            regDataString = string.Empty;
             RegFormat = FormatData.NONE;
-            RegValue = new byte[0];
+            RegValue = new object();
             Sorting = string.Empty;
         }
 
@@ -57,23 +59,38 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             set { regFormat = value; }
         }
 
-        private string regData;
+        private byte[] regData;
         [XmlAttribute]
-        public string RegData
+        public byte[] RegData
         {
             get { return regData; }
-            set { regData = value; }
+            set 
+            { 
+                regData = value;
+                regDataString = HEX_STRING.BYTEARRAY_TO_HEXSTRING(regData);
+            }
         }
 
-        private byte[] regValue;
+        private string regDataString;
         [XmlAttribute]
-        public byte[] RegValue
+        public string RegDataString
+        {
+            get { return regDataString; }
+            set
+            {
+                regDataString = value;
+                regData = HEX_STRING.HEXSTRING_TO_BYTEARRAY(regDataString);
+            }
+        }
+
+        private object regValue;
+        [XmlAttribute]
+        public object RegValue
         {
             get { return regValue; }
             set 
             { 
-                regValue = value; 
-                regValueString = HEX_STRING.BYTEARRAY_TO_HEXSTRING(regValue);
+                regValue = value;          
             }
         }
 
@@ -82,10 +99,9 @@ namespace Scada.Comm.Drivers.DrvModbusCM
         public string RegValueString
         {
             get { return regValueString; }
-            set 
-            { 
+            set
+            {
                 regValueString = value;
-                regValue = HEX_STRING.HEXSTRING_TO_BYTEARRAY(regValueString);
             }
         }
 
@@ -112,11 +128,12 @@ namespace Scada.Comm.Drivers.DrvModbusCM
 
             RegAddr = Convert.ToUInt64(xmlNode.GetChildAsString("RegAddr"));
             RegName = xmlNode.GetChildAsString("RegName");
-            RegDescription = xmlNode.GetChildAsString("RegDescription");
-            RegData = xmlNode.GetChildAsString("RegData");
+            RegDescription = xmlNode.GetChildAsString("RegDescription");    
             RegFormat = (FormatData)Enum.Parse(typeof(FormatData), xmlNode.GetChildAsString("RegFormat"));
-            RegValue = HEX_STRING.HEXSTRING_TO_BYTEARRAY(xmlNode.GetChildAsString("RegValue"));
-            Sorting = xmlNode.GetChildAsString("RegSorting");
+            RegData = HEX_STRING.HEXSTRING_TO_BYTEARRAY(xmlNode.GetChildAsString("RegData"));
+            Sorting = xmlNode.GetChildAsString("RegSorting");  
+            RegValueString = xmlNode.GetChildAsString("RegValue");
+            RegValue = ConverterFormatData.ConvertStringtoObject(RegFormat, RegValueString);
         }
         #endregion Load
 
@@ -135,10 +152,11 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             xmlElem.AppendElem("RegAddr", RegAddr);
             xmlElem.AppendElem("RegName", RegName);
             xmlElem.AppendElem("RegDescription", RegDescription);
-            xmlElem.AppendElem("RegData", RegData);
             xmlElem.AppendElem("RegFormat", Enum.GetName(typeof(FormatData), RegFormat));
-            xmlElem.AppendElem("RegValue", HEX_STRING.BYTEARRAY_TO_HEXSTRING(RegValue));
+            xmlElem.AppendElem("RegData", HEX_STRING.BYTEARRAY_TO_HEXSTRING(RegData));    
             xmlElem.AppendElem("RegSorting", Sorting);
+            xmlElem.AppendElem("RegValue", RegValueString);
+
         }
         #endregion Save
     }

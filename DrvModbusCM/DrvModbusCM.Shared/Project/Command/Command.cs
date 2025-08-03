@@ -375,10 +375,10 @@ namespace Scada.Comm.Drivers.DrvModbusCM
 
             try
             {
-                if (xmlNode.SelectSingleNode("ListRegistersWriteData") is XmlNode listRegistersWriteDataNode)
+                if (xmlNode.SelectSingleNode("ListRegisters") is XmlNode listRegistersWriteDataNode)
                 {
                     ListRegistersWriteData = new List<ProjectRegisterWriteData>();
-                    foreach (XmlNode registerWriteDataNode in listRegistersWriteDataNode.SelectNodes("RegisterWriteData"))
+                    foreach (XmlNode registerWriteDataNode in listRegistersWriteDataNode.SelectNodes("Register"))
                     {
                         ProjectRegisterWriteData registerWriteData = new ProjectRegisterWriteData();
                         registerWriteData.LoadFromXml(registerWriteDataNode);
@@ -388,7 +388,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             }
             catch { }
 
-            RegisterWriteData = HEX_STRING.HEXSTRING_TO_BYTEARRAY(xmlNode.GetChildAsString("RegisterWriteData"));
+            RegisterWriteData = HEX_STRING.HEXSTRING_TO_BYTEARRAY(xmlNode.GetChildAsString("WriteData"));
         }
         #endregion Load
 
@@ -425,15 +425,15 @@ namespace Scada.Comm.Drivers.DrvModbusCM
 
             try
             {
-                XmlElement listRegistersElem = xmlElem.AppendElem("ListRegistersWriteData");
+                XmlElement listRegistersElem = xmlElem.AppendElem("ListRegisters");
                 foreach (ProjectRegisterWriteData register in ListRegistersWriteData)
                 {
-                    register.SaveToXml(listRegistersElem.AppendElem("RegistersWriteData"));
+                    register.SaveToXml(listRegistersElem.AppendElem("Register"));
                 }
             }
             catch { }
 
-            xmlElem.AppendElem("RegisterWriteData", HEX_STRING.BYTEARRAY_TO_HEXSTRING(RegisterWriteData));
+            xmlElem.AppendElem("WriteData", HEX_STRING.BYTEARRAY_TO_HEXSTRING(RegisterWriteData));
         }
         #endregion Save
     }

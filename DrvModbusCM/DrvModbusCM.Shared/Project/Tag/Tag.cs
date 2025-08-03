@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
@@ -127,6 +128,14 @@ namespace Scada.Comm.Drivers.DrvModbusCM
         {
             set { sorting = value; }
             get { return sorting; }
+        }
+
+        private byte[] data;
+        [XmlAttribute]
+        public byte[] Data
+        {
+            get { return data; }
+            set { data = value; }
         }
 
         private object dataValue;
@@ -466,6 +475,17 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             int endBit = 0;
             int countBit = 0;
             int address = DriverUtils.FloatToFractionalNumber(tag.address, out startBit, out endBit, out countBit);
+            byte[] buffer = new byte[bytes.Length];
+
+            if(tag.Sorting != string.Empty)
+            {
+                try
+                {
+                    ApplyByteOrder(bytes, buffer, ParseByteOrder(tag.Sorting));
+                    bytes = buffer;
+                }
+                catch { }
+            }
 
             switch (format)
             {
@@ -626,12 +646,18 @@ namespace Scada.Comm.Drivers.DrvModbusCM
 
         public static byte[] GetBytes(ProjectTag tag, object value)
         {
+            if(value == null)
+            {
+                return new byte[0];
+            }
+
             byte[] bytes = new byte[0];
             FormatData format = tag.Format;
             int startBit = 0;
             int endBit = 0;
             int countBit = 0;
             int address = DriverUtils.FloatToFractionalNumber(tag.address, out startBit, out endBit, out countBit);
+            byte[] buffer = new byte[bytes.Length];
 
             switch (format)
             {
@@ -643,6 +669,9 @@ namespace Scada.Comm.Drivers.DrvModbusCM
                     break;
                 case ProjectTag.FormatData.BIT64:
                     
+                    break;
+                case ProjectTag.FormatData.BOOL:
+                    bytes = HEX_BOOLEAN.ToRegister((bool)value);
                     break;
                 case ProjectTag.FormatData.BYTE:
                     
@@ -691,14 +720,110 @@ namespace Scada.Comm.Drivers.DrvModbusCM
                     break;
             }
 
-            
-
-            
-
-            
+            if (tag.Sorting != string.Empty)
+            {
+                try
+                {
+                    ApplyByteOrder(bytes, buffer, ParseByteOrder(tag.Sorting));
+                    bytes = buffer;
+                }
+                catch { }
+            }
 
             return bytes;
         }
+
+        public static bool IsObjectEmpty(object obj)
+        {
+            var properties = obj.GetType().GetProperties();
+            foreach (var prop in properties)
+            {
+                var value = prop.GetValue(obj);
+                if (value != null &&
+                    !(value is string str && string.IsNullOrEmpty(str)))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public static ProjectTag ConvertRegisterToTag(ProjectRegisterWriteData register)
+        {
+            ProjectTag tag = new ProjectTag();
+            tag.ID = Guid.NewGuid();
+            tag.Address = register.RegAddr.ToString();
+            tag.Name = register.RegName;
+            tag.Description = register.RegDescription;
+            tag.DataValue = register.RegValue;
+            tag.Data = register.RegData;
+            tag.Format = register.RegFormat;
+            tag.Sorting = register.Sorting;
+            return tag;
+        }
+
+        /// <summary>
+        /// Parses a byte order array from the string notation like '0123456789ABCDEF'.
+        /// </summary>
+        public static int[] ParseByteOrder(string byteOrderStr)
+        {
+            if (string.IsNullOrEmpty(byteOrderStr))
+            {
+                return null;
+            }
+            else
+            {
+                int len = byteOrderStr.Length;
+                int[] byteOrder = new int[len];
+
+                for (int i = 0; i < len; i++)
+                {
+                    byteOrder[i] = int.TryParse(byteOrderStr[i].ToString(), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out int n) ? n : 0;
+                }
+
+                return byteOrder;
+            }
+        }
+
+        /// <summary>
+        /// Copies the array elements in the specified byte order.
+        /// </summary>
+        public static void ApplyByteOrder(byte[] src, byte[] dest, int[] byteOrder)
+        {
+            ApplyByteOrder(src, 0, dest, 0, dest.Length, byteOrder, false);
+        }
+
+        /// <summary>
+        /// Copies the array elements in the specified byte order.
+        /// </summary>
+        public static void ApplyByteOrder(byte[] src, int srcOffset, byte[] dest, int destOffset, int count,
+            int[] byteOrder, bool reverse)
+        {
+            int srcLen = src == null ? 0 : src.Length;
+            int endSrcInd = srcOffset + count - 1;
+            int ordLen = byteOrder == null ? 0 : byteOrder.Length;
+
+            if (byteOrder == null)
+            {
+                // copy data without byte order
+                for (int i = 0; i < count; i++)
+                {
+                    int srcInd = reverse ? endSrcInd - i : srcOffset + i;
+                    dest[destOffset++] = 0 <= srcInd && srcInd < srcLen ? src[srcInd] : (byte)0;
+                }
+            }
+            else
+            {
+                // copy data with byte order
+                for (int i = 0; i < count; i++)
+                {
+                    int srcInd = i < ordLen ? (reverse ? endSrcInd - byteOrder[i] : srcOffset + byteOrder[i]) : -1;
+                    dest[destOffset++] = 0 <= srcInd && srcInd < srcLen ? src[srcInd] : (byte)0;
+                }
+            }
+        }
+
+
 
         #region Scaled
 

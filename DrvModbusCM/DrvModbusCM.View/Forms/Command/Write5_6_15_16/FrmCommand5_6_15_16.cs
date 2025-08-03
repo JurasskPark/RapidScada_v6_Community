@@ -1,4 +1,5 @@
 ﻿using BrightIdeasSoftware;
+using DrvModbusCM.Shared.Project.Tag;
 using Microsoft.Win32;
 using System.Text.RegularExpressions;
 using System.Xml;
@@ -185,6 +186,9 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
 
             currentCommand.RegisterStartAddress = Convert.ToUInt16(nudRegisterStartAddress.Value);
             currentCommand.RegisterCount = Convert.ToUInt16(nudRegisterCount.Value);
+
+            currentCommand.RegisterWriteData = HEX_STRING.HEXSTRINGFORMAT_TO_BYTEARRAY(txtRegistersWriteData.Text.Trim());
+            currentCommand.ListRegistersWriteData = (List<ProjectRegisterWriteData>)olvRegistersWrite.Objects;
         }
 
         #endregion Save
@@ -333,6 +337,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             }
             else if (currentCommand.RegisterCount == (ulong)currentCommand.ListRegistersWriteData.Count())
             {
+                byte[] bytes = new byte[0];
                 currentCommand.FunctionCode = FunctionCode();
                 for (ulong i = 0; i < (ulong)currentCommand.ListRegistersWriteData.Count(); i++)
                 {
@@ -343,6 +348,9 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
                         case 5:
                             register.RegAddr = ((ulong)100000 + Convert.ToUInt64(nudRegisterStartAddress.Value)) + Convert.ToUInt64((ulong)i);
                             register.RegName = "Coil";
+                            register.RegFormat = FormatData.BOOL;
+                            register.RegValue = ConverterFormatData.ConvertStringtoObject(register.RegFormat, register.RegValueString);
+                            register.RegData = ProjectTag.GetBytes(ProjectTag.ConvertRegisterToTag(register), register.RegValue);
                             break;
                         case 6:
                             register.RegAddr = ((ulong)300000 + Convert.ToUInt64(nudRegisterStartAddress.Value)) + Convert.ToUInt64((ulong)i);
@@ -351,17 +359,22 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
                         case 15:
                             register.RegAddr = ((ulong)100000 + Convert.ToUInt64(nudRegisterStartAddress.Value)) + Convert.ToUInt64((ulong)i);
                             register.RegName = "Coil";
+                            register.RegFormat = FormatData.BOOL;
                             break;
                         case 16:
                             register.RegAddr = ((ulong)300000 + Convert.ToUInt64(nudRegisterStartAddress.Value)) + Convert.ToUInt64((ulong)i);
                             register.RegName = "Holding";
                             break;
                     }
+
+                    bytes = HEX_OPERATION.BYTEARRAY_COMBINE(bytes, register.RegData);
                 }
 
                 olvRegistersWrite.Objects = this.currentCommand.ListRegistersWriteData;
-                olvRegistersWrite.AutoResizeColumns();
                 olvRegistersWrite.BuildList();
+                olvRegistersWrite.AutoResizeColumns();
+
+                txtRegistersWriteData.Text = HEX_STRING.BYTEARRAY_TO_HEXSTRING(bytes);
             }
         }
 
@@ -391,9 +404,9 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
                 this.currentCommand.ListRegistersWriteData.Add(register);
             }
 
-            olvRegistersWrite.Objects = this.currentCommand.ListRegistersWriteData;
-            olvRegistersWrite.AutoResizeColumns();
+            olvRegistersWrite.Objects = this.currentCommand.ListRegistersWriteData;         
             olvRegistersWrite.BuildList();
+            olvRegistersWrite.AutoResizeColumns();
         }
 
         private void RegistersWriteDataDelete()
@@ -403,9 +416,9 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
                 this.currentCommand.ListRegistersWriteData.RemoveAt(this.currentCommand.ListRegistersWriteData.Count() - 1);
             }
 
-            olvRegistersWrite.Objects = this.currentCommand.ListRegistersWriteData;
-            olvRegistersWrite.AutoResizeColumns();
+            olvRegistersWrite.Objects = this.currentCommand.ListRegistersWriteData;       
             olvRegistersWrite.BuildList();
+            olvRegistersWrite.AutoResizeColumns();
         }
 
         private void olvRegistersWrite_CellEditStarting(object sender, CellEditEventArgs e)

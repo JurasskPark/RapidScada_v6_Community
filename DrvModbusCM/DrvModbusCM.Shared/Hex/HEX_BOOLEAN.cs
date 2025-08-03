@@ -22,6 +22,22 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             return bytes;
         }
 
+        public static byte[] ToRegister(bool value)
+        {
+            byte[] bytes = new byte[2];
+            if (value == true)
+            {
+                bytes[0] = 255;
+                bytes[1] = 0;
+            }
+            else
+            {
+                bytes[0] = 0;
+                bytes[1] = 0;
+            }
+            return bytes;
+        }
+
 
         public static bool[] ToArray(byte[] value)
         {

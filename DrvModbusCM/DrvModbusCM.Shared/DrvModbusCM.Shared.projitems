@@ -26,6 +26,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Project\Register\Register.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Project\SerialPort\SerialPort.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Project\Settings\Settings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Project\Tag\ConverterFormatData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Project\Tag\Tag.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Project\TcpServer\TcpServer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Protocols\MasterDeviceReceiverSender.cs" />

@@ -47,6 +47,8 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             olvColumnDescription = new OLVColumn();
             olvColumnFormatData = new OLVColumn();
             olvColumnValue = new OLVColumn();
+            olvColumnSorting = new OLVColumn();
+            olvColumnData = new OLVColumn();
             cmbFunctionCode = new ComboBox();
             lblRegisterCount = new Label();
             nudRegisterCount = new NumericUpDown();
@@ -180,6 +182,8 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             olvRegistersWrite.AllColumns.Add(olvColumnDescription);
             olvRegistersWrite.AllColumns.Add(olvColumnFormatData);
             olvRegistersWrite.AllColumns.Add(olvColumnValue);
+            olvRegistersWrite.AllColumns.Add(olvColumnSorting);
+            olvRegistersWrite.AllColumns.Add(olvColumnData);
             olvRegistersWrite.AlternateRowBackColor = Color.FromArgb(137, 180, 213);
             olvRegistersWrite.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             olvRegistersWrite.AutoArrange = false;
@@ -188,7 +192,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             olvRegistersWrite.CellEditTabChangesRows = true;
             olvRegistersWrite.CellEditUseWholeCell = false;
             olvRegistersWrite.CheckedAspectName = "";
-            olvRegistersWrite.Columns.AddRange(new ColumnHeader[] { olvColumnNumber, olvColumnRegister, olvColumnDescription, olvColumnFormatData, olvColumnValue });
+            olvRegistersWrite.Columns.AddRange(new ColumnHeader[] { olvColumnNumber, olvColumnRegister, olvColumnDescription, olvColumnFormatData, olvColumnValue, olvColumnSorting, olvColumnData });
             olvRegistersWrite.EmptyListMsg = "";
             olvRegistersWrite.ForeColor = SystemColors.WindowText;
             olvRegistersWrite.FullRowSelect = true;
@@ -240,14 +244,14 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             // olvColumnDescription
             // 
             olvColumnDescription.AspectName = "RegDescription";
-            olvColumnDescription.MinimumWidth = 100;
+            olvColumnDescription.MinimumWidth = 250;
             olvColumnDescription.Text = "Description";
             olvColumnDescription.Width = 250;
             // 
             // olvColumnFormatData
             // 
             olvColumnFormatData.AspectName = "RegFormat";
-            olvColumnFormatData.MinimumWidth = 100;
+            olvColumnFormatData.MinimumWidth = 150;
             olvColumnFormatData.Text = "FormatData";
             olvColumnFormatData.Width = 150;
             olvColumnFormatData.WordWrap = true;
@@ -256,9 +260,23 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             // 
             olvColumnValue.AspectName = "RegValueString";
             olvColumnValue.CellEditUseWholeCell = true;
-            olvColumnValue.MinimumWidth = 100;
+            olvColumnValue.MinimumWidth = 200;
             olvColumnValue.Text = "Value";
             olvColumnValue.Width = 200;
+            // 
+            // olvColumnSorting
+            // 
+            olvColumnSorting.AspectName = "Sorting";
+            olvColumnSorting.MinimumWidth = 100;
+            olvColumnSorting.Text = "Sorting";
+            olvColumnSorting.Width = 100;
+            // 
+            // olvColumnData
+            // 
+            olvColumnData.AspectName = "RegDataString";
+            olvColumnData.MinimumWidth = 100;
+            olvColumnData.Text = "Data";
+            olvColumnData.Width = 100;
             // 
             // cmbFunctionCode
             // 
@@ -322,7 +340,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(854, 541);
+            ClientSize = new Size(838, 525);
             ControlBox = false;
             Controls.Add(gpbOptions);
             Controls.Add(gpbGroup);
@@ -365,8 +383,10 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
         private BrightIdeasSoftware.ObjectListView olvRegistersWrite;
         private BrightIdeasSoftware.OLVColumn olvColumnNumber;
         private BrightIdeasSoftware.OLVColumn olvColumnRegister;
-        private BrightIdeasSoftware.OLVColumn olvColumnFormatData;
         private BrightIdeasSoftware.OLVColumn olvColumnDescription;
+        private BrightIdeasSoftware.OLVColumn olvColumnFormatData;
+        private BrightIdeasSoftware.OLVColumn olvColumnData;
+        private BrightIdeasSoftware.OLVColumn olvColumnSorting;
         private BrightIdeasSoftware.OLVColumn olvColumnValue;
         private Label lblRegistersWriteData;
         private TextBox txtRegistersWriteData;
