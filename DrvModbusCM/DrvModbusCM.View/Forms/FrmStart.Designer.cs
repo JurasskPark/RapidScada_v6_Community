@@ -39,6 +39,7 @@
             tolProjectSaveAs = new ToolStripMenuItem();
             tolAdministration = new ToolStripMenuItem();
             tolConfiguration = new ToolStripMenuItem();
+            tolLogs = new ToolStripMenuItem();
             tolTools = new ToolStripMenuItem();
             tolConverter = new ToolStripMenuItem();
             tolSettings = new ToolStripMenuItem();
@@ -53,7 +54,6 @@
             tolEmptySpace = new ToolStripMenuItem();
             tolLang = new ToolStripMenuItem();
             imgListMenu = new ImageList(components);
-            tolLogs = new ToolStripMenuItem();
             mnuMenu.SuspendLayout();
             SuspendLayout();
             // 
@@ -127,6 +127,14 @@
             tolConfiguration.Size = new Size(180, 22);
             tolConfiguration.Text = "Configuration";
             tolConfiguration.Click += tolConfiguration_Click;
+            // 
+            // tolLogs
+            // 
+            tolLogs.Image = (Image)resources.GetObject("tolLogs.Image");
+            tolLogs.Name = "tolLogs";
+            tolLogs.Size = new Size(180, 22);
+            tolLogs.Text = "Logs";
+            tolLogs.Click += tolLogs_Click;
             // 
             // tolTools
             // 
@@ -232,13 +240,6 @@
             imgListMenu.TransparentColor = Color.Transparent;
             imgListMenu.Images.SetKeyName(0, "flag_russia.png");
             imgListMenu.Images.SetKeyName(1, "flag_usa.png");
-            // 
-            // tolLogs
-            // 
-            tolLogs.Name = "tolLogs";
-            tolLogs.Size = new Size(180, 22);
-            tolLogs.Text = "Logs";
-            tolLogs.Click += tolLogs_Click;
             // 
             // FrmStart
             // 

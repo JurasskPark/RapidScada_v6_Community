@@ -103,6 +103,10 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             ckbEnabled.Checked = currentCommand.Enabled;
             txtCode.Text = currentCommand.Code;
 
+            cmbFunctionCode.SelectedIndexChanged -= cmbFunctionCode_SelectedIndexChanged;
+            nudRegisterStartAddress.ValueChanged -= nudRegisterStartAddress_ValueChanged;
+            nudRegisterCount.ValueChanged -= nudRegisterCount_ValueChanged;
+
             //Сначала подставляем значения, а потом делаем поиск по index 
             try
             {
@@ -121,8 +125,6 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             //А вот потом говорим, что так делать нельзя :)
             nudRegisterCount.Minimum = 1;
 
-
-
             txtRegistersWriteData.Text = HEX_STRING.BYTEARRAY_TO_HEXSTRING(currentCommand.RegisterWriteData);
 
             this.olvRegistersWrite.ClearObjects();
@@ -133,6 +135,10 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             }
 
             GenerateRegistersWriteData();
+
+            cmbFunctionCode.SelectedIndexChanged += cmbFunctionCode_SelectedIndexChanged;
+            nudRegisterStartAddress.ValueChanged += nudRegisterStartAddress_ValueChanged;
+            nudRegisterCount.ValueChanged += nudRegisterCount_ValueChanged;
         }
 
         #endregion Load
@@ -514,12 +520,8 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
 
         private void olvRegistersWrite_CellEditFinished(object sender, CellEditEventArgs e)
         {
-            if (e.Column == olvColumnFormatData)
-            {
-
-            }
-
             GenerateRegistersWriteData();
+            Modified = true;
         }
 
 
