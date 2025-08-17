@@ -91,6 +91,16 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             txtCode.Text = currentCommand.Code;
             ckbEnabled.Checked = currentCommand.Enabled;
 
+            //Сначала подставляем значения, а потом делаем поиск по index 
+            try
+            {
+                cmbFunctionCode.SelectedIndex = cmbFunctionCode.FindString("(" + currentCommand.FunctionCode.ToString().PadLeft(2, '0') + ")");
+            }
+            catch
+            {
+                cmbFunctionCode.SelectedIndex = 0;
+            }
+
             nudRegisterStartAddress.Value = currentCommand.RegisterStartAddress;
             //Костыль, т.к. сначала по умолчанию принимаем, что есть т.е. с 0
             nudRegisterCount.Minimum = 0;
@@ -98,12 +108,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             //А вот потом говорим, что так делать нельзя :)
             nudRegisterCount.Minimum = 1;
 
-            //Сначала подставляем значения, а потом делаем поиск по index 
-            try
-            {
-                cmbFunctionCode.SelectedIndex = cmbFunctionCode.FindString("(" + currentCommand.FunctionCode.ToString().PadLeft(2, '0') + ")");
-            }
-            catch { }
+
 
             ckbWriteDataOther.Checked = currentCommand.WriteDataOther;
             nudRegisterStartAddressWrite.Value = currentCommand.RegisterStartAddressWrite;
@@ -119,6 +124,8 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
                 cmbFunctionCodeWrite.SelectedIndex = cmbFunctionCodeWrite.FindString("(" + currentCommand.FunctionCodeWrite.ToString().PadLeft(2, '0') + ")");
             }
             catch { }
+
+
 
         }
 
@@ -172,6 +179,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             currentCommand.Name = txtName.Text;
             currentCommand.Code = txtCode.Text;
             currentCommand.Enabled = ckbEnabled.Checked;
+
             //Код функции
             try
             {

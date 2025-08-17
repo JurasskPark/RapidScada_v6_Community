@@ -244,6 +244,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             // olvColumnDescription
             // 
             olvColumnDescription.AspectName = "RegDescription";
+            olvColumnDescription.CellEditUseWholeCell = true;
             olvColumnDescription.MinimumWidth = 250;
             olvColumnDescription.Text = "Description";
             olvColumnDescription.Width = 250;
@@ -267,6 +268,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             // olvColumnSorting
             // 
             olvColumnSorting.AspectName = "Sorting";
+            olvColumnSorting.CellEditUseWholeCell = true;
             olvColumnSorting.MinimumWidth = 100;
             olvColumnSorting.Text = "Sorting";
             olvColumnSorting.Width = 100;
@@ -340,7 +342,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(838, 525);
+            ClientSize = new Size(834, 521);
             ControlBox = false;
             Controls.Add(gpbOptions);
             Controls.Add(gpbGroup);

@@ -79,6 +79,11 @@ namespace DrvModbusCM.Shared.Project.Tag
 
         public static bool ConvertStringToBoolean(string input)
         {
+            if(input == null || input == string.Empty)
+            {
+                return false;
+            }
+
             // Приводим строку к нижнему регистру и убираем пробелы
             string formattedInput = input.Trim().ToLower();
 

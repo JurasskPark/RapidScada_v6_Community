@@ -1,5 +1,6 @@
 ﻿using Scada.Comm.Drivers.DrvModbusCM;
 using Scada.Comm.Drivers.DrvModbusCM.View;
+using System.Net;
 
 
 namespace DrvModbusCMForm
@@ -64,8 +65,28 @@ namespace DrvModbusCMForm
             ulong Ulong13 = HEX_ULONG.HEXARRAY_TO_HEXARRAYULONG(bytes13);
             ulong Ulong14 = HEX_ULONG.HEXARRAY_TO_HEXARRAYULONG(bytes14);
             ulong Ulong15 = HEX_ULONG.HEXARRAY_TO_HEXARRAYULONG(bytes15);
-        
+            
+            bool[] coils = new bool[11];
+            coils[0] = true;
+            coils[1] = false;
+            coils[2] = true;
+            coils[3] = false;
+            coils[4] = true;
+            coils[5] = false;
+            coils[6] = true;
+            coils[7] = false;
+            coils[8] = true;
+            coils[9] = false;
+            coils[10] = true;
 
+            byte[] a = HEX_BOOLEAN.ToByteArray(coils);
+            byte[] b = HEX_BOOLEAN.BooleanArrayToModbus(coils);
+            string t = HEX_STRING.BYTEARRAY_TO_HEXSTRING(a);
+            string s = HEX_STRING.BYTEARRAY_TO_HEXSTRING(b);
+
+            ModbusRTU modbusRTU = new ModbusRTU();
+            byte[] frame = modbusRTU.CalculateSendData(1, 15, 0, 5, b);
+            string x = HEX_STRING.BYTEARRAY_TO_HEXSTRING(frame);
 
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.

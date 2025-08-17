@@ -671,7 +671,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
                     
                     break;
                 case ProjectTag.FormatData.BOOL:
-                    bytes = HEX_BOOLEAN.ToRegister((bool)value);
+                    bytes = HEX_BOOLEAN.ToArrayModbus((bool)value);
                     break;
                 case ProjectTag.FormatData.BYTE:
                     

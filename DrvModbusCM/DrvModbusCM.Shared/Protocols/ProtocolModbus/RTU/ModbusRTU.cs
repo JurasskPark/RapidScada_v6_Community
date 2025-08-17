@@ -27,21 +27,6 @@ public partial class ModbusRTU
         }
         else if (FunctionCode == 15)
         {
-            ////Сколько в массиве переменых
-            //bool[] tmp_Buffer = new bool[Values.Length];
-            ////Жирный костыль... Ну  получается, что регистр True = 65280 (FF00), а нам нужно теперь обратно получить True
-            //for (int i = 0; i < Values.Length; i++)
-            //{
-            //    if (Values[i] == 65280)
-            //    {
-            //        tmp_Buffer[i] = true;
-            //    }
-            //    else
-            //    {
-            //        tmp_Buffer[i] = false;
-            //    }
-            //}
-            //byte[] tmp_Values = HEX_BOOLEAN.ToByteArray(tmp_Buffer);
             frame = WriteMultipleCoils(Address, FunctionCode, RegisterStartAddress, RegisterCount, Values);
             return frame;
         }

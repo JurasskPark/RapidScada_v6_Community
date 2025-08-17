@@ -22,7 +22,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             return bytes;
         }
 
-        public static byte[] ToRegister(bool value)
+        public static byte[] ToArrayModbus(bool value)
         {
             byte[] bytes = new byte[2];
             if (value == true)
@@ -65,7 +65,9 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             for (int i = 0; i < bits.Length; i++)
             {
                 if (bits[i])
+                {
                     bytes[byteIndex] |= (byte)(1 << (7 - bitIndex));
+                }
 
                 bitIndex++;
                 if (bitIndex == 8)
@@ -78,12 +80,43 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             return bytes;
         }
 
+
+        /// <summary>
+        /// Конвертирует массив boolean в байтовый массив для Modbus Function Code 15
+        /// </summary>
+        public static byte[] BooleanArrayToModbus(bool[] coils)
+        {
+            if (coils == null || coils.Length == 0)
+            {
+                throw new ArgumentException("Массив не может быть пустым");
+            }
+
+            // Вычисляем необходимое количество байт
+            int byteCount = (coils.Length + 7) / 8;
+            byte[] result = new byte[byteCount];
+
+            for (int i = 0; i < coils.Length; i++)
+            {
+                if (coils[i])
+                {
+                    // Устанавливаем соответствующий бит в 1
+                    result[i / 8] |= (byte)(1 << (i % 8));
+                }
+            }
+
+            return result;
+        }
+
         public static bool GetValue(byte value, int bit)
         {
             if ((value & (int)Math.Pow(2, bit)) != 0)
+            {
                 return true;
+            }
             else
+            {
                 return false;
+            }
         }
 
         public static byte SetBit(byte value, int bit)

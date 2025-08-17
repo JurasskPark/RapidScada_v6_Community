@@ -1,6 +1,7 @@
 ﻿using BrightIdeasSoftware;
 using DrvModbusCM.Shared.Project.Tag;
 using Microsoft.Win32;
+using System;
 using System.Text.RegularExpressions;
 using System.Xml;
 using static Scada.Comm.Drivers.DrvModbusCM.ProjectTag;
@@ -102,14 +103,6 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             ckbEnabled.Checked = currentCommand.Enabled;
             txtCode.Text = currentCommand.Code;
 
-            nudRegisterStartAddress.Value = currentCommand.RegisterStartAddress;
-
-            //Костыль, т.к. сначала по умолчанию принимаем, что есть т.е. с 0
-            nudRegisterCount.Minimum = 0;
-            nudRegisterCount.Value = currentCommand.RegisterCount;
-            //А вот потом говорим, что так делать нельзя :)
-            nudRegisterCount.Minimum = 1;
-
             //Сначала подставляем значения, а потом делаем поиск по index 
             try
             {
@@ -119,6 +112,16 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             {
                 cmbFunctionCode.SelectedIndex = 0;
             }
+
+            nudRegisterStartAddress.Value = currentCommand.RegisterStartAddress;
+
+            //Костыль, т.к. сначала по умолчанию принимаем, что есть т.е. с 0
+            nudRegisterCount.Minimum = 0;
+            nudRegisterCount.Value = currentCommand.RegisterCount;
+            //А вот потом говорим, что так делать нельзя :)
+            nudRegisterCount.Minimum = 1;
+
+
 
             txtRegistersWriteData.Text = HEX_STRING.BYTEARRAY_TO_HEXSTRING(currentCommand.RegisterWriteData);
 
@@ -235,6 +238,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             ulong result = 0;
             try
             {
+                
                 Regex regex = new Regex(@"([A-Fa-f0-9][A-Fa-f0-9])");
                 Match match = regex.Match(cmbFunctionCode.Items[cmbFunctionCode.SelectedIndex].ToString().Trim());
                 if (match.Success)
@@ -338,6 +342,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             else if (currentCommand.RegisterCount == (ulong)currentCommand.ListRegistersWriteData.Count())
             {
                 byte[] bytes = new byte[0];
+                bool[] bools = new bool[currentCommand.ListRegistersWriteData.Count()];
                 currentCommand.FunctionCode = FunctionCode();
                 for (ulong i = 0; i < (ulong)currentCommand.ListRegistersWriteData.Count(); i++)
                 {
@@ -360,6 +365,9 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
                             register.RegAddr = ((ulong)100000 + Convert.ToUInt64(nudRegisterStartAddress.Value)) + Convert.ToUInt64((ulong)i);
                             register.RegName = "Coil";
                             register.RegFormat = FormatData.BOOL;
+                            register.RegValue = ConverterFormatData.ConvertStringtoObject(register.RegFormat, register.RegValueString);
+                            register.RegData = ProjectTag.GetBytes(ProjectTag.ConvertRegisterToTag(register), register.RegValue);
+                            bools[i] = (bool)register.RegValue;
                             break;
                         case 16:
                             register.RegAddr = ((ulong)300000 + Convert.ToUInt64(nudRegisterStartAddress.Value)) + Convert.ToUInt64((ulong)i);
@@ -367,7 +375,23 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
                             break;
                     }
 
-                    bytes = HEX_OPERATION.BYTEARRAY_COMBINE(bytes, register.RegData);
+                    switch(currentCommand.FunctionCode)
+                    {
+                        case 5:
+                            bytes = HEX_OPERATION.BYTEARRAY_COMBINE(bytes, register.RegData);
+                            break;
+                        case 6:
+                            bytes = HEX_OPERATION.BYTEARRAY_COMBINE(bytes, register.RegData);
+                            break;
+                        case 15:
+                            bytes = HEX_BOOLEAN.ToByteArray(bools);
+                            break;
+                        case 16:
+                            bytes = HEX_OPERATION.BYTEARRAY_COMBINE(bytes, register.RegData);
+                            break;
+                    }
+     
+                    
                 }
 
                 olvRegistersWrite.Objects = this.currentCommand.ListRegistersWriteData;
@@ -423,6 +447,13 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
 
         private void olvRegistersWrite_CellEditStarting(object sender, CellEditEventArgs e)
         {
+            if (e.Column == olvColumnNumber ||
+                e.Column == olvColumnRegister ||
+                 e.Column == olvColumnData)
+            {
+                e.Cancel = true;
+            }
+
             if (e.Column == olvColumnFormatData)
             {
                 // Создаем ComboBox
@@ -477,6 +508,8 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
 
                 olvRegistersWrite.RefreshObject(e.RowObject);
             }
+
+
         }
 
         private void olvRegistersWrite_CellEditFinished(object sender, CellEditEventArgs e)
@@ -485,6 +518,8 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             {
 
             }
+
+            GenerateRegistersWriteData();
         }
 
 

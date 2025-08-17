@@ -718,11 +718,11 @@ namespace Scada.Comm.Drivers.DrvModbusCM
                                 {
                                     case (ushort)1:
                                        bool coil = Device.GetBooleanCoil(addressRegister);
-                                        bytes = HEX_BOOLEAN.ToArray(coil);
+                                        bytes = HEX_BOOLEAN.ToArrayModbus(coil);
                                     break;
                                     case (ushort)2:
                                         bool discreteInput = Device.GetBooleanDiscreteInput(addressRegister);
-                                        bytes = HEX_BOOLEAN.ToArray(discreteInput);
+                                        bytes = HEX_BOOLEAN.ToArrayModbus(discreteInput);
                                         break;
                                     case (ushort)3:
                                         bytes = Device.GetUlongHoldingRegister(addressRegister, countRegisterTypeData);
