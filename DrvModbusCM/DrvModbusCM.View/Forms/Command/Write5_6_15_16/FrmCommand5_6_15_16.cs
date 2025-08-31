@@ -4,6 +4,7 @@ using Microsoft.Win32;
 using System;
 using System.Text.RegularExpressions;
 using System.Xml;
+using System.Xml.Linq;
 using static Scada.Comm.Drivers.DrvModbusCM.ProjectTag;
 
 namespace Scada.Comm.Drivers.DrvModbusCM.View
@@ -366,6 +367,9 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
                         case 6:
                             register.RegAddr = ((ulong)300000 + Convert.ToUInt64(nudRegisterStartAddress.Value)) + Convert.ToUInt64((ulong)i);
                             register.RegName = "Holding";
+                            register.RegFormat = currentCommand.ListRegistersWriteData[(int)i].RegFormat;
+                            register.RegValue = ConverterFormatData.ConvertStringtoObject(register.RegFormat, register.RegValueString);
+                            register.RegData = ProjectTag.GetBytes(ProjectTag.ConvertRegisterToTag(register), register.RegValue);
                             break;
                         case 15:
                             register.RegAddr = ((ulong)100000 + Convert.ToUInt64(nudRegisterStartAddress.Value)) + Convert.ToUInt64((ulong)i);
@@ -378,6 +382,9 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
                         case 16:
                             register.RegAddr = ((ulong)300000 + Convert.ToUInt64(nudRegisterStartAddress.Value)) + Convert.ToUInt64((ulong)i);
                             register.RegName = "Holding";
+                            register.RegFormat = currentCommand.ListRegistersWriteData[(int)i].RegFormat;
+                            register.RegValue = ConverterFormatData.ConvertStringtoObject(register.RegFormat, register.RegValueString);
+                            register.RegData = ProjectTag.GetBytes(ProjectTag.ConvertRegisterToTag(register), register.RegValue);
                             break;
                     }
 
@@ -419,15 +426,35 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
                     case 5:
                         register.RegAddr = ((ulong)100000 + Convert.ToUInt64(nudRegisterStartAddress.Value)) + Convert.ToUInt64(this.currentCommand.ListRegistersWriteData.Count());
                         register.RegName = "Coil";
+                        register.RegFormat = FormatData.BOOL;
+                        register.RegValueString = "False";
+                        register.RegValue = ConverterFormatData.ConvertStringtoObject(register.RegFormat, register.RegValueString);
+                        register.RegData = ProjectTag.GetBytes(ProjectTag.ConvertRegisterToTag(register), register.RegValue);
+
                         break;
                     case 6:
+                        register.RegAddr = ((ulong)300000 + Convert.ToUInt64(nudRegisterStartAddress.Value)) + Convert.ToUInt64(this.currentCommand.ListRegistersWriteData.Count());
                         register.RegName = "Holding";
+                        register.RegFormat = FormatData.SHORT;
+                        register.RegValueString = "0";
+                        register.RegValue = ConverterFormatData.ConvertStringtoObject(register.RegFormat, register.RegValueString);
+                        register.RegData = ProjectTag.GetBytes(ProjectTag.ConvertRegisterToTag(register), register.RegValue);
                         break;
                     case 15:
+                        register.RegAddr = ((ulong)100000 + Convert.ToUInt64(nudRegisterStartAddress.Value)) + Convert.ToUInt64(this.currentCommand.ListRegistersWriteData.Count());
                         register.RegName = "Coil";
+                        register.RegFormat = FormatData.BOOL;
+                        register.RegValueString = "False";
+                        register.RegValue = ConverterFormatData.ConvertStringtoObject(register.RegFormat, register.RegValueString);
+                        register.RegData = ProjectTag.GetBytes(ProjectTag.ConvertRegisterToTag(register), register.RegValue);
                         break;
-                    case 16:
+                    case 16:       
+                        register.RegAddr = ((ulong)300000 + Convert.ToUInt64(nudRegisterStartAddress.Value)) + Convert.ToUInt64(this.currentCommand.ListRegistersWriteData.Count());
                         register.RegName = "Holding";
+                        register.RegFormat = FormatData.SHORT;
+                        register.RegValueString = "0";
+                        register.RegValue = ConverterFormatData.ConvertStringtoObject(register.RegFormat, register.RegValueString);
+                        register.RegData = ProjectTag.GetBytes(ProjectTag.ConvertRegisterToTag(register), register.RegValue);
                         break;
                 }
 
