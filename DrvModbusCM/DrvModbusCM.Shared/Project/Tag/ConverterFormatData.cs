@@ -17,7 +17,7 @@ namespace DrvModbusCM.Shared.Project.Tag
                     result = string.Empty;
                     break;
                 case FormatData.BIT:
-                    result = Convert.ToBoolean(value);
+                    result = Convert.ToInt16(value);
                     break;
                 case FormatData.BIT32:
                     result = Convert.ToInt32(value);

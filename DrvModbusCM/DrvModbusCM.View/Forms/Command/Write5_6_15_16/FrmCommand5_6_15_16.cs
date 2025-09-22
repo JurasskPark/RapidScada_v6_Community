@@ -2,6 +2,7 @@
 using DrvModbusCM.Shared.Project.Tag;
 using Microsoft.Win32;
 using System;
+using System.Net;
 using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
@@ -351,9 +352,10 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
                 byte[] bytes = new byte[0];
                 bool[] bools = new bool[currentCommand.ListRegistersWriteData.Count()];
                 currentCommand.FunctionCode = FunctionCode();
-                for (ulong i = 0; i < (ulong)currentCommand.ListRegistersWriteData.Count(); i++)
+                for (int i = 0; i < currentCommand.ListRegistersWriteData.Count(); i++)
                 {
-                    ProjectRegisterWriteData register = currentCommand.ListRegistersWriteData[(int)i];
+                    ProjectRegisterWriteData register = new ProjectRegisterWriteData();
+                    register = currentCommand.ListRegistersWriteData[(int)i];
                     
                     switch (currentCommand.FunctionCode)
                     {
@@ -362,6 +364,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
                             register.RegName = "Coil";
                             register.RegFormat = FormatData.BOOL;
                             register.RegValue = ConverterFormatData.ConvertStringtoObject(register.RegFormat, register.RegValueString);
+                            register.RegValueString = register.RegValue.ToString();
                             register.RegData = ProjectTag.GetBytes(ProjectTag.ConvertRegisterToTag(register), register.RegValue);
                             break;
                         case 6:
@@ -369,6 +372,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
                             register.RegName = "Holding";
                             register.RegFormat = currentCommand.ListRegistersWriteData[(int)i].RegFormat;
                             register.RegValue = ConverterFormatData.ConvertStringtoObject(register.RegFormat, register.RegValueString);
+                            register.RegValueString = register.RegValue.ToString();
                             register.RegData = ProjectTag.GetBytes(ProjectTag.ConvertRegisterToTag(register), register.RegValue);
                             break;
                         case 15:
@@ -376,6 +380,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
                             register.RegName = "Coil";
                             register.RegFormat = FormatData.BOOL;
                             register.RegValue = ConverterFormatData.ConvertStringtoObject(register.RegFormat, register.RegValueString);
+                            register.RegValueString = register.RegValue.ToString();
                             register.RegData = ProjectTag.GetBytes(ProjectTag.ConvertRegisterToTag(register), register.RegValue);
                             bools[i] = (bool)register.RegValue;
                             break;
@@ -384,6 +389,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
                             register.RegName = "Holding";
                             register.RegFormat = currentCommand.ListRegistersWriteData[(int)i].RegFormat;
                             register.RegValue = ConverterFormatData.ConvertStringtoObject(register.RegFormat, register.RegValueString);
+                            register.RegValueString = register.RegValue.ToString();
                             register.RegData = ProjectTag.GetBytes(ProjectTag.ConvertRegisterToTag(register), register.RegValue);
                             break;
                     }
@@ -397,19 +403,18 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
                             bytes = HEX_OPERATION.BYTEARRAY_COMBINE(bytes, register.RegData);
                             break;
                         case 15:
-                            bytes = HEX_BOOLEAN.ToByteArray(bools);
+                            bool[] copy = (bool[])bools.Clone();
+                            bytes = HEX_BOOLEAN.ToArrayModbus(copy);
                             break;
                         case 16:
                             bytes = HEX_OPERATION.BYTEARRAY_COMBINE(bytes, register.RegData);
                             break;
                     }
-     
-                    
                 }
 
-                olvRegistersWrite.Objects = this.currentCommand.ListRegistersWriteData;
-                olvRegistersWrite.BuildList();
+                olvRegistersWrite.Objects = this.currentCommand.ListRegistersWriteData;               
                 olvRegistersWrite.AutoResizeColumns();
+                olvRegistersWrite.BuildList();
 
                 txtRegistersWriteData.Text = HEX_STRING.BYTEARRAY_TO_HEXSTRING(bytes);
             }
@@ -430,7 +435,6 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
                         register.RegValueString = "False";
                         register.RegValue = ConverterFormatData.ConvertStringtoObject(register.RegFormat, register.RegValueString);
                         register.RegData = ProjectTag.GetBytes(ProjectTag.ConvertRegisterToTag(register), register.RegValue);
-
                         break;
                     case 6:
                         register.RegAddr = ((ulong)300000 + Convert.ToUInt64(nudRegisterStartAddress.Value)) + Convert.ToUInt64(this.currentCommand.ListRegistersWriteData.Count());
@@ -487,6 +491,8 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
                 e.Cancel = true;
             }
 
+            ProjectRegisterWriteData register = (ProjectRegisterWriteData)e.RowObject;
+
             if (e.Column == olvColumnFormatData)
             {
                 // Создаем ComboBox
@@ -495,8 +501,6 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
                 comboBox.Font = ((ObjectListView)sender).Font;
                 comboBox.DropDownStyle = ComboBoxStyle.DropDownList;
                 comboBox.Items.AddRange(Enum.GetNames(typeof(FormatData)));
-
-                ProjectRegisterWriteData register = (ProjectRegisterWriteData)e.RowObject;
                 comboBox.SelectedIndex = comboBox.FindString(Enum.GetName(typeof(FormatData), register.RegFormat));
 
                 // Подписываемся на событие, чтобы обновить значение
@@ -520,6 +524,57 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
                     comboBox.Dispose();
                 };
             }
+
+            // если меняем значение
+            if (e.Column == olvColumnValue)
+            {
+                // если функция 5 или 15
+                if(currentCommand.FunctionCode == 5 || 
+                   currentCommand.FunctionCode == 15 ||
+                   register.RegFormat == FormatData.BOOL)
+                {
+                    object[] items = new object[2];
+                    items[0] = false;
+                    items[1] = true;
+
+                    // Создаем ComboBox
+                    ComboBox comboBox = new ComboBox();
+                    comboBox.Bounds = e.CellBounds;
+                    comboBox.Font = ((ObjectListView)sender).Font;
+                    comboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+                    comboBox.Items.AddRange(items);
+                    comboBox.SelectedIndex = comboBox.FindString(register.RegValue.ToString());
+
+                    // Подписываемся на событие, чтобы обновить значение
+                    comboBox.SelectedIndexChanged += (s, args) =>
+                    {
+                        if (comboBox.SelectedItem != null)
+                        {
+                            bool selectedValue = (bool)comboBox.SelectedItem;
+
+                            // Обновляем значение в объекте
+                            register.RegValue = ConverterFormatData.ConvertStringtoObject(register.RegFormat, selectedValue.ToString());
+                            register.RegValueString = register.RegValue.ToString();
+                            register.RegData = ProjectTag.GetBytes(ProjectTag.ConvertRegisterToTag(register), register.RegValue);
+
+                            olvRegistersWrite.SelectedObject = register;
+                            olvRegistersWrite.Refresh();
+
+                            e.NewValue = selectedValue;
+                        }
+                    };
+
+                    e.Control = comboBox;
+
+                    // Одновременно гарантируем, что ComboBox будет уничтожен после закрытия
+                    comboBox.LostFocus += (s, args) =>
+                    {
+                        comboBox.Dispose();
+                    };
+
+                }
+
+            }
         }
 
         private void olvRegistersWrite_CellEditFinishing(object sender, CellEditEventArgs e)
@@ -542,7 +597,26 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
                 olvRegistersWrite.RefreshObject(e.RowObject);
             }
 
+            // если меняем значение
+            if (e.Column == olvColumnValue)
+            {
+                ProjectRegisterWriteData register = (ProjectRegisterWriteData)e.RowObject;
 
+                // Убедитесь, что значение было изменено и требуется сохранение
+                if (e.NewValue != e.Control.Text)
+                {
+                    // Здесь можно добавить дополнительную логику, если это необходимо
+                    string selectedValue = e.Control.Text;
+                    register.RegValue = ConverterFormatData.ConvertStringtoObject(register.RegFormat, selectedValue);
+                    register.RegValueString = register.RegValue.ToString();
+
+                    olvRegistersWrite.SelectedObject = register;
+                    olvRegistersWrite.BuildList();
+                    e.NewValue = selectedValue;
+                }
+
+                olvRegistersWrite.RefreshObject(e.RowObject);
+            }
         }
 
         private void olvRegistersWrite_CellEditFinished(object sender, CellEditEventArgs e)

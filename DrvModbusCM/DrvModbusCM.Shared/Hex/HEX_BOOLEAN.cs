@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Reflection;
 using System.Text;
 
 namespace Scada.Comm.Drivers.DrvModbusCM
@@ -36,6 +38,47 @@ namespace Scada.Comm.Drivers.DrvModbusCM
                 bytes[1] = 0;
             }
             return bytes;
+        }
+
+        /// <summary>
+        /// Конвертирует массив boolean в байтовый массив для Modbus Function Code 15
+        /// </summary>
+        public static byte[] ToArrayModbus(bool[] coils)
+        {
+            // Проверяем корректность входных данных
+            if (coils == null || coils.Length == 0)
+                throw new ArgumentException("The coils array cannot be empty");
+
+            // Вычисляем необходимое количество байт
+            int byteCount = (coils.Length + 7) / 8;
+            byte[] bytes = new byte[byteCount];
+
+            // Конвертация
+            for (int i = 0; i < coils.Length; i++)
+            {
+                if (coils[i])
+                {
+                    // Устанавливаем соответствующий бит в байте
+                    bytes[i / 8] |= (byte)(1 << (i % 8));
+                }
+            }
+
+            return bytes;
+        }
+
+        /// <summary>
+        /// Конвертирует байтовый массив в массив boolean для Modbus Function Code 15
+        /// </summary>
+        public bool[] ToArrayBoolModbus(byte[] bytes, int coilCount)
+        {
+            bool[] result = new bool[coilCount];
+
+            for (int i = 0; i < coilCount; i++)
+            {
+                result[i] = (bytes[i / 8] & (1 << (7 - i % 8))) != 0;
+            }
+
+            return result;
         }
 
 
@@ -78,33 +121,6 @@ namespace Scada.Comm.Drivers.DrvModbusCM
             }
             Array.Reverse(bytes);
             return bytes;
-        }
-
-
-        /// <summary>
-        /// Конвертирует массив boolean в байтовый массив для Modbus Function Code 15
-        /// </summary>
-        public static byte[] BooleanArrayToModbus(bool[] coils)
-        {
-            if (coils == null || coils.Length == 0)
-            {
-                throw new ArgumentException("Массив не может быть пустым");
-            }
-
-            // Вычисляем необходимое количество байт
-            int byteCount = (coils.Length + 7) / 8;
-            byte[] result = new byte[byteCount];
-
-            for (int i = 0; i < coils.Length; i++)
-            {
-                if (coils[i])
-                {
-                    // Устанавливаем соответствующий бит в 1
-                    result[i / 8] |= (byte)(1 << (i % 8));
-                }
-            }
-
-            return result;
         }
 
         public static bool GetValue(byte value, int bit)

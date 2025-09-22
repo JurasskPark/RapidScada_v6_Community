@@ -150,7 +150,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             gpbOptions.Margin = new Padding(4, 3, 4, 3);
             gpbOptions.Name = "gpbOptions";
             gpbOptions.Padding = new Padding(4, 3, 4, 3);
-            gpbOptions.Size = new Size(832, 404);
+            gpbOptions.Size = new Size(842, 376);
             gpbOptions.TabIndex = 21;
             gpbOptions.TabStop = false;
             gpbOptions.Text = "Options";
@@ -162,7 +162,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             txtRegistersWriteData.Margin = new Padding(6, 5, 6, 5);
             txtRegistersWriteData.Multiline = true;
             txtRegistersWriteData.Name = "txtRegistersWriteData";
-            txtRegistersWriteData.Size = new Size(815, 53);
+            txtRegistersWriteData.Size = new Size(825, 53);
             txtRegistersWriteData.TabIndex = 27;
             // 
             // lblRegistersWriteData
@@ -215,7 +215,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             olvRegistersWrite.SelectedForeColor = Color.White;
             olvRegistersWrite.ShowGroups = false;
             olvRegistersWrite.ShowHeaderInAllViews = false;
-            olvRegistersWrite.Size = new Size(814, 206);
+            olvRegistersWrite.Size = new Size(824, 178);
             olvRegistersWrite.SortGroupItemsByPrimaryColumn = false;
             olvRegistersWrite.TabIndex = 25;
             olvRegistersWrite.UnfocusedSelectedBackColor = Color.FromArgb(70, 138, 189);
@@ -230,6 +230,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             // olvColumnNumber
             // 
             olvColumnNumber.AspectName = "RegAddr";
+            olvColumnNumber.MaximumWidth = 80;
             olvColumnNumber.MinimumWidth = 80;
             olvColumnNumber.Text = "Number";
             olvColumnNumber.Width = 80;
@@ -342,7 +343,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(834, 521);
+            ClientSize = new Size(868, 517);
             ControlBox = false;
             Controls.Add(gpbOptions);
             Controls.Add(gpbGroup);
