@@ -36,6 +36,8 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
 
         public Project project;                                        // the project configuration
         private string configFileName;                                 // the configuration file name
+
+        DriverThread driverThread;                                     // the driver thread
         #endregion Variables
 
         #region Application
@@ -278,7 +280,7 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
         {
             FrmLogs frmLogs = new FrmLogs();
             frmLogs.MdiParent = this;
-            frmLogs.Text = frmLogs.Text.ToString(); 
+            frmLogs.Text = frmLogs.Text.ToString();
             frmLogs.WindowState = FormWindowState.Maximized;
             frmLogs.formParent = this;
             frmLogs.project = project;
@@ -455,10 +457,10 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
         #region 
         private void tlsProjectStartStop_Click(object sender, EventArgs e)
         {
-            
+
         }
 
-      
+
 
         public void DebugerLog(string text)
         {
@@ -480,10 +482,16 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
 
         private void tolDebug_Click(object sender, EventArgs e)
         {
-            DriverThread driverThread = new DriverThread(project);
+            driverThread = new DriverThread(project);
             driverThread.ThreadsStart();
         }
 
-
+        private void tolDebugStop_Click(object sender, EventArgs e)
+        {
+            if(driverThread != null)
+            {
+                driverThread.ThreadsStop();
+            }
+        }
     }
 }

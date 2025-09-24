@@ -79,9 +79,6 @@
             cmnuCommandImportSelect = new ToolStripMenuItem();
             cmnuCommandImportAll = new ToolStripMenuItem();
             cmnuCommandGenerate = new ToolStripMenuItem();
-            toolStripSeparator6 = new ToolStripSeparator();
-            upToolStripMenuItem2 = new ToolStripMenuItem();
-            downToolStripMenuItem2 = new ToolStripMenuItem();
             cmnuCommandDelete = new ContextMenuStrip(components);
             cmnuCommandDel = new ToolStripMenuItem();
             toolStripSeparator1 = new ToolStripSeparator();
@@ -115,6 +112,7 @@
             trvProject.Size = new Size(172, 446);
             trvProject.TabIndex = 0;
             trvProject.AfterSelect += trvProject_AfterSelect;
+            trvProject.KeyDown += trvProject_KeyDown;
             trvProject.MouseDown += trvProject_MouseDown;
             // 
             // imgList
@@ -170,7 +168,6 @@
             // 
             // cmnuTagAppend
             // 
-            cmnuTagAppend.ImageScalingSize = new Size(24, 24);
             cmnuTagAppend.Items.AddRange(new ToolStripItem[] { cmnuAddTag, cmnuSeparator1, cmnuDeleteGroup, cmnuSeparator2, сmnuSelectVariableUp, сmnuSelectVariableDown });
             cmnuTagAppend.Name = "cmnu";
             cmnuTagAppend.Size = new Size(108, 104);
@@ -213,7 +210,6 @@
             // 
             // cmnuDeleteAction
             // 
-            cmnuDeleteAction.ImageScalingSize = new Size(24, 24);
             cmnuDeleteAction.Items.AddRange(new ToolStripItem[] { cmnuDeleteVariable, cmnuSeparator3, сmnuSelectVariableActionUp, сmnuSelectVariableActionDown });
             cmnuDeleteAction.Name = "cmnu";
             cmnuDeleteAction.Size = new Size(108, 76);
@@ -333,75 +329,78 @@
             // 
             // cmnuDeviceAppend
             // 
-            cmnuDeviceAppend.ImageScalingSize = new Size(24, 24);
             cmnuDeviceAppend.Items.AddRange(new ToolStripItem[] { cmnuDeviceAdd, toolStripSeparator5, cmnuChannelDel, toolStripSeparator3, upToolStripMenuItem1, downToolStripMenuItem1 });
             cmnuDeviceAppend.Name = "HMI_contextMenu";
-            cmnuDeviceAppend.Size = new Size(142, 136);
+            cmnuDeviceAppend.Size = new Size(208, 104);
             // 
             // cmnuDeviceAdd
             // 
             cmnuDeviceAdd.Image = (Image)resources.GetObject("cmnuDeviceAdd.Image");
             cmnuDeviceAdd.Name = "cmnuDeviceAdd";
-            cmnuDeviceAdd.Size = new Size(141, 30);
+            cmnuDeviceAdd.ShortcutKeys = Keys.Control | Keys.Shift | Keys.D;
+            cmnuDeviceAdd.Size = new Size(207, 22);
             cmnuDeviceAdd.Text = "Add device";
             cmnuDeviceAdd.Click += cmnuDeviceAdd_Click;
             // 
             // toolStripSeparator5
             // 
             toolStripSeparator5.Name = "toolStripSeparator5";
-            toolStripSeparator5.Size = new Size(138, 6);
+            toolStripSeparator5.Size = new Size(204, 6);
             // 
             // cmnuChannelDel
             // 
             cmnuChannelDel.Image = (Image)resources.GetObject("cmnuChannelDel.Image");
             cmnuChannelDel.Name = "cmnuChannelDel";
-            cmnuChannelDel.Size = new Size(141, 30);
+            cmnuChannelDel.ShortcutKeys = Keys.Delete;
+            cmnuChannelDel.Size = new Size(207, 22);
             cmnuChannelDel.Text = "Delete";
             // 
             // toolStripSeparator3
             // 
             toolStripSeparator3.Name = "toolStripSeparator3";
-            toolStripSeparator3.Size = new Size(138, 6);
+            toolStripSeparator3.Size = new Size(204, 6);
             // 
             // upToolStripMenuItem1
             // 
             upToolStripMenuItem1.Image = (Image)resources.GetObject("upToolStripMenuItem1.Image");
             upToolStripMenuItem1.Name = "upToolStripMenuItem1";
-            upToolStripMenuItem1.Size = new Size(141, 30);
+            upToolStripMenuItem1.ShortcutKeys = Keys.Control | Keys.Up;
+            upToolStripMenuItem1.Size = new Size(207, 22);
             upToolStripMenuItem1.Text = "Up";
             // 
             // downToolStripMenuItem1
             // 
             downToolStripMenuItem1.Image = (Image)resources.GetObject("downToolStripMenuItem1.Image");
             downToolStripMenuItem1.Name = "downToolStripMenuItem1";
-            downToolStripMenuItem1.Size = new Size(141, 30);
+            downToolStripMenuItem1.ShortcutKeys = Keys.Control | Keys.Down;
+            downToolStripMenuItem1.Size = new Size(207, 22);
             downToolStripMenuItem1.Text = "Down";
             // 
             // cmnuDeviceDelete
             // 
-            cmnuDeviceDelete.ImageScalingSize = new Size(24, 24);
             cmnuDeviceDelete.Items.AddRange(new ToolStripItem[] { cmnuDeviceDel });
             cmnuDeviceDelete.Name = "HMI_contextMenu";
-            cmnuDeviceDelete.Size = new Size(116, 34);
+            cmnuDeviceDelete.Size = new Size(132, 26);
             // 
             // cmnuDeviceDel
             // 
             cmnuDeviceDel.Image = (Image)resources.GetObject("cmnuDeviceDel.Image");
             cmnuDeviceDel.Name = "cmnuDeviceDel";
-            cmnuDeviceDel.Size = new Size(115, 30);
+            cmnuDeviceDel.ShortcutKeys = Keys.Delete;
+            cmnuDeviceDel.Size = new Size(131, 22);
             cmnuDeviceDel.Text = "Delete";
             cmnuDeviceDel.Click += cmnuDeviceDel_Click;
             // 
             // cmnuCommandAppend
             // 
-            cmnuCommandAppend.ImageScalingSize = new Size(24, 24);
-            cmnuCommandAppend.Items.AddRange(new ToolStripItem[] { cmnuCommandAdd, cmnuCommandImport, cmnuCommandGenerate, toolStripSeparator6, upToolStripMenuItem2, downToolStripMenuItem2 });
+            cmnuCommandAppend.Items.AddRange(new ToolStripItem[] { cmnuCommandAdd, cmnuCommandImport, cmnuCommandGenerate });
             cmnuCommandAppend.Name = "HMI_contextMenu";
-            cmnuCommandAppend.Size = new Size(185, 120);
+            cmnuCommandAppend.Size = new Size(185, 70);
             // 
             // cmnuCommandAdd
             // 
             cmnuCommandAdd.DropDownItems.AddRange(new ToolStripItem[] { cmnuTypeStandard, cmnuTypeOther });
+            cmnuCommandAdd.Image = (Image)resources.GetObject("cmnuCommandAdd.Image");
             cmnuCommandAdd.Name = "cmnuCommandAdd";
             cmnuCommandAdd.Size = new Size(184, 22);
             cmnuCommandAdd.Text = "Create command";
@@ -409,13 +408,16 @@
             // cmnuTypeStandard
             // 
             cmnuTypeStandard.DropDownItems.AddRange(new ToolStripItem[] { cmnuDeviceModbusCommandAddReadCoils, cmnuDeviceModbusCommandAddReadInputs, cmnuDeviceModbusCommandAddReadHoldingRegisters, cmnuDeviceModbusCommandAddReadInputRegisters, cmnuDeviceModbusCommandAddWriteCoil, cmnuDeviceModbusCommandAddWriteInputRegister, cmnuDeviceModbusCommandAddWriteCoils, cmnuDeviceModbusCommandAddWriteInputRegisters });
+            cmnuTypeStandard.Image = (Image)resources.GetObject("cmnuTypeStandard.Image");
             cmnuTypeStandard.Name = "cmnuTypeStandard";
             cmnuTypeStandard.Size = new Size(197, 22);
             cmnuTypeStandard.Text = "Standard";
             // 
             // cmnuDeviceModbusCommandAddReadCoils
             // 
+            cmnuDeviceModbusCommandAddReadCoils.Image = (Image)resources.GetObject("cmnuDeviceModbusCommandAddReadCoils.Image");
             cmnuDeviceModbusCommandAddReadCoils.Name = "cmnuDeviceModbusCommandAddReadCoils";
+            cmnuDeviceModbusCommandAddReadCoils.ShortcutKeys = Keys.Control | Keys.Shift | Keys.D1;
             cmnuDeviceModbusCommandAddReadCoils.Size = new Size(262, 22);
             cmnuDeviceModbusCommandAddReadCoils.Tag = "READCOILS";
             cmnuDeviceModbusCommandAddReadCoils.Text = "Read Coils (1)";
@@ -423,30 +425,37 @@
             // 
             // cmnuDeviceModbusCommandAddReadInputs
             // 
+            cmnuDeviceModbusCommandAddReadInputs.Image = (Image)resources.GetObject("cmnuDeviceModbusCommandAddReadInputs.Image");
             cmnuDeviceModbusCommandAddReadInputs.Name = "cmnuDeviceModbusCommandAddReadInputs";
-            cmnuDeviceModbusCommandAddReadInputs.Size = new Size(262, 22);
+            cmnuDeviceModbusCommandAddReadInputs.ShortcutKeys = Keys.Control | Keys.Shift | Keys.D2;
+            cmnuDeviceModbusCommandAddReadInputs.Size = new Size(282, 22);
             cmnuDeviceModbusCommandAddReadInputs.Tag = "READINPUTS";
             cmnuDeviceModbusCommandAddReadInputs.Text = "Read Inputs (2)";
             cmnuDeviceModbusCommandAddReadInputs.Click += cmnuCommandAdd_Click;
             // 
             // cmnuDeviceModbusCommandAddReadHoldingRegisters
             // 
+            cmnuDeviceModbusCommandAddReadHoldingRegisters.Image = (Image)resources.GetObject("cmnuDeviceModbusCommandAddReadHoldingRegisters.Image");
             cmnuDeviceModbusCommandAddReadHoldingRegisters.Name = "cmnuDeviceModbusCommandAddReadHoldingRegisters";
-            cmnuDeviceModbusCommandAddReadHoldingRegisters.Size = new Size(262, 22);
+            cmnuDeviceModbusCommandAddReadHoldingRegisters.ShortcutKeys = Keys.Control | Keys.Shift | Keys.D3;
+            cmnuDeviceModbusCommandAddReadHoldingRegisters.Size = new Size(282, 22);
             cmnuDeviceModbusCommandAddReadHoldingRegisters.Tag = "READHOLDINGREGISTERS";
             cmnuDeviceModbusCommandAddReadHoldingRegisters.Text = "Read HoldingRegisters (3)";
             cmnuDeviceModbusCommandAddReadHoldingRegisters.Click += cmnuCommandAdd_Click;
             // 
             // cmnuDeviceModbusCommandAddReadInputRegisters
             // 
+            cmnuDeviceModbusCommandAddReadInputRegisters.Image = (Image)resources.GetObject("cmnuDeviceModbusCommandAddReadInputRegisters.Image");
             cmnuDeviceModbusCommandAddReadInputRegisters.Name = "cmnuDeviceModbusCommandAddReadInputRegisters";
-            cmnuDeviceModbusCommandAddReadInputRegisters.Size = new Size(262, 22);
+            cmnuDeviceModbusCommandAddReadInputRegisters.ShortcutKeys = Keys.Control | Keys.Shift | Keys.D4;
+            cmnuDeviceModbusCommandAddReadInputRegisters.Size = new Size(282, 22);
             cmnuDeviceModbusCommandAddReadInputRegisters.Tag = "READINPUTREGISTERS";
             cmnuDeviceModbusCommandAddReadInputRegisters.Text = "Read InputRegisters (4)";
             cmnuDeviceModbusCommandAddReadInputRegisters.Click += cmnuCommandAdd_Click;
             // 
             // cmnuDeviceModbusCommandAddWriteCoil
             // 
+            cmnuDeviceModbusCommandAddWriteCoil.Image = (Image)resources.GetObject("cmnuDeviceModbusCommandAddWriteCoil.Image");
             cmnuDeviceModbusCommandAddWriteCoil.Name = "cmnuDeviceModbusCommandAddWriteCoil";
             cmnuDeviceModbusCommandAddWriteCoil.Size = new Size(262, 22);
             cmnuDeviceModbusCommandAddWriteCoil.Tag = "WRITECOIL";
@@ -455,6 +464,7 @@
             // 
             // cmnuDeviceModbusCommandAddWriteInputRegister
             // 
+            cmnuDeviceModbusCommandAddWriteInputRegister.Image = (Image)resources.GetObject("cmnuDeviceModbusCommandAddWriteInputRegister.Image");
             cmnuDeviceModbusCommandAddWriteInputRegister.Name = "cmnuDeviceModbusCommandAddWriteInputRegister";
             cmnuDeviceModbusCommandAddWriteInputRegister.Size = new Size(262, 22);
             cmnuDeviceModbusCommandAddWriteInputRegister.Tag = "WRITEHOLDINGREGISTER";
@@ -463,6 +473,7 @@
             // 
             // cmnuDeviceModbusCommandAddWriteCoils
             // 
+            cmnuDeviceModbusCommandAddWriteCoils.Image = (Image)resources.GetObject("cmnuDeviceModbusCommandAddWriteCoils.Image");
             cmnuDeviceModbusCommandAddWriteCoils.Name = "cmnuDeviceModbusCommandAddWriteCoils";
             cmnuDeviceModbusCommandAddWriteCoils.Size = new Size(262, 22);
             cmnuDeviceModbusCommandAddWriteCoils.Tag = "WRITEMULTIPLECOILS";
@@ -471,6 +482,7 @@
             // 
             // cmnuDeviceModbusCommandAddWriteInputRegisters
             // 
+            cmnuDeviceModbusCommandAddWriteInputRegisters.Image = (Image)resources.GetObject("cmnuDeviceModbusCommandAddWriteInputRegisters.Image");
             cmnuDeviceModbusCommandAddWriteInputRegisters.Name = "cmnuDeviceModbusCommandAddWriteInputRegisters";
             cmnuDeviceModbusCommandAddWriteInputRegisters.Size = new Size(262, 22);
             cmnuDeviceModbusCommandAddWriteInputRegisters.Tag = "WRITEMULTIPLEHOLDINGREGISTERS";
@@ -480,6 +492,7 @@
             // cmnuTypeOther
             // 
             cmnuTypeOther.DropDownItems.AddRange(new ToolStripItem[] { cmnuDeviceOtherCommandAddRead99 });
+            cmnuTypeOther.Image = (Image)resources.GetObject("cmnuTypeOther.Image");
             cmnuTypeOther.Name = "cmnuTypeOther";
             cmnuTypeOther.Size = new Size(197, 22);
             cmnuTypeOther.Text = "Rarely used commands";
@@ -501,14 +514,14 @@
             // cmnuCommandImportSelect
             // 
             cmnuCommandImportSelect.Name = "cmnuCommandImportSelect";
-            cmnuCommandImportSelect.Size = new Size(140, 22);
-            cmnuCommandImportSelect.Text = "Выбранную";
+            cmnuCommandImportSelect.Size = new Size(105, 22);
+            cmnuCommandImportSelect.Text = "Select";
             // 
             // cmnuCommandImportAll
             // 
             cmnuCommandImportAll.Name = "cmnuCommandImportAll";
-            cmnuCommandImportAll.Size = new Size(140, 22);
-            cmnuCommandImportAll.Text = "Все";
+            cmnuCommandImportAll.Size = new Size(105, 22);
+            cmnuCommandImportAll.Text = "All";
             // 
             // cmnuCommandGenerate
             // 
@@ -516,70 +529,57 @@
             cmnuCommandGenerate.Size = new Size(184, 22);
             cmnuCommandGenerate.Text = "Generate commands";
             // 
-            // toolStripSeparator6
-            // 
-            toolStripSeparator6.Name = "toolStripSeparator6";
-            toolStripSeparator6.Size = new Size(181, 6);
-            // 
-            // upToolStripMenuItem2
-            // 
-            upToolStripMenuItem2.Name = "upToolStripMenuItem2";
-            upToolStripMenuItem2.Size = new Size(184, 22);
-            upToolStripMenuItem2.Text = "Up";
-            // 
-            // downToolStripMenuItem2
-            // 
-            downToolStripMenuItem2.Name = "downToolStripMenuItem2";
-            downToolStripMenuItem2.Size = new Size(184, 22);
-            downToolStripMenuItem2.Text = "Down";
-            // 
             // cmnuCommandDelete
             // 
-            cmnuCommandDelete.ImageScalingSize = new Size(24, 24);
             cmnuCommandDelete.Items.AddRange(new ToolStripItem[] { cmnuCommandDel, toolStripSeparator1, cmnuCommandUp, cmnuCommandDown });
             cmnuCommandDelete.Name = "HMI_contextMenu";
-            cmnuCommandDelete.Size = new Size(116, 100);
-            cmnuCommandDelete.Click += cmnuCommandDelete_Click;
+            cmnuCommandDelete.Size = new Size(171, 76);
             // 
             // cmnuCommandDel
             // 
             cmnuCommandDel.Image = (Image)resources.GetObject("cmnuCommandDel.Image");
             cmnuCommandDel.Name = "cmnuCommandDel";
-            cmnuCommandDel.Size = new Size(115, 30);
+            cmnuCommandDel.ShortcutKeys = Keys.Delete;
+            cmnuCommandDel.Size = new Size(170, 22);
             cmnuCommandDel.Text = "Delete";
             cmnuCommandDel.ToolTipText = "Удалить группу";
+            cmnuCommandDel.Click += cmnuCommandDel_Click;
             // 
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(112, 6);
+            toolStripSeparator1.Size = new Size(167, 6);
             // 
             // cmnuCommandUp
             // 
             cmnuCommandUp.Image = (Image)resources.GetObject("cmnuCommandUp.Image");
             cmnuCommandUp.Name = "cmnuCommandUp";
-            cmnuCommandUp.Size = new Size(115, 30);
+            cmnuCommandUp.ShortcutKeys = Keys.Control | Keys.Up;
+            cmnuCommandUp.Size = new Size(170, 22);
             cmnuCommandUp.Text = "Up";
+            cmnuCommandUp.Click += cmnuCommandUp_Click;
             // 
             // cmnuCommandDown
             // 
             cmnuCommandDown.Image = (Image)resources.GetObject("cmnuCommandDown.Image");
             cmnuCommandDown.Name = "cmnuCommandDown";
-            cmnuCommandDown.Size = new Size(115, 30);
+            cmnuCommandDown.ShortcutKeys = Keys.Control | Keys.Down;
+            cmnuCommandDown.Size = new Size(170, 22);
             cmnuCommandDown.Text = "Down";
+            cmnuCommandDown.Click += cmnuCommandDown_Click;
             // 
             // cmnuChannelAppend
             // 
-            cmnuChannelAppend.ImageScalingSize = new Size(24, 24);
             cmnuChannelAppend.Items.AddRange(new ToolStripItem[] { cmnuChannelAdd });
             cmnuChannelAppend.Name = "HMI_contextMenu";
-            cmnuChannelAppend.Size = new Size(150, 34);
+            cmnuChannelAppend.Size = new Size(216, 26);
             // 
             // cmnuChannelAdd
             // 
             cmnuChannelAdd.Image = (Image)resources.GetObject("cmnuChannelAdd.Image");
             cmnuChannelAdd.Name = "cmnuChannelAdd";
-            cmnuChannelAdd.Size = new Size(149, 30);
+            cmnuChannelAdd.ShortcutKeys = Keys.Control | Keys.Shift | Keys.C;
+            cmnuChannelAdd.Size = new Size(215, 22);
             cmnuChannelAdd.Text = "Add channel";
             cmnuChannelAdd.Click += cmnuChannelAdd_Click;
             // 
@@ -591,10 +591,13 @@
             Controls.Add(tlsMenu);
             Controls.Add(splContainer);
             Icon = (Icon)resources.GetObject("$this.Icon");
+            KeyPreview = true;
             Name = "FrmConfig";
             Text = "Config";
             FormClosing += FrmConfig_FormClosing;
             Load += FrmConfig_Load;
+            KeyDown += FrmConfig_KeyDown;
+            KeyUp += FrmConfig_KeyUp;
             cmnuTagAppend.ResumeLayout(false);
             cmnuDeleteAction.ResumeLayout(false);
             splContainer.Panel1.ResumeLayout(false);
@@ -667,9 +670,6 @@
         private ToolStripSeparator toolStripSeparator5;
         private ToolStripMenuItem upToolStripMenuItem1;
         private ToolStripMenuItem downToolStripMenuItem1;
-        private ToolStripSeparator toolStripSeparator6;
-        private ToolStripMenuItem upToolStripMenuItem2;
-        private ToolStripMenuItem downToolStripMenuItem2;
         private ToolStripMenuItem cmnuChannelDel;
         private ToolStripSeparator toolStripSeparator3;
     }

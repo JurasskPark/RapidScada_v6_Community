@@ -85,9 +85,13 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
         private string culture = "en-GB";               // the culture
         private bool isRussian;							// the language
 
-        System.Windows.Forms.TreeView trvConfig = new System.Windows.Forms.TreeView();  // config treeview
-        ProjectNodeData mtNodeData = new ProjectNodeData();                             // project node type
+        private System.Windows.Forms.TreeView trvConfig = new System.Windows.Forms.TreeView();  // config treeview
+        private ProjectNodeData mtNodeData = new ProjectNodeData();                             // project node type
         private Form frmPropertyForm = new Form();                                      // child form properties
+
+
+        private bool ctrlPressed = false;               // press ctrl
+        private bool shiftPressed = false;              // press shift
         #endregion Variables
 
         #region Form Load
@@ -939,6 +943,11 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
                 parentNode = selectNode;
                 ProjectNodeData nodeData = (ProjectNodeData)parentNode.Tag;
                 projectChannel = nodeData.Channel;
+
+                if(projectChannel == null)
+                {
+                    return;
+                }
             }
             else
             {
@@ -1525,10 +1534,23 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
             }
         }
 
-        private void cmnuCommandDelete_Click(object sender, EventArgs e)
+        private void cmnuCommandDel_Click(object sender, EventArgs e)
         {
             ProjectNodeDelete();
         }
+
+
+        private void cmnuCommandUp_Click(object sender, EventArgs e)
+        {
+            ProjectNodeElementUp();
+        }
+
+        private void cmnuCommandDown_Click(object sender, EventArgs e)
+        {
+            ProjectNodeElementDown();
+        }
+
+
 
         /// <summary>
         /// 
@@ -1586,6 +1608,81 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
         #endregion Menu
 
         #endregion Project
+
+
+
+        private void FrmConfig_KeyDown(object sender, KeyEventArgs e)
+        {
+            // creating a channel
+            if (ctrlPressed && shiftPressed && e.KeyCode == Keys.C)
+            {
+
+                ProjectChannelAdd();
+                e.Handled = true;
+            }
+
+            // creating a device
+            if (ctrlPressed && shiftPressed && e.KeyCode == Keys.D)
+            {
+                ProjectDeviceAdd();
+                e.Handled = true;
+            }
+
+            if (e.Control)
+            {
+                ctrlPressed = true;
+            }
+            if (e.Shift)
+            {
+                shiftPressed = true;
+            }
+        }
+
+        private void FrmConfig_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Control)
+            {
+                ctrlPressed = false;
+            }
+            if (e.Shift)
+            {
+                shiftPressed = false;
+            }
+        }
+
+        private void trvProject_KeyDown(object sender, KeyEventArgs e)
+        {
+
+
+            //// Проверяем зажатую клавишу Alt и нажатую C
+            //if (e.Alt && e.KeyCode == Keys.C)
+            //{
+            //    MessageBox.Show("Нажато сочетание Alt + C");
+            //    e.Handled = true; // Указываем, что событие обработано
+            //}
+
+
+            switch (e.KeyCode)
+            {
+                //case Keys.F2:
+                //    // Имитируем нажатие пункта "Переименовать"
+                //    RenameItem_Click(null, null);
+                //    break;
+                //case Keys.Delete:
+                //    // Имитируем нажатие пункта "Удалить"
+                //    DeleteItem_Click(null, null);
+                //    break;
+                //case Keys.O:
+                //    if (e.Control)
+                //    {
+                //        // Имитируем нажатие пункта "Открыть"
+                //        OpenItem_Click(null, null);
+                //    }
+                //    break;
+            }
+
+        }
+
 
     }
 }

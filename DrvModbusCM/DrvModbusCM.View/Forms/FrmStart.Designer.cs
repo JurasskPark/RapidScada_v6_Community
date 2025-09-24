@@ -40,6 +40,7 @@
             tolAdministration = new ToolStripMenuItem();
             tolConfiguration = new ToolStripMenuItem();
             tolLogs = new ToolStripMenuItem();
+            tolManager = new ToolStripMenuItem();
             tolTools = new ToolStripMenuItem();
             tolConverter = new ToolStripMenuItem();
             tolSettings = new ToolStripMenuItem();
@@ -54,6 +55,7 @@
             tolEmptySpace = new ToolStripMenuItem();
             tolLang = new ToolStripMenuItem();
             imgListMenu = new ImageList(components);
+            tolDebugStop = new ToolStripMenuItem();
             mnuMenu.SuspendLayout();
             SuspendLayout();
             // 
@@ -66,7 +68,7 @@
             // 
             // mnuMenu
             // 
-            mnuMenu.Items.AddRange(new ToolStripItem[] { tolProject, tolAdministration, tolTools, tolSettings, tolWindows, tolDebug, tolEmptySpace, tolLang });
+            mnuMenu.Items.AddRange(new ToolStripItem[] { tolProject, tolAdministration, tolTools, tolSettings, tolWindows, tolDebug, tolEmptySpace, tolLang, tolDebugStop });
             mnuMenu.Location = new Point(0, 0);
             mnuMenu.Name = "mnuMenu";
             mnuMenu.Size = new Size(800, 24);
@@ -114,7 +116,7 @@
             // 
             // tolAdministration
             // 
-            tolAdministration.DropDownItems.AddRange(new ToolStripItem[] { tolConfiguration, tolLogs });
+            tolAdministration.DropDownItems.AddRange(new ToolStripItem[] { tolConfiguration, tolLogs, tolManager });
             tolAdministration.Image = (Image)resources.GetObject("tolAdministration.Image");
             tolAdministration.Name = "tolAdministration";
             tolAdministration.Size = new Size(114, 20);
@@ -124,7 +126,7 @@
             // 
             tolConfiguration.Image = (Image)resources.GetObject("tolConfiguration.Image");
             tolConfiguration.Name = "tolConfiguration";
-            tolConfiguration.Size = new Size(180, 22);
+            tolConfiguration.Size = new Size(148, 22);
             tolConfiguration.Text = "Configuration";
             tolConfiguration.Click += tolConfiguration_Click;
             // 
@@ -132,9 +134,15 @@
             // 
             tolLogs.Image = (Image)resources.GetObject("tolLogs.Image");
             tolLogs.Name = "tolLogs";
-            tolLogs.Size = new Size(180, 22);
+            tolLogs.Size = new Size(148, 22);
             tolLogs.Text = "Logs";
             tolLogs.Click += tolLogs_Click;
+            // 
+            // tolManager
+            // 
+            tolManager.Name = "tolManager";
+            tolManager.Size = new Size(148, 22);
+            tolManager.Text = "Manager";
             // 
             // tolTools
             // 
@@ -241,6 +249,13 @@
             imgListMenu.Images.SetKeyName(0, "flag_russia.png");
             imgListMenu.Images.SetKeyName(1, "flag_usa.png");
             // 
+            // tolDebugStop
+            // 
+            tolDebugStop.Name = "tolDebugStop";
+            tolDebugStop.Size = new Size(81, 20);
+            tolDebugStop.Text = "Stop Debug";
+            tolDebugStop.Click += tolDebugStop_Click;
+            // 
             // FrmStart
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -288,5 +303,7 @@
         private ToolStripMenuItem tolEmptySpace;
         public ImageList imgListMenu;
         private ToolStripMenuItem tolLogs;
+        private ToolStripMenuItem tolManager;
+        private ToolStripMenuItem tolDebugStop;
     }
 }
