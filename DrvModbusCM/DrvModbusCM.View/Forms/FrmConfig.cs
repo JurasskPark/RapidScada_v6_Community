@@ -119,6 +119,26 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
         }
         #endregion Form Close
 
+        #region Form Key
+        private void FrmConfig_KeyDown(object sender, KeyEventArgs e)
+        {
+
+        }
+
+        private void FrmConfig_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Control)
+            {
+                ctrlPressed = false;
+            }
+            if (e.Shift)
+            {
+                shiftPressed = false;
+            }
+        }
+
+        #endregion Form Key
+
         #region Lang
         /// <summary>
         /// Loading from the translation catalog by language.
@@ -1608,81 +1628,6 @@ namespace Scada.Comm.Drivers.DrvModbusCM.View
         #endregion Menu
 
         #endregion Project
-
-
-
-        private void FrmConfig_KeyDown(object sender, KeyEventArgs e)
-        {
-            // creating a channel
-            if (ctrlPressed && shiftPressed && e.KeyCode == Keys.C)
-            {
-
-                ProjectChannelAdd();
-                e.Handled = true;
-            }
-
-            // creating a device
-            if (ctrlPressed && shiftPressed && e.KeyCode == Keys.D)
-            {
-                ProjectDeviceAdd();
-                e.Handled = true;
-            }
-
-            if (e.Control)
-            {
-                ctrlPressed = true;
-            }
-            if (e.Shift)
-            {
-                shiftPressed = true;
-            }
-        }
-
-        private void FrmConfig_KeyUp(object sender, KeyEventArgs e)
-        {
-            if (e.Control)
-            {
-                ctrlPressed = false;
-            }
-            if (e.Shift)
-            {
-                shiftPressed = false;
-            }
-        }
-
-        private void trvProject_KeyDown(object sender, KeyEventArgs e)
-        {
-
-
-            //// Проверяем зажатую клавишу Alt и нажатую C
-            //if (e.Alt && e.KeyCode == Keys.C)
-            //{
-            //    MessageBox.Show("Нажато сочетание Alt + C");
-            //    e.Handled = true; // Указываем, что событие обработано
-            //}
-
-
-            switch (e.KeyCode)
-            {
-                //case Keys.F2:
-                //    // Имитируем нажатие пункта "Переименовать"
-                //    RenameItem_Click(null, null);
-                //    break;
-                //case Keys.Delete:
-                //    // Имитируем нажатие пункта "Удалить"
-                //    DeleteItem_Click(null, null);
-                //    break;
-                //case Keys.O:
-                //    if (e.Control)
-                //    {
-                //        // Имитируем нажатие пункта "Открыть"
-                //        OpenItem_Click(null, null);
-                //    }
-                //    break;
-            }
-
-        }
-
 
     }
 }
