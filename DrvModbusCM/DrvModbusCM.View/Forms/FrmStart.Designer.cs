@@ -54,8 +54,8 @@
             tolDebug = new ToolStripMenuItem();
             tolEmptySpace = new ToolStripMenuItem();
             tolLang = new ToolStripMenuItem();
-            imgListMenu = new ImageList(components);
             tolDebugStop = new ToolStripMenuItem();
+            imgListMenu = new ImageList(components);
             mnuMenu.SuspendLayout();
             SuspendLayout();
             // 
@@ -221,8 +221,8 @@
             // 
             tolDebug.Image = (Image)resources.GetObject("tolDebug.Image");
             tolDebug.Name = "tolDebug";
-            tolDebug.Size = new Size(70, 20);
-            tolDebug.Text = "Debug";
+            tolDebug.Size = new Size(97, 20);
+            tolDebug.Text = "Start Debug";
             tolDebug.Click += tolDebug_Click;
             // 
             // tolEmptySpace
@@ -241,6 +241,13 @@
             tolLang.Text = "Language";
             tolLang.Click += tolLang_Click;
             // 
+            // tolDebugStop
+            // 
+            tolDebugStop.Name = "tolDebugStop";
+            tolDebugStop.Size = new Size(81, 20);
+            tolDebugStop.Text = "Stop Debug";
+            tolDebugStop.Click += tolDebugStop_Click;
+            // 
             // imgListMenu
             // 
             imgListMenu.ColorDepth = ColorDepth.Depth32Bit;
@@ -248,13 +255,6 @@
             imgListMenu.TransparentColor = Color.Transparent;
             imgListMenu.Images.SetKeyName(0, "flag_russia.png");
             imgListMenu.Images.SetKeyName(1, "flag_usa.png");
-            // 
-            // tolDebugStop
-            // 
-            tolDebugStop.Name = "tolDebugStop";
-            tolDebugStop.Size = new Size(81, 20);
-            tolDebugStop.Text = "Stop Debug";
-            tolDebugStop.Click += tolDebugStop_Click;
             // 
             // FrmStart
             // 
